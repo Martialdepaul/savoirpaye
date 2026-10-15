@@ -1,0 +1,51 @@
+import { CheckCircle2, XCircle, ArrowRight, RotateCcw, Mail } from "lucide-react";
+import { fcfa } from "../../lib/dashboard-data";
+import { COURSE_PRICE, COURSE_URL, course } from "../../lib/sales-data";
+import type { Buyer } from "./CheckoutForm";
+
+export function Success({ buyer }: { buyer: Buyer }) {
+  const rows = [
+    ["Référence", "#SP-4822"],
+    ["Formation", course.title],
+    ["Moyen de paiement", buyer.method],
+    ["Montant payé", fcfa(COURSE_PRICE)],
+  ];
+  return (
+    <div className="mx-auto max-w-md text-center">
+      <span className="mx-auto flex size-16 items-center justify-center rounded-full bg-[#ECF8EF] text-success"><CheckCircle2 size={34} /></span>
+      <h1 className="mt-5 font-heading text-2xl font-extrabold">Paiement confirmé</h1>
+      <p className="mt-2 text-ink-2">Merci {buyer.name.split(" ")[0]}, votre formation est disponible dès maintenant.</p>
+      <dl className="num mt-6 divide-y divide-line rounded-card border border-line bg-white text-left text-sm shadow-soft">
+        {rows.map(([k, v]) => (
+          <div key={k} className="flex justify-between gap-4 px-4 py-3">
+            <dt className="text-ink-2">{k}</dt>
+            <dd className={`text-right font-semibold ${k === "Montant payé" ? "text-gold-ink" : ""}`}>{v}</dd>
+          </div>
+        ))}
+      </dl>
+      <p className="mt-4 flex items-center justify-center gap-2 text-sm text-ink-2"><Mail size={15} /> Un reçu a été envoyé à {buyer.email}</p>
+      <a href={COURSE_URL} className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-btn bg-primary px-6 py-3.5 font-semibold text-white hover:bg-primary-hover">
+        Accéder à la formation <ArrowRight size={18} />
+      </a>
+    </div>
+  );
+}
+
+export function Failure({ reason, onRetry }: { reason: "expired" | "declined"; onRetry: () => void }) {
+  return (
+    <div className="mx-auto max-w-md text-center">
+      <span className="mx-auto flex size-16 items-center justify-center rounded-full bg-[#FCEDED] text-danger"><XCircle size={34} /></span>
+      <h1 className="mt-5 font-heading text-2xl font-extrabold">Le paiement n'a pas abouti</h1>
+      <p className="mt-2 leading-relaxed text-ink-2">
+        {reason === "expired"
+          ? "Le délai de confirmation est dépassé. Aucun montant n'a été débité."
+          : "Le paiement a été refusé ou annulé. Aucun montant n'a été débité. Vérifiez votre solde et votre numéro, puis réessayez."}
+      </p>
+      <button onClick={onRetry} className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-btn bg-primary px-6 py-3.5 font-semibold text-white hover:bg-primary-hover">
+        <RotateCcw size={17} /> Réessayer
+      </button>
+      <a href={COURSE_URL} className="mt-3 inline-flex w-full justify-center rounded-btn border border-line bg-white px-6 py-3.5 font-semibold hover:bg-page">Retour à la formation</a>
+      <p className="mt-5 text-sm text-ink-2">Besoin d'aide ? Écrivez-nous à <span className="font-medium text-ink">aide@savoirpay.com</span></p>
+    </div>
+  );
+}
