@@ -1,0 +1,10 @@
+{
+  "description": "SavoirPay empowers African entrepreneurs to create and sell online courses and digital products effortlessly, featuring an AI course creator and flexible pricing.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

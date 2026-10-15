@@ -115,7 +115,7 @@ export default function StatistiquesPage() {
           {/* Taux de conversion */}
           <section className="rounded-card border border-line bg-white p-4 shadow-soft sm:p-6">
             <h2 className="font-heading mb-4 text-lg font-bold">Taux de conversion</h2>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
               <div className="rounded-card border border-line bg-page p-4">
                 <p className="text-xs text-ink-2">Visiteurs</p>
                 <p className="num mt-1 text-2xl font-extrabold text-ink">{visitorCount.toLocaleString("fr-FR")}</p>
@@ -126,7 +126,7 @@ export default function StatistiquesPage() {
                 <p className="num mt-1 text-2xl font-extrabold text-primary">{convRate}%</p>
                 <p className="text-xs text-ink-2">des visiteurs achètent</p>
               </div>
-              <div className="rounded-card border border-line bg-page p-4">
+              <div className="col-span-2 rounded-card border border-line bg-page p-4 sm:col-span-1">
                 <p className="text-xs text-ink-2">Panier moyen</p>
                 <p className="num mt-1 text-xl font-extrabold text-gold-ink">{fcfa(avgCart)}</p>
                 <p className="text-xs text-ink-2">par commande</p>

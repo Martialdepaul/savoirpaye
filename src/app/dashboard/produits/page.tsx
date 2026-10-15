@@ -89,7 +89,7 @@ export default function ProduitsPage() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
             <div className="rounded-card border border-line bg-white p-4 shadow-soft">
               <p className="text-xs text-ink-2">Total produits</p>
               <p className="num mt-1 text-2xl font-extrabold text-ink">{totalOnline}</p>
@@ -100,7 +100,7 @@ export default function ProduitsPage() {
               <p className="num mt-1 text-2xl font-extrabold text-ink">{totalSales}</p>
               <p className="text-xs text-ink-2">commandes</p>
             </div>
-            <div className="rounded-card border border-line bg-white p-4 shadow-soft">
+            <div className="col-span-2 rounded-card border border-line bg-white p-4 shadow-soft sm:col-span-1">
               <p className="text-xs text-ink-2">Revenu total</p>
               <p className="num mt-1 text-xl font-extrabold text-gold-ink">{fcfa(totalRevenue)}</p>
               <p className="text-xs text-ink-2">tous produits</p>

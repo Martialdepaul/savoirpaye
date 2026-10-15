@@ -58,7 +58,7 @@ export default function ClientsPage() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
             <div className="rounded-card border border-line bg-white p-4 shadow-soft">
               <p className="text-xs text-ink-2">Total clients</p>
               <p className="num mt-1 text-2xl font-extrabold text-ink">{clients.length}</p>
@@ -67,7 +67,7 @@ export default function ClientsPage() {
               <p className="text-xs text-ink-2">Nouveaux ce mois</p>
               <p className="num mt-1 text-2xl font-extrabold text-primary">14</p>
             </div>
-            <div className="rounded-card border border-line bg-white p-4 shadow-soft">
+            <div className="col-span-2 rounded-card border border-line bg-white p-4 shadow-soft sm:col-span-1">
               <p className="text-xs text-ink-2">Valeur moyenne</p>
               <p className="num mt-1 text-xl font-extrabold text-gold-ink">{fcfa(avgValue)}</p>
             </div>

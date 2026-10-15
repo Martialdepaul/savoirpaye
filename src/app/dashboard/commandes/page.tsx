@@ -55,7 +55,7 @@ export default function CommandesPage() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
             <div className="rounded-card border border-line bg-white p-4 shadow-soft">
               <p className="text-xs text-ink-2">Total commandes</p>
               <p className="num mt-1 text-2xl font-extrabold text-ink">{allOrders.length}</p>
@@ -65,7 +65,7 @@ export default function CommandesPage() {
               <p className="num mt-1 text-2xl font-extrabold text-success">{paid.length}</p>
               <p className="text-xs text-ink-2">{paidPct}% du total</p>
             </div>
-            <div className="rounded-card border border-line bg-white p-4 shadow-soft">
+            <div className="col-span-2 rounded-card border border-line bg-white p-4 shadow-soft sm:col-span-1">
               <p className="text-xs text-ink-2">Chiffre d&apos;affaires</p>
               <p className="num mt-1 text-xl font-extrabold text-gold-ink">{fcfa(totalRevenue)}</p>
             </div>
