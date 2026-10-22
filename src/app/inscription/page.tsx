@@ -1,7 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { Field, PasswordInput, PasswordStrength, SubmitButton, inputCls, isEmail, isPhone, passwordOk } from "@/components/auth/fields";
@@ -13,8 +12,10 @@ type Errors = Partial<Record<keyof Form, string>>;
 const iso: Record<string, string> = { "Sénégal": "SN", "Côte d'Ivoire": "CI", Cameroun: "CM", Mali: "ML", "Bénin": "BJ", "Burkina Faso": "BF", Togo: "TG", Gabon: "GA" };
 const offers: Record<string, string> = { starter: "Starter (gratuite)", pro: "Pro", business: "Business" };
 
-function SignupForm() {
-  const offer = offers[useSearchParams().get("offre") ?? ""];
+export default function SignupPage() {
+  // Lu côté client pour que le formulaire soit rendu dès le HTML initial
+  const [offer, setOffer] = useState<string | undefined>();
+  useEffect(() => setOffer(offers[new URLSearchParams(window.location.search).get("offre") ?? ""]), []);
   const [f, setF] = useState<Form>({ name: "", email: "", country: "Sénégal", phone: "", password: "", terms: false });
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
@@ -81,13 +82,5 @@ function SignupForm() {
         <SubmitButton loading={loading}>{loading ? "Création du compte…" : "Créer mon compte"}</SubmitButton>
       </form>
     </AuthLayout>
-  );
-}
-
-export default function SignupPage() {
-  return (
-    <Suspense fallback={null}>
-      <SignupForm />
-    </Suspense>
   );
 }

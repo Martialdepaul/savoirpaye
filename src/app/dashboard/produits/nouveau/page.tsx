@@ -33,7 +33,7 @@ function NewProduct() {
 
 export default function NewProductPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<DashboardShell active="Produits"><div className="mx-auto h-96 max-w-4xl px-4 pt-6 sm:px-8" aria-busy="true" /></DashboardShell>}>
       <NewProduct />
     </Suspense>
   );
