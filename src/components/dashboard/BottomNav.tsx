@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { Home, Package, Plus, ShoppingBag, Wallet } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { CreateMenuList } from "./CreateMenu";
+import { activeLabel } from "./nav";
 
 const left = [
   { label: "Accueil", icon: Home, href: "/dashboard" },
@@ -20,12 +22,14 @@ function Item({ label, icon: Icon, href, active }: { label: string; icon: typeof
       aria-current={active ? "page" : undefined}
       className={`flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-1 py-2 text-[10px] font-medium min-[360px]:text-[11px] ${active ? "text-primary" : "text-ink-2"}`}
     >
-      <Icon size={21} className="shrink-0" /> <span className="max-w-full truncate">{label}</span>
+      <Icon size={21} strokeWidth={active ? 2.4 : 2} className="shrink-0" /> <span className="max-w-full truncate">{label}</span>
     </a>
   );
 }
 
-export default function BottomNav({ active = "Accueil" }: { active?: string }) {
+// `active` est conservé pour compatibilité ; l'entrée active est déduite de l'URL.
+export default function BottomNav(_: { active?: string }) {
+  const active = activeLabel(usePathname());
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -45,7 +49,7 @@ export default function BottomNav({ active = "Accueil" }: { active?: string }) {
               onClick={() => setOpen(!open)}
               aria-label="Créer"
               aria-expanded={open}
-              className="-mt-5 flex size-14 items-center justify-center rounded-full bg-primary text-white shadow-[0_6px_16px_rgb(11_93_85/0.35)] ring-4 ring-page transition-colors hover:bg-primary-hover"
+              className="-mt-5 flex size-14 items-center justify-center rounded-full bg-gold text-forest shadow-[0_6px_16px_rgb(245_165_36/0.4)] ring-4 ring-page transition-colors hover:bg-gold-hover"
             >
               <Plus size={26} className={`transition-transform ${open ? "rotate-45" : ""}`} />
             </button>

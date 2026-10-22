@@ -26,8 +26,8 @@ export default function Waiting({ buyer, price, onSuccess, onFailure, onCancel }
     <div className="mx-auto max-w-md text-center">
       <div className="relative mx-auto size-40" role="timer" aria-label={`Temps restant : ${mm}:${ss}`}>
         <svg viewBox="0 0 120 120" className="size-full -rotate-90">
-          <circle cx="60" cy="60" r={R} fill="none" stroke="#E7E5E4" strokeWidth="6" />
-          <circle cx="60" cy="60" r={R} fill="none" stroke="#0B5D55" strokeWidth="6" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C * (1 - left / TOTAL)} className="transition-[stroke-dashoffset] duration-1000 ease-linear" />
+          <circle cx="60" cy="60" r={R} fill="none" stroke="#E3EBE7" strokeWidth="6" />
+          <circle cx="60" cy="60" r={R} fill="none" stroke="#0D4D3B" strokeWidth="6" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C * (1 - left / TOTAL)} className="transition-[stroke-dashoffset] duration-1000 ease-linear" />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <Smartphone size={26} className="animate-pulse text-primary" />

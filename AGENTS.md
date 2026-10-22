@@ -14,18 +14,19 @@ Plateforme de vente de formations et produits numériques pour l'Afrique francop
   - `page.tsx` : accueil court (hero avec photos, moyens de paiement, témoignages, bandeau final)
   - `fonctionnalites/`, `comment-ca-marche/`, `createur-ia/`, `tarifs/`, `faq/`, `ressources/` (+ `[slug]`), `a-propos/`, `contact/` : site public, une page par sujet, via `SiteShell` + `PageHero` (`src/components/site/`)
   - `inscription/`, `connexion/`, `mot-de-passe-oublie/`, `reinitialiser-mot-de-passe/` : comptes
+  - `onboarding/` : configuration de la boutique en 3 étapes, après l'inscription
   - `formations/[slug]/` et `produits/[slug]/` : pages de vente générées depuis le catalogue
   - `boutique/[vendeur]/` : boutique publique du vendeur
   - `checkout/` : paiement Mobile Money (`/checkout?produit=<slug>`)
   - `cgu/`, `confidentialite/`, `mentions-legales/` : pages légales (les `[crochets]` sont à compléter)
-  - `dashboard/` : espace vendeur (accueil, produits, `produits/nouveau`, `produits/[id]/modifier`, commandes, clients, créateur IA, statistiques, portefeuille, paramètres) et espace apprenant (`mes-formations/`)
+  - `dashboard/` : espace vendeur (accueil, produits, `produits/nouveau`, `produits/[id]/modifier`, commandes, clients, créateur IA, statistiques, portefeuille, paramètres) notifications, aide) et espace apprenant (`mes-formations/`)
 - `src/lib/catalog.ts` : catalogue central des produits (source unique pour tableau de bord, éditeur, pages de vente, boutique et paiement) + `productUrl`, `checkoutUrl`, `slugify`
 - `src/lib/site-data.ts` : contenus du site public (menu, fonctionnalités, comparatif, articles, équipe)
 - `src/lib/*-data.ts` : autres données de démonstration (pas encore de back-end)
 - `public/images/` : photos du site (Unsplash, voir `CREDITS.md`), versionnées hors Git LFS pour que Vercel les serve
 - `src/components/` : composants par domaine (`landing`, `sales`, `checkout`, `dashboard`, `editor`, `auth`, `legal`, `creator`, `student`, `wallet`, `ui`)
 - `src/components/editor/` : éditeur de produit (`ProductEditor`, `ModulesEditor`, validation dans `types.ts`)
-- `src/components/dashboard/nav.ts` : source unique de la navigation du tableau de bord (Sidebar desktop, MobileMenu)
+- `src/components/dashboard/nav.ts` : source unique de la navigation du tableau de bord (`navItems`, `secondaryNav`, `activeLabel` qui déduit l'entrée active de l'URL) ; `NavList` est partagée par la barre latérale et le menu ☰ du Topbar
 - `src/components/ui/Pagination.tsx` : `usePagination` + `<Pagination>`, à utiliser pour toute liste longue
 - `src/components/ui/Toast.tsx` : `useToast()` pour les confirmations
 

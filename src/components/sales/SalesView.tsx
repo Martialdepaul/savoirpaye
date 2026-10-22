@@ -88,7 +88,7 @@ export default function SalesView({ product: p }: { product: CatalogProduct }) {
             </div>
 
             <a href={`/boutique/${seller.slug}`} className="mt-5 inline-flex items-center gap-3 rounded-btn py-1 pr-2 hover:bg-white">
-              <span className="flex size-11 items-center justify-center rounded-full bg-primary font-heading text-sm font-bold text-white">{seller.initials}</span>
+              <img src="/images/team-1.jpg" alt="" className="size-11 rounded-full object-cover" />
               <span>
                 <span className="block text-sm font-semibold">{seller.name}</span>
                 <span className="block text-xs text-ink-2">{seller.role} · Voir la boutique</span>

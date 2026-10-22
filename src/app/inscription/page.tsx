@@ -35,7 +35,7 @@ export default function SignupPage() {
     if (first) return document.getElementById(first)?.focus();
     setLoading(true);
     // Simulation de la création de compte, à remplacer par l'API
-    setTimeout(() => (window.location.href = "/dashboard"), 900);
+    setTimeout(() => (window.location.href = "/onboarding"), 900);
   };
 
   return (

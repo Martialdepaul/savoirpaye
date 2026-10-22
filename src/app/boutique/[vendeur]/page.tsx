@@ -34,8 +34,12 @@ export default async function ShopPage({ params }: Props) {
       </header>
 
       <section className="border-b border-line bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-8 sm:flex-row sm:items-center sm:py-12">
-          <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-primary font-heading text-2xl font-extrabold text-white sm:size-24">{seller.initials}</span>
+        <div className="relative h-36 overflow-hidden bg-forest sm:h-52">
+          <img src="/images/store-cover.jpg" alt="" className="size-full object-cover opacity-80" />
+          <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-forest/70 to-transparent" />
+        </div>
+        <div className="mx-auto -mt-12 flex max-w-6xl flex-col gap-6 px-5 pb-8 sm:-mt-14 sm:flex-row sm:items-end sm:pb-12">
+          <img src="/images/team-1.jpg" alt={`Photo de ${seller.name}`} className="relative size-24 shrink-0 rounded-full object-cover ring-4 ring-white sm:size-28" />
           <div className="min-w-0 flex-1">
             <h1 className="font-heading text-2xl font-extrabold sm:text-3xl">{seller.name}</h1>
             <p className="mt-1 flex items-center gap-1.5 text-sm text-ink-2"><MapPin size={15} /> {seller.city}</p>

@@ -102,7 +102,7 @@ export default function ProduitsPage() {
 
           <div ref={pager.anchorRef} className="scroll-mt-20 space-y-5">
           {/* Mobile cards */}
-          <ul className="space-y-3 sm:hidden">
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:hidden">
             {pager.pageItems.map((p) => (
               <li key={p.id} className="rounded-card border border-line bg-white shadow-soft">
                 <a href={editUrl(p.id)} className="block p-4 pb-3">
@@ -128,7 +128,7 @@ export default function ProduitsPage() {
           </ul>
 
           {/* Desktop table */}
-          <section className="hidden overflow-hidden rounded-card border border-line bg-white shadow-soft sm:block">
+          <section className="hidden overflow-hidden rounded-card border border-line bg-white shadow-soft md:block">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>

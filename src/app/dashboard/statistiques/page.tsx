@@ -86,27 +86,27 @@ export default function StatistiquesPage() {
                     data={topProducts}
                     margin={{ top: 0, right: 16, left: 0, bottom: 0 }}
                   >
-                    <CartesianGrid stroke="#E7E5E4" strokeDasharray="3 3" horizontal={false} />
+                    <CartesianGrid stroke="#E3EBE7" strokeDasharray="3 3" horizontal={false} />
                     <XAxis
                       type="number"
                       tickLine={false}
                       axisLine={false}
-                      tick={{ fill: "#57534E", fontSize: 12 }}
+                      tick={{ fill: "#52615A", fontSize: 12 }}
                     />
                     <YAxis
                       type="category"
                       dataKey="name"
                       tickLine={false}
                       axisLine={false}
-                      tick={{ fill: "#57534E", fontSize: 11 }}
+                      tick={{ fill: "#52615A", fontSize: 11 }}
                       width={112}
                       tickFormatter={(v: string) => (v.length > 22 ? `${v.slice(0, 21)}…` : v)}
                     />
                     <Tooltip
                       formatter={(v) => [`${v} ventes`, "Ventes"]}
-                      contentStyle={{ borderRadius: 10, border: "1px solid #E7E5E4", fontSize: 13 }}
+                      contentStyle={{ borderRadius: 10, border: "1px solid #E3EBE7", fontSize: 13 }}
                     />
-                    <Bar dataKey="sales" fill="#0b5d55" radius={[0, 4, 4, 0]} />
+                    <Bar dataKey="sales" fill="#0d4d3b" radius={[0, 4, 4, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

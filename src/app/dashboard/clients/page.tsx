@@ -115,7 +115,7 @@ export default function ClientsPage() {
           </div>
 
           {/* Mobile cards */}
-          <ul className="space-y-3 sm:hidden">
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:hidden">
             {pager.pageItems.map((c) => (
               <li
                 key={c.id}
@@ -140,7 +140,7 @@ export default function ClientsPage() {
           </ul>
 
           {/* Desktop table */}
-          <section className="hidden overflow-hidden rounded-card border border-line bg-white shadow-soft sm:block">
+          <section className="hidden overflow-hidden rounded-card border border-line bg-white shadow-soft md:block">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>

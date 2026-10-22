@@ -1,17 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Bell, ShoppingBag, Star, Wallet } from "lucide-react";
+import { Bell, MessageSquareQuote, ShoppingBag, Sparkles, Wallet } from "lucide-react";
+import { notifications as initial, type Notif } from "../../lib/site-data";
 
-const initial = [
-  { id: 1, icon: ShoppingBag, text: "Nouvelle vente : Moussa Ndiaye a acheté « Maîtriser Excel en 7 jours ».", when: "Il y a 8 min", href: "/dashboard/commandes", unread: true },
-  { id: 2, icon: Wallet, text: "Votre retrait de 200 000 FCFA vers Wave a été effectué.", when: "Hier", href: "/dashboard/portefeuille", unread: true },
-  { id: 3, icon: Star, text: "Nouvel avis 5 étoiles sur « Vendre sur WhatsApp Business ».", when: "Il y a 2 jours", href: "/formations/vendre-sur-whatsapp-business", unread: true },
-];
+const icons: Record<Notif["kind"], typeof Bell> = { vente: ShoppingBag, retrait: Wallet, avis: MessageSquareQuote, ia: Sparkles, systeme: Bell };
+const links: Partial<Record<Notif["kind"], string>> = { vente: "/dashboard/commandes", retrait: "/dashboard/portefeuille", ia: "/dashboard/createur-ia" };
+
 
 export default function Notifications() {
   const [open, setOpen] = useState(false);
-  const [items, setItems] = useState(initial);
+  const [items, setItems] = useState(initial.slice(0, 5));
   const ref = useRef<HTMLDivElement>(null);
   const unread = items.filter((n) => n.unread).length;
 
@@ -45,10 +44,11 @@ export default function Notifications() {
           <ul className="max-h-[60vh] divide-y divide-line overflow-y-auto">
             {items.map((n) => (
               <li key={n.id}>
-                <a href={n.href} className="flex gap-3 px-4 py-3 hover:bg-page">
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary"><n.icon size={16} /></span>
+                <a href={links[n.kind] ?? "/dashboard/notifications"} className="flex gap-3 px-4 py-3 hover:bg-page">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">{(() => { const I = icons[n.kind]; return <I size={16} />; })()}</span>
                   <span className="min-w-0 flex-1">
-                    <span className={`block text-sm ${n.unread ? "font-semibold text-ink" : "text-ink-2"}`}>{n.text}</span>
+                    <span className={`block text-sm ${n.unread ? "font-semibold text-ink" : "text-ink-2"}`}>{n.title}</span>
+                    <span className="block text-xs text-ink-2">{n.text}</span>
                     <span className="mt-0.5 block text-xs text-ink-2">{n.when}</span>
                   </span>
                   {n.unread && <span className="mt-1.5 size-2 shrink-0 rounded-full bg-primary" aria-label="Non lue" />}
@@ -56,6 +56,7 @@ export default function Notifications() {
               </li>
             ))}
           </ul>
+          <a href="/dashboard/notifications" className="flex min-h-11 items-center justify-center border-t border-line text-sm font-semibold text-primary hover:bg-page">Voir toutes les notifications</a>
         </div>
       )}
     </div>
