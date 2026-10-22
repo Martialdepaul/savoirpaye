@@ -1,10 +1,12 @@
 import { steps } from "../../lib/mock-data";
 
-export default function HowItWorks() {
+type Level = "h1" | "h2";
+
+export default function HowItWorks({ level: H = "h2" }: { level?: Level }) {
   return (
-    <section id="comment-ca-marche" className="mx-auto max-w-6xl px-5 py-20 lg:py-28">
+    <section id="comment-ca-marche" className="mx-auto max-w-6xl px-5 py-12 sm:py-16 lg:py-20">
       <div className="max-w-2xl">
-        <h2 className="font-heading text-3xl font-extrabold sm:text-4xl">Comment ça marche</h2>
+        <H className="font-heading text-3xl font-extrabold sm:text-4xl">Comment ça marche</H>
         <p className="mt-3 text-lg text-ink-2">De l'idée à votre premier paiement, en quatre étapes.</p>
       </div>
       <ol className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

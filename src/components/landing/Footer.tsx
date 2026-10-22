@@ -4,16 +4,16 @@ const cols = [
   {
     title: "Produit",
     links: [
-      { label: "Fonctionnalités", href: "/#fonctionnalites" },
-      { label: "Créateur IA", href: "/#createur-ia" },
-      { label: "Tarifs", href: "/#tarifs" },
-      { label: "Moyens de paiement", href: "/#paiements" },
+      { label: "Comment ça marche", href: "/comment-ca-marche" },
+      { label: "Créateur IA", href: "/createur-ia" },
+      { label: "Tarifs", href: "/tarifs" },
+      { label: "Moyens de paiement", href: "/comment-ca-marche#paiements" },
     ],
   },
   {
     title: "Ressources",
     links: [
-      { label: "Questions fréquentes", href: "/#faq" },
+      { label: "Questions fréquentes", href: "/faq" },
       { label: "Exemple de boutique", href: "/boutique/aminata-diallo" },
       { label: "Contact", href: "mailto:contact@savoirpay.com" },
     ],
@@ -31,10 +31,10 @@ const cols = [
 export default function Footer() {
   return (
     <footer className="bg-ink text-white">
-      <div className="mx-auto max-w-6xl px-5 py-14">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
-          <div>
-            <a href="#top" className="font-heading text-2xl font-extrabold"><span>savoir</span><span className="text-gold">pay</span></a>
+      <div className="mx-auto max-w-6xl px-5 py-10 sm:py-14">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:gap-10">
+          <div className="col-span-2 lg:col-span-1">
+            <a href="/" className="font-heading text-2xl font-extrabold"><span>savoir</span><span className="text-gold">pay</span></a>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/70">
               La plateforme pour créer et vendre vos cours en ligne partout en Afrique francophone.
             </p>
@@ -50,7 +50,7 @@ export default function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-12 border-t border-white/10 pt-6 text-sm text-white/60">
+        <div className="mt-10 border-t border-white/10 pt-6 text-sm text-white/60 sm:mt-12">
           © 2026 SavoirPay. Tous droits réservés.
         </div>
       </div>

@@ -10,18 +10,20 @@ const outline = [
   "Module 4 : Fidéliser ses premiers clients",
 ];
 
-export default function AiCreator() {
+type Level = "h1" | "h2";
+
+export default function AiCreator({ level: H = "h2" }: { level?: Level }) {
   const [topic, setTopic] = useState("Lancer son e-commerce depuis Abidjan");
   const [shown, setShown] = useState(true);
 
   return (
-    <section id="createur-ia" className="px-5 pb-20 lg:pb-28">
+    <section id="createur-ia" className="px-5 py-10 sm:py-14 lg:py-20">
       <div className="mx-auto grid max-w-6xl items-center gap-10 rounded-[20px] border border-ai/15 bg-ai-light p-6 sm:p-10 lg:grid-cols-2 lg:gap-14 lg:p-14">
         <div>
           <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-ai ring-1 ring-ai/20">
             <Sparkles size={14} /> Créateur IA
           </span>
-          <h2 className="mt-4 font-heading text-3xl font-extrabold sm:text-4xl">Votre cours prend forme en quelques minutes.</h2>
+          <H className="mt-4 font-heading text-3xl font-extrabold sm:text-4xl">Votre cours prend forme en quelques minutes.</H>
           <p className="mt-4 text-lg leading-relaxed text-ink-2">
             Décrivez votre sujet. L'IA propose le plan, rédige les leçons et les quiz, puis prépare votre page de vente. Vous gardez la main sur chaque mot.
           </p>

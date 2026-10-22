@@ -11,7 +11,8 @@ Plateforme de vente de formations et produits numériques pour l'Afrique francop
 ## Structure
 
 - `src/app/` : routes (App Router)
-  - `page.tsx` : landing page
+  - `page.tsx` : accueil court (hero, moyens de paiement, raccourcis vers les pages)
+  - `comment-ca-marche/`, `createur-ia/`, `tarifs/`, `faq/` : pages marketing (une section = une page, via `MarketingLayout`)
   - `inscription/`, `connexion/`, `mot-de-passe-oublie/`, `reinitialiser-mot-de-passe/` : comptes
   - `formations/[slug]/` et `produits/[slug]/` : pages de vente générées depuis le catalogue
   - `boutique/[vendeur]/` : boutique publique du vendeur

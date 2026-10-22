@@ -1,12 +1,14 @@
 import { Check } from "lucide-react";
 import { plans } from "../../lib/mock-data";
 
-export default function Pricing() {
+type Level = "h1" | "h2";
+
+export default function Pricing({ level: H = "h2" }: { level?: Level }) {
   return (
-    <section id="tarifs" className="border-t border-line bg-white">
-      <div className="mx-auto max-w-6xl px-5 py-20 lg:py-28">
+    <section id="tarifs">
+      <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16 lg:py-20">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-heading text-3xl font-extrabold sm:text-4xl">Des tarifs simples, en FCFA</h2>
+          <H className="font-heading text-3xl font-extrabold sm:text-4xl">Des tarifs simples, en FCFA</H>
           <p className="mt-3 text-lg text-ink-2">Commencez gratuitement, évoluez quand vos ventes décollent.</p>
         </div>
         <div className="mt-12 grid gap-5 lg:grid-cols-3 lg:items-stretch">

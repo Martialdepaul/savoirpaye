@@ -83,7 +83,7 @@ export default function Hero() {
             <a href="/inscription" className="inline-flex items-center justify-center gap-2 rounded-btn bg-primary px-6 py-3.5 font-semibold text-white transition-colors hover:bg-primary-hover">
               Commencer gratuitement <ArrowRight size={18} />
             </a>
-            <a href="#comment-ca-marche" className="inline-flex items-center justify-center rounded-btn border border-line bg-white px-6 py-3.5 font-semibold text-ink transition-colors hover:bg-primary-light">
+            <a href="/comment-ca-marche" className="inline-flex items-center justify-center rounded-btn border border-line bg-white px-6 py-3.5 font-semibold text-ink transition-colors hover:bg-primary-light">
               Voir comment ça marche
             </a>
           </div>
