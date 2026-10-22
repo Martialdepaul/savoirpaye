@@ -19,7 +19,7 @@ Plateforme de vente de formations et produits numériques pour l'Afrique francop
   - `boutique/[vendeur]/` : boutique publique du vendeur
   - `checkout/` : paiement Mobile Money (`/checkout?produit=<slug>`)
   - `cgu/`, `confidentialite/`, `mentions-legales/` : pages légales (les `[crochets]` sont à compléter)
-  - `dashboard/` : espace vendeur (accueil, produits, `produits/nouveau`, `produits/[id]/modifier`, commandes, clients, créateur IA, statistiques, portefeuille, paramètres) notifications, aide) et espace apprenant (`mes-formations/`)
+  - `dashboard/` : espace vendeur (accueil, produits, `produits/nouveau`, `produits/[id]/modifier`, commandes, clients, créateur IA, statistiques, portefeuille, paramètres, notifications, aide) et espace apprenant (`mes-formations/`)
 - `src/lib/catalog.ts` : catalogue central des produits (source unique pour tableau de bord, éditeur, pages de vente, boutique et paiement) + `productUrl`, `checkoutUrl`, `slugify`
 - `src/lib/site-data.ts` : contenus du site public (menu, fonctionnalités, comparatif, articles, équipe)
 - `src/lib/*-data.ts` : autres données de démonstration (pas encore de back-end)
