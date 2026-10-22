@@ -24,8 +24,8 @@ export default function Header() {
           ))}
         </nav>
         <div className="hidden items-center gap-3 md:flex">
-          <a href="/dashboard" className="rounded-btn px-3 py-2 text-sm font-medium text-ink hover:bg-black/5">Connexion</a>
-          <a href="#" className="rounded-btn bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover">
+          <a href="/connexion" className="rounded-btn px-3 py-2 text-sm font-medium text-ink hover:bg-black/5">Connexion</a>
+          <a href="/inscription" className="rounded-btn bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover">
             Commencer gratuitement
           </a>
         </div>
@@ -46,9 +46,9 @@ export default function Header() {
                 {l.label}
               </a>
             ))}
-            <a href="/dashboard" className="py-3.5 text-base font-medium text-ink">Connexion</a>
+            <a href="/connexion" className="py-3.5 text-base font-medium text-ink">Connexion</a>
           </nav>
-          <a href="#" className="mt-1 block rounded-btn bg-primary py-3 text-center font-semibold text-white">
+          <a href="/inscription" className="mt-1 block rounded-btn bg-primary py-3 text-center font-semibold text-white">
             Commencer gratuitement
           </a>
         </div>

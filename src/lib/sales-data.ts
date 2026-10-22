@@ -40,7 +40,9 @@ export const curriculum: Module[] = (() => {
   }));
 })();
 
-export const reviews = [
+export type Review = { name: string; city: string; rating: number; date: string; text: string };
+
+export const reviews: Review[] = [
   { name: "Fatou Sène", city: "Dakar", rating: 5, date: "Il y a 2 semaines", text: "En deux semaines j'ai doublé mes commandes de pagnes. Le module sur le catalogue m'a tout changé, et les explications sont très simples." },
   { name: "Koffi Yao", city: "Abidjan", rating: 5, date: "Il y a 1 mois", text: "Enfin une formation qui parle de Wave et d'Orange Money. J'envoie mes liens de paiement directement dans la discussion." },
   { name: "Mariam Traoré", city: "Bamako", rating: 4, date: "Il y a 1 mois", text: "Très concret, avec des exercices à faire tout de suite. J'aurais aimé un module de plus sur la livraison." },

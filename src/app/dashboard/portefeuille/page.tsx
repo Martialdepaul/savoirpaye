@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import BottomNav from "@/components/dashboard/BottomNav";
@@ -10,6 +10,10 @@ import WithdrawalDrawer from "@/components/wallet/WithdrawalDrawer";
 
 export default function PortefeuillePage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  // Ouvre directement le retrait depuis le bouton « Retirer » de l'accueil
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has("retrait")) setDrawerOpen(true);
+  }, []);
   return (
     <div className="min-h-screen">
       <Sidebar active="Portefeuille" />

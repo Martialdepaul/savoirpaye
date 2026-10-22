@@ -1,9 +1,31 @@
 import Logo from "../ui/Logo";
 
 const cols = [
-  { title: "Produit", links: ["Fonctionnalités", "Créateur IA", "Tarifs", "Moyens de paiement"] },
-  { title: "Ressources", links: ["Centre d'aide", "Blog des créateurs", "Contact"] },
-  { title: "Légal", links: ["Conditions d'utilisation", "Politique de confidentialité", "Mentions légales"] },
+  {
+    title: "Produit",
+    links: [
+      { label: "Fonctionnalités", href: "/#fonctionnalites" },
+      { label: "Créateur IA", href: "/#createur-ia" },
+      { label: "Tarifs", href: "/#tarifs" },
+      { label: "Moyens de paiement", href: "/#paiements" },
+    ],
+  },
+  {
+    title: "Ressources",
+    links: [
+      { label: "Questions fréquentes", href: "/#faq" },
+      { label: "Exemple de boutique", href: "/boutique/aminata-diallo" },
+      { label: "Contact", href: "mailto:contact@savoirpay.com" },
+    ],
+  },
+  {
+    title: "Légal",
+    links: [
+      { label: "Conditions d'utilisation", href: "/cgu" },
+      { label: "Politique de confidentialité", href: "/confidentialite" },
+      { label: "Mentions légales", href: "/mentions-legales" },
+    ],
+  },
 ];
 
 export default function Footer() {
@@ -22,7 +44,7 @@ export default function Footer() {
               <h4 className="font-heading text-sm font-bold">{c.title}</h4>
               <ul className="mt-3 space-y-0.5">
                 {c.links.map((l) => (
-                  <li key={l}><a href="#" className="inline-block py-2 text-sm text-white/70 transition-colors hover:text-white">{l}</a></li>
+                  <li key={l.label}><a href={l.href} className="inline-block py-2 text-sm text-white/70 transition-colors hover:text-white">{l.label}</a></li>
                 ))}
               </ul>
             </div>

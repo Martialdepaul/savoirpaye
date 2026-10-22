@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { Plus, Package, GraduationCap, Sparkles } from "lucide-react";
 
 const items = [
-  { label: "Nouveau produit", icon: Package },
-  { label: "Nouvelle formation", icon: GraduationCap },
+  { label: "Nouveau produit", icon: Package, href: "/dashboard/produits/nouveau" },
+  { label: "Nouvelle formation", icon: GraduationCap, href: "/dashboard/produits/nouveau?type=formation" },
   { label: "Créer avec l'IA", icon: Sparkles, ai: true, href: "/dashboard/createur-ia" },
 ];
 
@@ -16,7 +16,7 @@ export function CreateMenuList({ onPick }: { onPick: () => void }) {
         <li key={i.label} role="none">
           <button
             role="menuitem"
-            onClick={() => { onPick(); if (i.href) window.location.href = i.href; }}
+            onClick={() => { onPick(); window.location.href = i.href; }}
             className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium hover:bg-page ${i.ai ? "text-ai" : "text-ink"}`}
           >
             <i.icon size={18} /> {i.label}

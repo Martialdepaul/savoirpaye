@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import { Smartphone } from "lucide-react";
 import { fcfa } from "../../lib/dashboard-data";
-import { COURSE_PRICE } from "../../lib/sales-data";
 import { countries, type Buyer } from "./CheckoutForm";
 
 const TOTAL = 120;
 
-export default function Waiting({ buyer, onSuccess, onFailure, onCancel }: { buyer: Buyer; onSuccess: () => void; onFailure: (r: "expired" | "declined") => void; onCancel: () => void }) {
+export default function Waiting({ buyer, price, onSuccess, onFailure, onCancel }: { buyer: Buyer; price: number; onSuccess: () => void; onFailure: (r: "expired" | "declined") => void; onCancel: () => void }) {
   const [left, setLeft] = useState(TOTAL);
 
   useEffect(() => {
@@ -38,7 +37,7 @@ export default function Waiting({ buyer, onSuccess, onFailure, onCancel }: { buy
 
       <h1 className="mt-6 font-heading text-2xl font-extrabold">Confirmez le paiement sur votre téléphone</h1>
       <p className="mt-3 leading-relaxed text-ink-2">
-        Une demande de <span className="num font-semibold text-gold-ink">{fcfa(COURSE_PRICE)}</span> a été envoyée via {buyer.method} au <span className="num font-semibold text-ink">{dial} {buyer.phone}</span>.
+        Une demande de <span className="num font-semibold text-gold-ink">{fcfa(price)}</span> a été envoyée via {buyer.method} au <span className="num font-semibold text-ink">{dial} {buyer.phone}</span>.
         Saisissez votre code secret pour valider.
       </p>
       <p className="mt-2 text-sm text-ink-2">Ne fermez pas cette page.</p>

@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { ChevronDown, Lock, PlayCircle, HelpCircle, X } from "lucide-react";
-import { curriculum } from "../../lib/sales-data";
+import type { CatalogModule } from "../../lib/catalog";
 
-export default function Curriculum() {
+export default function Curriculum({ modules: curriculum, duration }: { modules: CatalogModule[]; duration?: string }) {
   const [open, setOpen] = useState<number | null>(0);
   const [video, setVideo] = useState<string | null>(null);
   const lessonsTotal = curriculum.reduce((n, m) => n + m.lessons.length, 0);
@@ -12,7 +12,7 @@ export default function Curriculum() {
   return (
     <section id="programme">
       <h2 className="font-heading text-2xl font-extrabold">Programme de la formation</h2>
-      <p className="num mt-1 text-sm text-ink-2">{curriculum.length} modules · {lessonsTotal} leçons · 4 h 20 de contenu</p>
+      <p className="num mt-1 text-sm text-ink-2">{curriculum.length} modules · {lessonsTotal} leçons{duration ? ` · ${duration} de contenu` : ""}</p>
       <div className="mt-5 divide-y divide-line overflow-hidden rounded-card border border-line bg-white shadow-soft">
         {curriculum.map((m, i) => {
           const isOpen = open === i;
@@ -27,7 +27,7 @@ export default function Curriculum() {
                   <span className="num flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-light text-sm font-bold text-primary">{i + 1}</span>
                   <span className="min-w-0 flex-1">
                     <span className="block font-heading text-[15px] font-bold">{m.title}</span>
-                    <span className="num text-xs font-normal text-ink-2">{m.lessons.length} leçons + 1 quiz</span>
+                    <span className="num text-xs font-normal text-ink-2">{m.lessons.length} leçons{m.quiz ? " + 1 quiz" : ""}</span>
                   </span>
                   <ChevronDown size={18} className={`shrink-0 text-ink-2 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                 </button>
@@ -47,9 +47,11 @@ export default function Curriculum() {
                       )}
                     </li>
                   ))}
-                  <li className="flex items-center gap-3 px-4 py-3 pl-6 text-sm text-ink-2 sm:px-5 sm:pl-[3.75rem]">
-                    <HelpCircle size={17} className="shrink-0" /> {m.quiz}
-                  </li>
+                  {m.quiz && (
+                    <li className="flex items-center gap-3 px-4 py-3 pl-6 text-sm text-ink-2 sm:px-5 sm:pl-[3.75rem]">
+                      <HelpCircle size={17} className="shrink-0" /> {m.quiz}
+                    </li>
+                  )}
                 </ul>
               )}
             </div>
@@ -65,7 +67,7 @@ export default function Curriculum() {
                 <div className="text-xs font-semibold text-primary">Aperçu gratuit</div>
                 <div className="truncate font-heading font-bold">{video}</div>
               </div>
-              <button onClick={() => setVideo(null)} aria-label="Fermer" className="flex size-9 items-center justify-center rounded-lg hover:bg-page"><X size={18} /></button>
+              <button onClick={() => setVideo(null)} aria-label="Fermer" className="flex size-11 items-center justify-center rounded-lg hover:bg-page"><X size={18} /></button>
             </div>
             <div className="flex aspect-video items-center justify-center bg-ink">
               <PlayCircle size={64} className="text-white/90" />

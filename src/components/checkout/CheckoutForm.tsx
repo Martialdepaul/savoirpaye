@@ -4,7 +4,6 @@ import { useState } from "react";
 import { CreditCard, Check } from "lucide-react";
 import { fcfa } from "../../lib/dashboard-data";
 import { paymentMethods } from "../../lib/mock-data";
-import { COURSE_PRICE } from "../../lib/sales-data";
 
 export type Buyer = { name: string; email: string; phone: string; country: string; method: string };
 
@@ -21,7 +20,7 @@ export const countries = [
 
 const input = "mt-2 w-full rounded-btn border bg-white px-3.5 py-3 text-base outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
 
-export default function CheckoutForm({ value, onChange, onSubmit }: { value: Buyer; onChange: (b: Buyer) => void; onSubmit: () => void }) {
+export default function CheckoutForm({ value, price, onChange, onSubmit }: { value: Buyer; price: number; onChange: (b: Buyer) => void; onSubmit: () => void }) {
   const [errors, setErrors] = useState<Partial<Record<keyof Buyer, string>>>({});
   const set = (k: keyof Buyer, v: string) => { onChange({ ...value, [k]: v }); if (errors[k]) setErrors({ ...errors, [k]: undefined }); };
   const dial = countries.find((c) => c.name === value.country)?.dial;
@@ -114,7 +113,7 @@ export default function CheckoutForm({ value, onChange, onSubmit }: { value: Buy
       </section>
 
       <button type="submit" className="num w-full rounded-btn bg-primary px-6 py-4 text-base font-semibold text-white transition-colors hover:bg-primary-hover">
-        Payer {fcfa(COURSE_PRICE)}
+        Payer {fcfa(price)}
       </button>
     </form>
   );

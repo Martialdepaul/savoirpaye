@@ -171,7 +171,7 @@ export default function ClientsPage() {
                       <td className="whitespace-nowrap px-6 py-4 text-ink-2">{c.lastPurchase}</td>
                       <td className="whitespace-nowrap px-6 py-4 text-ink-2">{c.joinedAt}</td>
                       <td className="px-6 py-4">
-                        <button className="min-h-10 rounded-btn border border-line bg-white px-3.5 text-xs font-medium text-ink-2 hover:text-ink">
+                        <button onClick={(e) => { e.stopPropagation(); setSelected(c); }} className="min-h-10 rounded-btn border border-line bg-white px-3.5 text-xs font-medium text-ink-2 hover:text-ink">
                           Voir
                         </button>
                       </td>
@@ -251,13 +251,15 @@ export default function ClientsPage() {
               </div>
             </div>
             <div className="border-t border-line p-6">
-              <button
-                onClick={() => {}}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-btn bg-primary px-5 py-2.5 font-bold text-white hover:bg-primary-hover"
+              <a
+                href={`https://wa.me/${selected.phone.replace(/\D/g, "")}`}
+                target="_blank"
+                rel="noopener"
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-btn bg-primary px-5 font-bold text-white hover:bg-primary-hover"
               >
                 <MessageSquare size={16} />
-                Envoyer un message
-              </button>
+                Écrire sur WhatsApp
+              </a>
             </div>
           </div>
         </div>

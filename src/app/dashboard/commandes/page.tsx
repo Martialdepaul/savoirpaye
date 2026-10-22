@@ -8,6 +8,7 @@ import BottomNav from "@/components/dashboard/BottomNav";
 import { fcfa, type OrderStatus } from "@/lib/dashboard-data";
 import { StatusBadge } from "@/components/dashboard/LatestOrders";
 import Pagination, { usePagination } from "@/components/ui/Pagination";
+import { useToast } from "@/components/ui/Toast";
 
 const allOrders = [
   { id: "#SP-4821", client: "Moussa Ndiaye", email: "moussa@email.com", product: "Maîtriser Excel en 7 jours", amount: 25000, method: "Wave", status: "Payé" as OrderStatus, when: "14 oct. 2026, 09:12" },
@@ -54,6 +55,7 @@ export default function CommandesPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("Toutes");
   const [selected, setSelected] = useState<(typeof allOrders)[0] | null>(null);
+  const [toast, showToast] = useToast();
 
   const filtered = allOrders.filter((o) => {
     const matchSearch =
@@ -194,6 +196,7 @@ export default function CommandesPage() {
         </main>
       </div>
       <BottomNav active="Commandes" />
+      {toast}
 
       {/* Drawer */}
       {selected && (
@@ -241,8 +244,8 @@ export default function CommandesPage() {
             </div>
             <div className="border-t border-line p-6">
               <button
-                onClick={() => {}}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-btn bg-primary px-5 py-2.5 font-bold text-white hover:bg-primary-hover"
+                onClick={() => showToast(`Reçu envoyé à ${selected.email}`)}
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-btn bg-primary px-5 font-bold text-white hover:bg-primary-hover"
               >
                 <Mail size={16} />
                 Envoyer un reçu

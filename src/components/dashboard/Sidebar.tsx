@@ -5,7 +5,7 @@ import { seller } from "../../lib/dashboard-data";
 export default function Sidebar({ active: current = "Accueil" }: { active?: string }) {
   return (
     <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-line bg-white lg:flex">
-      <div className="flex h-16 items-center px-6"><Logo /></div>
+      <div className="flex h-16 items-center px-6"><Logo href="/dashboard" /></div>
       <nav className="flex-1 space-y-1 px-3 py-2" aria-label="Navigation du tableau de bord">
         {navItems.map((n) => {
           const active = n.label === current;

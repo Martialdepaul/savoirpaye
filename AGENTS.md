@@ -12,13 +12,21 @@ Plateforme de vente de formations et produits numériques pour l'Afrique francop
 
 - `src/app/` : routes (App Router)
   - `page.tsx` : landing page
-  - `formations/vendre-sur-whatsapp-business/` : page de vente
-  - `checkout/` : paiement Mobile Money
-  - `dashboard/` : espace vendeur (accueil, produits, commandes, clients, créateur IA, statistiques, portefeuille, paramètres) et espace apprenant (`mes-formations/`, `mes-formations/[slug]/`)
-- `src/components/` : composants par domaine (`landing`, `sales`, `checkout`, `dashboard`, `creator`, `student`, `wallet`, `ui`)
+  - `inscription/`, `connexion/`, `mot-de-passe-oublie/`, `reinitialiser-mot-de-passe/` : comptes
+  - `formations/[slug]/` et `produits/[slug]/` : pages de vente générées depuis le catalogue
+  - `boutique/[vendeur]/` : boutique publique du vendeur
+  - `checkout/` : paiement Mobile Money (`/checkout?produit=<slug>`)
+  - `cgu/`, `confidentialite/`, `mentions-legales/` : pages légales (les `[crochets]` sont à compléter)
+  - `dashboard/` : espace vendeur (accueil, produits, `produits/nouveau`, `produits/[id]/modifier`, commandes, clients, créateur IA, statistiques, portefeuille, paramètres) et espace apprenant (`mes-formations/`)
+- `src/lib/catalog.ts` : catalogue central des produits (source unique pour tableau de bord, éditeur, pages de vente, boutique et paiement) + `productUrl`, `checkoutUrl`, `slugify`
+- `src/lib/*-data.ts` : autres données de démonstration (pas encore de back-end)
+- `src/components/` : composants par domaine (`landing`, `sales`, `checkout`, `dashboard`, `editor`, `auth`, `legal`, `creator`, `student`, `wallet`, `ui`)
+- `src/components/editor/` : éditeur de produit (`ProductEditor`, `ModulesEditor`, validation dans `types.ts`)
 - `src/components/dashboard/nav.ts` : source unique de la navigation du tableau de bord (Sidebar desktop, MobileMenu)
 - `src/components/ui/Pagination.tsx` : `usePagination` + `<Pagination>`, à utiliser pour toute liste longue
-- `src/lib/*-data.ts` : données de démonstration (pas encore de back-end)
+- `src/components/ui/Toast.tsx` : `useToast()` pour les confirmations
+
+Les appels serveur sont simulés (`setTimeout`) et marqués `// Simulation … à remplacer par l'API`.
 
 ## Conventions UI
 

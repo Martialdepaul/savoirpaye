@@ -32,7 +32,7 @@ export default function Pricing() {
                 ))}
               </ul>
               <a
-                href="#"
+                href={`/inscription?offre=${p.name.toLowerCase()}`}
                 className={`mt-8 rounded-btn px-5 py-3 text-center font-semibold transition-colors ${
                   p.featured ? "bg-primary text-white hover:bg-primary-hover" : "border border-line bg-white text-ink hover:bg-primary-light"
                 }`}

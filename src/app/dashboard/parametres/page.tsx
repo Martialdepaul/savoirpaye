@@ -1,10 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, Trash2, Edit2 } from "lucide-react";
+import { Copy, Trash2, Edit2, Check, X } from "lucide-react";
+import { useToast } from "@/components/ui/Toast";
+import { passwordOk, PasswordStrength as Rules } from "@/components/auth/fields";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import BottomNav from "@/components/dashboard/BottomNav";
+
+type Notify = (msg: string) => void;
 
 const tabs = [
   { id: "profil", label: "Profil" },
@@ -44,7 +48,8 @@ function TextareaField({ label, id, ...props }: React.TextareaHTMLAttributes<HTM
   );
 }
 
-function TabProfil() {
+function TabProfil({ notify }: { notify: Notify }) {
+  const [photo, setPhoto] = useState("");
   const [prenom, setPrenom] = useState("Aminata");
   const [nom, setNom] = useState("Diallo");
   const [email, setEmail] = useState("aminata@savoirpaye.com");
@@ -55,14 +60,19 @@ function TabProfil() {
     <div className="space-y-6">
       {/* Avatar */}
       <div className="flex items-center gap-5">
-        <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-primary font-heading text-2xl font-bold text-white">
-          AD
-        </span>
+        {photo ? (
+          <img src={photo} alt="Photo de profil" className="size-20 shrink-0 rounded-full object-cover" />
+        ) : (
+          <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-primary font-heading text-2xl font-bold text-white">
+            AD
+          </span>
+        )}
         <div>
           <p className="font-semibold text-ink">Photo de profil</p>
-          <button className="mt-1 rounded-btn border border-line bg-white px-4 py-2 text-sm font-medium text-ink-2 hover:text-ink">
+          <label className="mt-1 inline-flex min-h-11 cursor-pointer items-center rounded-btn border border-line bg-white px-4 text-sm font-medium text-ink-2 hover:text-ink">
             Modifier la photo
-          </button>
+            <input type="file" accept="image/*" className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; if (f) { setPhoto(URL.createObjectURL(f)); notify("Photo mise à jour"); } }} />
+          </label>
         </div>
       </div>
 
@@ -75,7 +85,7 @@ function TabProfil() {
       <TextareaField label="Bio / À propos" id="bio" value={bio} onChange={(e) => setBio(e.target.value)} />
 
       <div>
-        <button className="rounded-btn bg-primary px-5 py-2.5 font-bold text-white hover:bg-primary-hover">
+        <button onClick={() => notify("Profil enregistré")} className="min-h-11 rounded-btn bg-primary px-5 font-bold text-white hover:bg-primary-hover">
           Enregistrer les modifications
         </button>
       </div>
@@ -83,11 +93,11 @@ function TabProfil() {
   );
 }
 
-function TabBoutique() {
+function TabBoutique({ notify }: { notify: Notify }) {
   const [nomBoutique, setNomBoutique] = useState("SavoirPay Academy");
   const [desc, setDesc] = useState("Formez-vous aux compétences numériques essentielles pour réussir en Afrique.");
   const [categorie, setCategorie] = useState("Bureautique");
-  const url = "savoirpaye.com/boutique/aminata-diallo";
+  const url = "savoirpay.com/boutique/aminata-diallo";
 
   return (
     <div className="space-y-5">
@@ -106,9 +116,10 @@ function TabBoutique() {
             className="flex-1 rounded-btn border border-line bg-page px-4 py-3 text-sm text-ink-2"
           />
           <button
-            onClick={() => navigator.clipboard.writeText(`https://${url}`)}
-            className="rounded-btn border border-line bg-white px-3 py-3 text-ink-2 hover:text-ink"
+            onClick={() => navigator.clipboard.writeText(`https://${url}`).then(() => notify("Adresse copiée"), () => {})}
+            className="flex size-11 shrink-0 items-center justify-center rounded-btn border border-line bg-white text-ink-2 hover:text-ink"
             title="Copier l'URL"
+            aria-label="Copier l'adresse de la boutique"
           >
             <Copy size={16} />
           </button>
@@ -132,29 +143,81 @@ function TabBoutique() {
       </div>
 
       <div>
-        <button className="rounded-btn bg-primary px-5 py-2.5 font-bold text-white hover:bg-primary-hover">
-          Enregistrer
-        </button>
+        <div className="flex flex-wrap gap-3">
+          <button onClick={() => notify("Boutique enregistrée")} className="min-h-11 rounded-btn bg-primary px-5 font-bold text-white hover:bg-primary-hover">
+            Enregistrer
+          </button>
+          <a href="/boutique/aminata-diallo" target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-btn border border-line bg-white px-5 font-semibold text-ink hover:bg-page">
+            Voir ma boutique
+          </a>
+        </div>
       </div>
     </div>
   );
 }
 
-function TabPaiements() {
-  const [autoWithdraw, setAutoWithdraw] = useState(false);
+const operators = ["Wave", "Orange Money", "Free Money", "MTN MoMo", "Moov Money"];
 
-  const accounts = [
-    { method: "Wave", number: "+221 77 000 00 00", active: true },
-    { method: "Orange Money", number: "+221 76 000 00 00", active: true },
-  ];
+function TabPaiements({ notify }: { notify: Notify }) {
+  const [autoWithdraw, setAutoWithdraw] = useState(false);
+  const [accounts, setAccounts] = useState([
+    { id: 1, method: "Wave", number: "+221 77 000 00 00", active: true },
+    { id: 2, method: "Orange Money", number: "+221 76 000 00 00", active: true },
+  ]);
+  // Formulaire d'ajout ou de modification : null = fermé, 0 = nouveau compte
+  const [editing, setEditing] = useState<number | null>(null);
+  const [form, setForm] = useState({ method: "Wave", number: "" });
+  const [formError, setFormError] = useState("");
+
+  const openForm = (id: number) => {
+    const a = accounts.find((x) => x.id === id);
+    setForm(a ? { method: a.method, number: a.number } : { method: "Wave", number: "" });
+    setFormError("");
+    setEditing(id);
+  };
+  const saveForm = () => {
+    if (form.number.replace(/\D/g, "").length < 8) return setFormError("Saisissez un numéro valide.");
+    setAccounts(editing ? accounts.map((a) => (a.id === editing ? { ...a, ...form } : a)) : [...accounts, { id: Date.now(), ...form, active: true }]);
+    notify(editing ? "Compte modifié" : "Compte ajouté");
+    setEditing(null);
+  };
+  const remove = (id: number) => {
+    if (!window.confirm("Supprimer ce compte de retrait ?")) return;
+    setAccounts(accounts.filter((a) => a.id !== id));
+    notify("Compte supprimé");
+  };
+
+  const accountForm = (
+    <div className="rounded-card border border-primary/40 bg-primary-light/40 p-4">
+      <div className="grid gap-3 sm:grid-cols-[180px_1fr]">
+        <div>
+          <label htmlFor="acc-method" className="mb-1.5 block text-sm font-semibold text-ink">Opérateur</label>
+          <select id="acc-method" value={form.method} onChange={(e) => setForm({ ...form, method: e.target.value })}
+            className="w-full rounded-btn border border-line bg-white px-3 py-3 text-base focus:border-primary focus:outline-none sm:text-sm">
+            {operators.map((o) => <option key={o}>{o}</option>)}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="acc-number" className="mb-1.5 block text-sm font-semibold text-ink">Numéro</label>
+          <input id="acc-number" type="tel" inputMode="tel" value={form.number} onChange={(e) => { setForm({ ...form, number: e.target.value }); setFormError(""); }} placeholder="+221 77 123 45 67"
+            aria-invalid={!!formError} className={`w-full rounded-btn border bg-white px-3 py-3 text-base focus:border-primary focus:outline-none sm:text-sm ${formError ? "border-danger" : "border-line"}`} />
+          {formError && <p role="alert" className="mt-1.5 text-sm text-danger">{formError}</p>}
+        </div>
+      </div>
+      <div className="mt-3 flex gap-2">
+        <button onClick={saveForm} className="inline-flex min-h-11 items-center gap-1.5 rounded-btn bg-primary px-4 text-sm font-bold text-white hover:bg-primary-hover"><Check size={16} /> Enregistrer</button>
+        <button onClick={() => setEditing(null)} className="inline-flex min-h-11 items-center gap-1.5 rounded-btn border border-line bg-white px-4 text-sm font-medium text-ink-2 hover:text-ink"><X size={16} /> Annuler</button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
       <div>
         <h3 className="font-heading mb-3 font-bold text-ink">Comptes de paiement</h3>
         <ul className="space-y-3">
-          {accounts.map((a) => (
-            <li key={a.method} className="rounded-card flex items-center justify-between gap-3 border border-line bg-white p-4">
+          {accounts.map((a) => editing === a.id ? <li key={a.id}>{accountForm}</li> : (
+            <li key={a.id} className="rounded-card flex items-center justify-between gap-3 border border-line bg-white p-4">
               <div className="flex items-center gap-3">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-light text-xs font-bold text-primary">
                   {a.method.charAt(0)}
@@ -168,19 +231,23 @@ function TabPaiements() {
                 {a.active && (
                   <span className="rounded-full bg-[#ECF8EF] px-2.5 py-1 text-xs font-bold text-success">Actif</span>
                 )}
-                <button onClick={() => {}} className="rounded p-1.5 text-ink-2 hover:bg-page hover:text-ink" title="Modifier">
+                <button onClick={() => openForm(a.id)} className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Modifier" aria-label={`Modifier le compte ${a.method}`}>
                   <Edit2 size={15} />
                 </button>
-                <button onClick={() => {}} className="rounded p-1.5 text-danger hover:bg-[#FCEDED]" title="Supprimer">
+                <button onClick={() => remove(a.id)} className="flex size-10 items-center justify-center rounded-lg text-danger hover:bg-[#FCEDED]" title="Supprimer" aria-label={`Supprimer le compte ${a.method}`}>
                   <Trash2 size={15} />
                 </button>
               </div>
             </li>
           ))}
         </ul>
-        <button className="mt-3 rounded-btn border border-line bg-white px-4 py-2 text-sm font-medium text-ink-2 hover:text-ink">
-          + Ajouter un compte
-        </button>
+        {editing === 0 ? (
+          <div className="mt-3">{accountForm}</div>
+        ) : (
+          <button onClick={() => openForm(0)} className="mt-3 min-h-11 rounded-btn border border-line bg-white px-4 text-sm font-medium text-ink-2 hover:text-ink">
+            + Ajouter un compte
+          </button>
+        )}
       </div>
 
       <div className="rounded-card border border-line bg-white p-4">
@@ -190,7 +257,8 @@ function TabPaiements() {
             <p className="text-sm text-ink-2">Déclenche un retrait dès que votre solde atteint ce seuil.</p>
           </div>
           <button
-            onClick={() => setAutoWithdraw(!autoWithdraw)}
+            onClick={() => { setAutoWithdraw(!autoWithdraw); notify(autoWithdraw ? "Retrait automatique désactivé" : "Retrait automatique activé"); }}
+            aria-label="Retrait automatique"
             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${
               autoWithdraw ? "bg-primary" : "bg-line"
             }`}
@@ -209,30 +277,29 @@ function TabPaiements() {
   );
 }
 
-function PasswordStrength({ password }: { password: string }) {
-  const strength = Math.min(4, Math.floor(password.length / 3));
-  const colors = ["bg-danger", "bg-pending", "bg-pending", "bg-success"];
-  return (
-    <div className="mt-2 flex gap-1">
-      {[0, 1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className={`h-1 flex-1 rounded-full transition-colors ${i < strength ? colors[strength - 1] : "bg-line"}`}
-        />
-      ))}
-    </div>
-  );
-}
-
-function TabSecurite() {
+function TabSecurite({ notify }: { notify: Notify }) {
   const [current, setCurrent] = useState("");
   const [newPwd, setNewPwd] = useState("");
   const [confirm, setConfirm] = useState("");
-
-  const sessions = [
+  const [pwdError, setPwdError] = useState("");
+  const [sessions, setSessions] = useState([
     { device: "iPhone 14", location: "Dakar, Sénégal", status: "Actif maintenant", active: true },
     { device: "Chrome, Windows", location: "Dakar, Sénégal", status: "Il y a 2 h", active: false },
-  ];
+  ]);
+
+  const changePassword = () => {
+    if (!current) return setPwdError("Saisissez votre mot de passe actuel.");
+    if (!passwordOk(newPwd)) return setPwdError("Le nouveau mot de passe ne respecte pas encore toutes les règles.");
+    if (newPwd !== confirm) return setPwdError("Les deux mots de passe ne sont pas identiques.");
+    setPwdError("");
+    setCurrent(""); setNewPwd(""); setConfirm("");
+    notify("Mot de passe mis à jour");
+  };
+
+  const deleteAccount = () => {
+    const answer = window.prompt("Cette action est définitive. Tapez SUPPRIMER pour confirmer la suppression de votre compte.");
+    if (answer?.trim().toUpperCase() === "SUPPRIMER") window.location.href = "/";
+  };
 
   return (
     <div className="space-y-8">
@@ -259,7 +326,7 @@ function TabSecurite() {
               onChange={(e) => setNewPwd(e.target.value)}
               className="w-full rounded-btn border border-line bg-white px-4 py-3 text-sm focus:border-primary focus:outline-none"
             />
-            <PasswordStrength password={newPwd} />
+            <Rules value={newPwd} />
           </div>
           <div>
             <label htmlFor="pwd-confirm" className="mb-1.5 block text-sm font-semibold text-ink">Confirmer le mot de passe</label>
@@ -271,7 +338,8 @@ function TabSecurite() {
               className="w-full rounded-btn border border-line bg-white px-4 py-3 text-sm focus:border-primary focus:outline-none"
             />
           </div>
-          <button className="rounded-btn bg-primary px-5 py-2.5 font-bold text-white hover:bg-primary-hover">
+          {pwdError && <p role="alert" className="text-sm text-danger">{pwdError}</p>}
+          <button onClick={changePassword} className="min-h-11 rounded-btn bg-primary px-5 font-bold text-white hover:bg-primary-hover">
             Mettre à jour
           </button>
         </div>
@@ -290,7 +358,7 @@ function TabSecurite() {
               {s.active ? (
                 <span className="rounded-full bg-[#ECF8EF] px-2.5 py-1 text-xs font-bold text-success">Actuel</span>
               ) : (
-                <button onClick={() => {}} className="rounded-btn border border-line bg-white px-3 py-1.5 text-xs font-medium text-ink-2 hover:text-ink">
+                <button onClick={() => { setSessions(sessions.filter((_, j) => j !== i)); notify("Session déconnectée"); }} className="min-h-10 shrink-0 rounded-btn border border-line bg-white px-3 text-xs font-medium text-ink-2 hover:text-ink">
                   Déconnecter
                 </button>
               )}
@@ -304,8 +372,8 @@ function TabSecurite() {
         <h3 className="font-heading mb-1 font-bold text-danger">Zone de danger</h3>
         <p className="mb-4 text-sm text-ink-2">Cette action est irréversible. Toutes vos données seront supprimées.</p>
         <button
-          onClick={() => {}}
-          className="rounded-btn border border-danger px-5 py-2.5 text-sm font-bold text-danger hover:bg-[#FCEDED]"
+          onClick={deleteAccount}
+          className="min-h-11 rounded-btn border border-danger px-5 text-sm font-bold text-danger hover:bg-[#FCEDED]"
         >
           Supprimer mon compte
         </button>
@@ -316,6 +384,7 @@ function TabSecurite() {
 
 export default function ParametresPage() {
   const [tab, setTab] = useState("profil");
+  const [toast, notify] = useToast();
 
   return (
     <div className="min-h-screen">
@@ -336,7 +405,9 @@ export default function ParametresPage() {
                 <button
                   key={t.id}
                   onClick={() => setTab(t.id)}
-                  className={`whitespace-nowrap border-b-2 px-4 pb-3 pt-3 text-sm font-semibold transition-colors ${
+                  role="tab"
+                  aria-selected={tab === t.id}
+                  className={`min-h-12 whitespace-nowrap border-b-2 px-4 text-sm font-semibold transition-colors ${
                     tab === t.id
                       ? "border-primary text-primary"
                       : "border-transparent text-ink-2 hover:text-ink"
@@ -347,15 +418,16 @@ export default function ParametresPage() {
               ))}
             </div>
             <div className="p-4 sm:p-6">
-              {tab === "profil" && <TabProfil />}
-              {tab === "boutique" && <TabBoutique />}
-              {tab === "paiements" && <TabPaiements />}
-              {tab === "securite" && <TabSecurite />}
+              {tab === "profil" && <TabProfil notify={notify} />}
+              {tab === "boutique" && <TabBoutique notify={notify} />}
+              {tab === "paiements" && <TabPaiements notify={notify} />}
+              {tab === "securite" && <TabSecurite notify={notify} />}
             </div>
           </div>
         </main>
       </div>
       <BottomNav active="Paramètres" />
+      {toast}
     </div>
   );
 }

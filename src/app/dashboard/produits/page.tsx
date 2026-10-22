@@ -1,36 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search, Edit2, Eye, MoreVertical } from "lucide-react";
+import { Plus, Search, Edit2, Eye, Link2 } from "lucide-react";
 import Pagination, { usePagination } from "@/components/ui/Pagination";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import BottomNav from "@/components/dashboard/BottomNav";
 import { fcfa } from "@/lib/dashboard-data";
-
-type ProductStatus = "En ligne" | "Brouillon" | "Archivé";
-type ProductType = "Formation" | "Produit numérique" | "Coaching";
-
-interface Product {
-  id: string;
-  name: string;
-  type: ProductType;
-  price: number;
-  sales: number;
-  revenue: number;
-  status: ProductStatus;
-  createdAt: string;
-}
-
-const products: Product[] = [
-  { id: "P001", name: "Maîtriser Excel en 7 jours", type: "Formation", price: 25000, sales: 34, revenue: 850000, status: "En ligne", createdAt: "3 mars 2026" },
-  { id: "P002", name: "Lancer son e-commerce en Afrique", type: "Formation", price: 35000, sales: 22, revenue: 770000, status: "En ligne", createdAt: "12 jan. 2026" },
-  { id: "P003", name: "Pack de 50 modèles de factures", type: "Produit numérique", price: 5000, sales: 61, revenue: 305000, status: "En ligne", createdAt: "5 fév. 2026" },
-  { id: "P004", name: "Comptabilité simple pour freelances", type: "Formation", price: 15000, sales: 15, revenue: 225000, status: "En ligne", createdAt: "20 jan. 2026" },
-  { id: "P005", name: "Vendre sur WhatsApp Business", type: "Formation", price: 20000, sales: 8, revenue: 160000, status: "En ligne", createdAt: "1 avr. 2026" },
-  { id: "P006", name: "Modèles de contrats freelance", type: "Produit numérique", price: 8000, sales: 0, revenue: 0, status: "Brouillon", createdAt: "10 oct. 2026" },
-  { id: "P007", name: "Coaching 1h — Stratégie digitale", type: "Coaching", price: 50000, sales: 3, revenue: 150000, status: "Archivé", createdAt: "15 juil. 2026" },
-];
+import { catalog as products, productUrl, type ProductStatus, type ProductType } from "@/lib/catalog";
+import { useToast } from "@/components/ui/Toast";
 
 function statusBadge(status: ProductStatus) {
   if (status === "En ligne")
@@ -48,8 +26,21 @@ function typeBadge(type: ProductType) {
   return <span className="rounded-md bg-gold-light px-2 py-0.5 text-[11px] font-bold text-gold-ink">{type}</span>;
 }
 
+const editUrl = (id: string) => `/dashboard/produits/${id}/modifier`;
+
 export default function ProduitsPage() {
   const [search, setSearch] = useState("");
+  const [toast, showToast] = useToast();
+
+  const copyLink = async (p: (typeof products)[number]) => {
+    const url = `${window.location.origin}${productUrl(p)}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      showToast("Lien de la page de vente copié");
+    } catch {
+      window.prompt("Copiez le lien de votre page de vente :", url);
+    }
+  };
 
   const filtered = products.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
@@ -72,10 +63,10 @@ export default function ProduitsPage() {
               <h1 className="font-heading text-2xl font-extrabold sm:text-3xl">Produits</h1>
               <p className="mt-1 text-sm text-ink-2">Gérez vos produits et formations.</p>
             </div>
-            <button className="inline-flex items-center gap-2 rounded-btn bg-primary px-5 py-2.5 font-bold text-white hover:bg-primary-hover">
+            <a href="/dashboard/produits/nouveau" className="inline-flex items-center justify-center gap-2 rounded-btn bg-primary px-5 py-3 font-bold text-white hover:bg-primary-hover">
               <Plus size={18} />
               Nouveau produit
-            </button>
+            </a>
           </div>
 
           {/* Search */}
@@ -113,7 +104,8 @@ export default function ProduitsPage() {
           {/* Mobile cards */}
           <ul className="space-y-3 sm:hidden">
             {pager.pageItems.map((p) => (
-              <li key={p.id} className="rounded-card border border-line bg-white p-4 shadow-soft">
+              <li key={p.id} className="rounded-card border border-line bg-white shadow-soft">
+                <a href={editUrl(p.id)} className="block p-4 pb-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <p className="truncate font-semibold text-ink">{p.name}</p>
@@ -124,6 +116,12 @@ export default function ProduitsPage() {
                 <div className="mt-3 flex items-center justify-between text-sm">
                   <span className="num font-bold text-gold-ink">{fcfa(p.price)}</span>
                   <span className="text-ink-2">{p.sales} ventes</span>
+                </div>
+                </a>
+                <div className="grid grid-cols-3 divide-x divide-line border-t border-line text-xs font-semibold text-ink-2">
+                  <a href={editUrl(p.id)} className="flex min-h-11 items-center justify-center gap-1.5 hover:text-ink"><Edit2 size={14} /> Modifier</a>
+                  <a href={productUrl(p)} target="_blank" rel="noopener" className="flex min-h-11 items-center justify-center gap-1.5 hover:text-ink"><Eye size={14} /> Aperçu</a>
+                  <button onClick={() => copyLink(p)} className="flex min-h-11 items-center justify-center gap-1.5 hover:text-ink"><Link2 size={14} /> Lien</button>
                 </div>
               </li>
             ))}
@@ -146,7 +144,7 @@ export default function ProduitsPage() {
                   {pager.pageItems.map((p) => (
                     <tr key={p.id} className="hover:bg-page/60">
                       <td className="px-6 py-4">
-                        <div className="font-semibold text-ink">{p.name}</div>
+                        <a href={editUrl(p.id)} className="font-semibold text-ink hover:text-primary">{p.name}</a>
                         <div className="text-xs text-ink-2">Créé le {p.createdAt}</div>
                       </td>
                       <td className="px-6 py-4">{typeBadge(p.type)}</td>
@@ -156,14 +154,14 @@ export default function ProduitsPage() {
                       <td className="px-6 py-4">{statusBadge(p.status)}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-1">
-                          <button onClick={() => {}} className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Modifier" aria-label="Modifier">
+                          <a href={editUrl(p.id)} className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Modifier" aria-label="Modifier">
                             <Edit2 size={15} />
-                          </button>
-                          <button onClick={() => {}} className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Aperçu" aria-label="Aperçu">
+                          </a>
+                          <a href={productUrl(p)} target="_blank" rel="noopener" className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Voir la page de vente" aria-label="Voir la page de vente">
                             <Eye size={15} />
-                          </button>
-                          <button onClick={() => {}} className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Plus" aria-label="Plus">
-                            <MoreVertical size={15} />
+                          </a>
+                          <button onClick={() => copyLink(p)} className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Copier le lien" aria-label="Copier le lien">
+                            <Link2 size={15} />
                           </button>
                         </div>
                       </td>
@@ -183,6 +181,7 @@ export default function ProduitsPage() {
         </main>
       </div>
       <BottomNav active="Produits" />
+      {toast}
     </div>
   );
 }

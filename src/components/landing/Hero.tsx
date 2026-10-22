@@ -80,7 +80,7 @@ export default function Hero() {
             Créez, vendez et gérez vos cours en ligne et produits numériques. Vos élèves paient par Orange Money, Wave ou carte bancaire, et vous retirez vos gains en FCFA.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a href="#" className="inline-flex items-center justify-center gap-2 rounded-btn bg-primary px-6 py-3.5 font-semibold text-white transition-colors hover:bg-primary-hover">
+            <a href="/inscription" className="inline-flex items-center justify-center gap-2 rounded-btn bg-primary px-6 py-3.5 font-semibold text-white transition-colors hover:bg-primary-hover">
               Commencer gratuitement <ArrowRight size={18} />
             </a>
             <a href="#comment-ca-marche" className="inline-flex items-center justify-center rounded-btn border border-line bg-white px-6 py-3.5 font-semibold text-ink transition-colors hover:bg-primary-light">

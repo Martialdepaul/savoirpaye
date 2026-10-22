@@ -12,9 +12,9 @@ export default function BalanceCard() {
             <Clock size={15} /> <span className="num font-semibold">{fcfa(wallet.pending)}</span> en attente de validation
           </div>
         </div>
-        <button className="flex items-center justify-center gap-2 rounded-btn bg-gold px-6 py-3 font-bold text-ink transition-colors hover:bg-[#d4922c]">
+        <a href="/dashboard/portefeuille?retrait=1" className="flex min-h-12 items-center justify-center gap-2 rounded-btn bg-gold px-6 font-bold text-ink transition-colors hover:bg-[#d4922c]">
           Retirer <ArrowUpRight size={18} />
-        </button>
+        </a>
       </div>
     </section>
   );
