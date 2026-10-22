@@ -4,18 +4,23 @@ import { useState } from "react";
 import { Home, Package, Plus, ShoppingBag, Wallet } from "lucide-react";
 import { CreateMenuList } from "./CreateMenu";
 
-const left = [{ label: "Accueil", icon: Home }, { label: "Produits", icon: Package }];
-const right = [{ label: "Commandes", icon: ShoppingBag }, { label: "Portefeuille", icon: Wallet }];
+const left = [
+  { label: "Accueil", icon: Home, href: "/dashboard" },
+  { label: "Produits", icon: Package, href: "/dashboard/produits" },
+];
+const right = [
+  { label: "Commandes", icon: ShoppingBag, href: "/dashboard/commandes" },
+  { label: "Portefeuille", icon: Wallet, href: "/dashboard/portefeuille" },
+];
 
-function Item({ label, icon: Icon, active }: { label: string; icon: typeof Home; active?: boolean }) {
+function Item({ label, icon: Icon, href, active }: { label: string; icon: typeof Home; href: string; active?: boolean }) {
   return (
     <a
-      href="#"
-      onClick={(e) => e.preventDefault()}
+      href={href}
       aria-current={active ? "page" : undefined}
-      className={`flex flex-1 flex-col items-center gap-1 py-2 text-[11px] font-medium ${active ? "text-primary" : "text-ink-2"}`}
+      className={`flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-1 py-2 text-[10px] font-medium min-[360px]:text-[11px] ${active ? "text-primary" : "text-ink-2"}`}
     >
-      <Icon size={21} /> {label}
+      <Icon size={21} className="shrink-0" /> <span className="max-w-full truncate">{label}</span>
     </a>
   );
 }
@@ -33,7 +38,7 @@ export default function BottomNav({ active = "Accueil" }: { active?: string }) {
         </div>
       )}
       <nav aria-label="Navigation principale" className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
-        <div className="mx-auto flex max-w-md items-end px-2">
+        <div className="mx-auto flex max-w-md items-end px-1 min-[360px]:px-2">
           {left.map((n) => <Item key={n.label} {...n} active={n.label === active} />)}
           <div className="flex flex-1 justify-center">
             <button
@@ -45,7 +50,7 @@ export default function BottomNav({ active = "Accueil" }: { active?: string }) {
               <Plus size={26} className={`transition-transform ${open ? "rotate-45" : ""}`} />
             </button>
           </div>
-          {right.map((n) => <Item key={n.label} {...n} />)}
+          {right.map((n) => <Item key={n.label} {...n} active={n.label === active} />)}
         </div>
       </nav>
     </>

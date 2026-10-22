@@ -43,7 +43,7 @@ export default function DashboardPage() {
 
           <BalanceCard />
           <StatCards period={period} />
-          <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
+          <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1.5fr_1fr]">
             <RevenueChart period={period} />
             <TopProducts />
           </div>

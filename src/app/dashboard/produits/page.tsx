@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Search, Edit2, Eye, MoreVertical } from "lucide-react";
+import Pagination, { usePagination } from "@/components/ui/Pagination";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import BottomNav from "@/components/dashboard/BottomNav";
@@ -33,10 +34,10 @@ const products: Product[] = [
 
 function statusBadge(status: ProductStatus) {
   if (status === "En ligne")
-    return <span className="rounded-full bg-[#ECF8EF] px-2.5 py-1 text-xs font-bold text-success">{status}</span>;
+    return <span className="shrink-0 whitespace-nowrap rounded-full bg-[#ECF8EF] px-2.5 py-1 text-xs font-bold text-success">{status}</span>;
   if (status === "Brouillon")
-    return <span className="rounded-full bg-page px-2.5 py-1 text-xs font-bold text-ink-2">{status}</span>;
-  return <span className="rounded-full bg-line px-2.5 py-1 text-xs font-bold text-ink-2">{status}</span>;
+    return <span className="shrink-0 whitespace-nowrap rounded-full bg-page px-2.5 py-1 text-xs font-bold text-ink-2">{status}</span>;
+  return <span className="shrink-0 whitespace-nowrap rounded-full bg-line px-2.5 py-1 text-xs font-bold text-ink-2">{status}</span>;
 }
 
 function typeBadge(type: ProductType) {
@@ -53,6 +54,7 @@ export default function ProduitsPage() {
   const filtered = products.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );
+  const pager = usePagination(filtered, 10, search);
 
   const totalOnline = products.filter((p) => p.status === "En ligne").length;
   const totalSales = products.reduce((s, p) => s + p.sales, 0);
@@ -107,9 +109,10 @@ export default function ProduitsPage() {
             </div>
           </div>
 
+          <div ref={pager.anchorRef} className="scroll-mt-20 space-y-5">
           {/* Mobile cards */}
           <ul className="space-y-3 sm:hidden">
-            {filtered.map((p) => (
+            {pager.pageItems.map((p) => (
               <li key={p.id} className="rounded-card border border-line bg-white p-4 shadow-soft">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
@@ -140,26 +143,26 @@ export default function ProduitsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
-                  {filtered.map((p) => (
+                  {pager.pageItems.map((p) => (
                     <tr key={p.id} className="hover:bg-page/60">
                       <td className="px-6 py-4">
                         <div className="font-semibold text-ink">{p.name}</div>
                         <div className="text-xs text-ink-2">Créé le {p.createdAt}</div>
                       </td>
                       <td className="px-6 py-4">{typeBadge(p.type)}</td>
-                      <td className="num px-6 py-4 text-right font-semibold text-gold-ink">{fcfa(p.price)}</td>
+                      <td className="num whitespace-nowrap px-6 py-4 text-right font-semibold text-gold-ink">{fcfa(p.price)}</td>
                       <td className="num px-6 py-4 text-right text-ink-2">{p.sales}</td>
-                      <td className="num px-6 py-4 text-right font-semibold">{fcfa(p.revenue)}</td>
+                      <td className="num whitespace-nowrap px-6 py-4 text-right font-semibold">{fcfa(p.revenue)}</td>
                       <td className="px-6 py-4">{statusBadge(p.status)}</td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <button onClick={() => {}} className="rounded p-1.5 text-ink-2 hover:bg-page hover:text-ink" title="Modifier">
+                        <div className="flex items-center gap-1">
+                          <button onClick={() => {}} className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Modifier" aria-label="Modifier">
                             <Edit2 size={15} />
                           </button>
-                          <button onClick={() => {}} className="rounded p-1.5 text-ink-2 hover:bg-page hover:text-ink" title="Aperçu">
+                          <button onClick={() => {}} className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Aperçu" aria-label="Aperçu">
                             <Eye size={15} />
                           </button>
-                          <button onClick={() => {}} className="rounded p-1.5 text-ink-2 hover:bg-page hover:text-ink" title="Plus">
+                          <button onClick={() => {}} className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Plus" aria-label="Plus">
                             <MoreVertical size={15} />
                           </button>
                         </div>
@@ -170,6 +173,13 @@ export default function ProduitsPage() {
               </table>
             </div>
           </section>
+
+          {filtered.length === 0 ? (
+            <p className="rounded-card border border-dashed border-line bg-white py-12 text-center text-sm text-ink-2">Aucun produit ne correspond à votre recherche.</p>
+          ) : (
+            <Pagination {...pager} onChange={pager.setPage} label="produits" />
+          )}
+          </div>
         </main>
       </div>
       <BottomNav active="Produits" />

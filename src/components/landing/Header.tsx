@@ -18,7 +18,7 @@ export default function Header() {
         <Logo />
         <nav className="hidden items-center gap-8 md:flex" aria-label="Navigation principale">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="text-sm font-medium text-ink-2 transition-colors hover:text-ink">
+            <a key={l.href} href={l.href} className="py-3 text-sm font-medium text-ink-2 transition-colors hover:text-ink">
               {l.label}
             </a>
           ))}

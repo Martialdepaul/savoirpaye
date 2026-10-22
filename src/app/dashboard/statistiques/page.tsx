@@ -74,7 +74,7 @@ export default function StatistiquesPage() {
           <StatCards period={period} />
 
           {/* Charts */}
-          <div className="grid gap-5 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
             <RevenueChart period={period} />
 
             <section className="rounded-card border border-line bg-white p-4 shadow-soft sm:p-6">
@@ -99,7 +99,8 @@ export default function StatistiquesPage() {
                       tickLine={false}
                       axisLine={false}
                       tick={{ fill: "#57534E", fontSize: 11 }}
-                      width={140}
+                      width={112}
+                      tickFormatter={(v: string) => (v.length > 22 ? `${v.slice(0, 21)}…` : v)}
                     />
                     <Tooltip
                       formatter={(v) => [`${v} ventes`, "Ventes"]}
@@ -139,7 +140,21 @@ export default function StatistiquesPage() {
             <div className="px-4 py-4 sm:px-6 sm:pb-3">
               <h2 className="font-heading text-lg font-bold">Top produits</h2>
             </div>
-            <div className="overflow-x-auto">
+            <ul className="divide-y divide-line border-t border-line sm:hidden">
+              {topProducts.map((p, i) => (
+                <li key={i} className="flex items-start justify-between gap-3 px-4 py-3.5">
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-ink">{p.name}</div>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                      {typeBadge(p.type)}
+                      <span className="num text-xs text-ink-2">{p.sales} ventes</span>
+                    </div>
+                  </div>
+                  <div className="num shrink-0 whitespace-nowrap text-sm font-semibold text-gold-ink">{fcfa(p.revenue)}</div>
+                </li>
+              ))}
+            </ul>
+            <div className="hidden overflow-x-auto sm:block">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-y border-line bg-page text-xs uppercase tracking-wider text-ink-2">

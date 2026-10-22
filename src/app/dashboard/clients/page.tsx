@@ -6,6 +6,7 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import BottomNav from "@/components/dashboard/BottomNav";
 import { fcfa } from "@/lib/dashboard-data";
+import Pagination, { usePagination } from "@/components/ui/Pagination";
 
 interface Client {
   id: string;
@@ -31,6 +32,33 @@ const clients: Client[] = [
   { id: "C008", name: "Aissatou Bah", initials: "AB", email: "aissatou@email.com", phone: "+221 76 890 12 34", purchases: 1, totalSpent: 15000, lastPurchase: "10 oct. 2026", joinedAt: "2 août 2026", products: ["Comptabilité simple pour freelances"] },
 ];
 
+// Clients plus anciens (données de démonstration) pour remplir plusieurs pages
+const olderNames = ["Khady Mbaye", "Babacar Gueye", "Ndeye Thiam", "Lamine Cissé", "Coumba Kane", "Pape Diouf", "Astou Sy", "Modou Lo", "Bineta Camara", "Alioune Ndour", "Mame Diarra Fall", "Abdou Seck", "Yacine Touré", "Dieynaba Sall", "Moustapha Kâ", "Nafi Badji", "Ousmane Sané", "Marème Dia"];
+const olderCatalog = [
+  { name: "Maîtriser Excel en 7 jours", price: 25000 },
+  { name: "Lancer son e-commerce en Afrique", price: 35000 },
+  { name: "Pack de 50 modèles de factures", price: 5000 },
+  { name: "Comptabilité simple pour freelances", price: 15000 },
+  { name: "Vendre sur WhatsApp Business", price: 20000 },
+];
+const olderMonths = ["sept.", "août", "juil.", "juin"];
+olderNames.forEach((name, i) => {
+  const bought = olderCatalog.filter((_, j) => (i + j) % 3 === 0).slice(0, 1 + (i % 3));
+  const [first, last] = [name.split(" ")[0], name.split(" ").slice(-1)[0]];
+  clients.push({
+    id: `C${String(9 + i).padStart(3, "0")}`,
+    name,
+    initials: `${first[0]}${last[0]}`.toUpperCase(),
+    email: `${first.toLowerCase()}@email.com`,
+    phone: `+221 7${6 + (i % 3)} ${String(100 + i * 37).slice(-3)} ${String(10 + i).slice(-2)} ${String(40 + i).slice(-2)}`,
+    purchases: bought.length,
+    totalSpent: bought.reduce((t, b) => t + b.price, 0),
+    lastPurchase: `${28 - i} ${olderMonths[Math.floor(i / 5)]} 2026`,
+    joinedAt: `${1 + ((i * 7) % 27)} ${olderMonths[Math.min(3, Math.floor(i / 5) + 1)]} 2026`,
+    products: bought.map((b) => b.name),
+  });
+});
+
 export default function ClientsPage() {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Client | null>(null);
@@ -40,6 +68,7 @@ export default function ClientsPage() {
       c.name.toLowerCase().includes(search.toLowerCase()) ||
       c.email.toLowerCase().includes(search.toLowerCase())
   );
+  const pager = usePagination(filtered, 10, search);
 
   const totalSpentAll = clients.reduce((s, c) => s + c.totalSpent, 0);
   const totalPurchasesAll = clients.reduce((s, c) => s + c.purchases, 0);
@@ -74,7 +103,7 @@ export default function ClientsPage() {
           </div>
 
           {/* Search */}
-          <div className="relative sm:w-[280px]">
+          <div ref={pager.anchorRef} className="relative scroll-mt-20 sm:w-[280px]">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-2" />
             <input
               type="text"
@@ -87,7 +116,7 @@ export default function ClientsPage() {
 
           {/* Mobile cards */}
           <ul className="space-y-3 sm:hidden">
-            {filtered.map((c) => (
+            {pager.pageItems.map((c) => (
               <li
                 key={c.id}
                 onClick={() => setSelected(c)}
@@ -124,7 +153,7 @@ export default function ClientsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
-                  {filtered.map((c) => (
+                  {pager.pageItems.map((c) => (
                     <tr key={c.id} className="cursor-pointer hover:bg-page/60" onClick={() => setSelected(c)}>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
@@ -138,11 +167,11 @@ export default function ClientsPage() {
                         </div>
                       </td>
                       <td className="num px-6 py-4 text-right text-ink-2">{c.purchases}</td>
-                      <td className="num px-6 py-4 text-right font-semibold text-gold-ink">{fcfa(c.totalSpent)}</td>
-                      <td className="px-6 py-4 text-ink-2">{c.lastPurchase}</td>
-                      <td className="px-6 py-4 text-ink-2">{c.joinedAt}</td>
+                      <td className="num whitespace-nowrap px-6 py-4 text-right font-semibold text-gold-ink">{fcfa(c.totalSpent)}</td>
+                      <td className="whitespace-nowrap px-6 py-4 text-ink-2">{c.lastPurchase}</td>
+                      <td className="whitespace-nowrap px-6 py-4 text-ink-2">{c.joinedAt}</td>
                       <td className="px-6 py-4">
-                        <button className="rounded-btn border border-line bg-white px-3 py-1.5 text-xs font-medium text-ink-2 hover:text-ink">
+                        <button className="min-h-10 rounded-btn border border-line bg-white px-3.5 text-xs font-medium text-ink-2 hover:text-ink">
                           Voir
                         </button>
                       </td>
@@ -152,6 +181,12 @@ export default function ClientsPage() {
               </table>
             </div>
           </section>
+
+          {filtered.length === 0 ? (
+            <p className="rounded-card border border-dashed border-line bg-white py-12 text-center text-sm text-ink-2">Aucun client ne correspond à votre recherche.</p>
+          ) : (
+            <Pagination {...pager} onChange={pager.setPage} label="clients" />
+          )}
         </main>
       </div>
       <BottomNav active="Clients" />
@@ -166,7 +201,7 @@ export default function ClientsPage() {
           >
             <div className="flex items-center justify-between border-b border-line px-6 py-4">
               <h2 className="font-heading text-lg font-bold">Profil client</h2>
-              <button onClick={() => setSelected(null)} className="rounded p-1.5 text-ink-2 hover:bg-page hover:text-ink">
+              <button onClick={() => setSelected(null)} aria-label="Fermer" className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink">
                 <X size={20} />
               </button>
             </div>

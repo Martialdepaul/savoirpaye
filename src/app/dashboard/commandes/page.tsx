@@ -7,6 +7,7 @@ import Topbar from "@/components/dashboard/Topbar";
 import BottomNav from "@/components/dashboard/BottomNav";
 import { fcfa, type OrderStatus } from "@/lib/dashboard-data";
 import { StatusBadge } from "@/components/dashboard/LatestOrders";
+import Pagination, { usePagination } from "@/components/ui/Pagination";
 
 const allOrders = [
   { id: "#SP-4821", client: "Moussa Ndiaye", email: "moussa@email.com", product: "Maîtriser Excel en 7 jours", amount: 25000, method: "Wave", status: "Payé" as OrderStatus, when: "14 oct. 2026, 09:12" },
@@ -20,6 +21,31 @@ const allOrders = [
   { id: "#SP-4813", client: "Seydou Diallo", email: "seydou@email.com", product: "Maîtriser Excel en 7 jours", amount: 25000, method: "Wave", status: "Payé" as OrderStatus, when: "11 oct. 2026, 10:20" },
   { id: "#SP-4812", client: "Aissatou Bah", email: "aissatou@email.com", product: "Comptabilité simple pour freelances", amount: 15000, method: "Carte bancaire", status: "Échoué" as OrderStatus, when: "10 oct. 2026, 14:00" },
 ];
+
+// Historique plus ancien (données de démonstration) pour remplir plusieurs pages
+const olderClients = ["Khady Mbaye", "Babacar Gueye", "Ndeye Thiam", "Lamine Cissé", "Coumba Kane", "Pape Diouf", "Astou Sy", "Modou Lo", "Bineta Camara", "Alioune Ndour", "Mame Diarra Fall", "Abdou Seck"];
+const olderProducts = [
+  { name: "Maîtriser Excel en 7 jours", price: 25000 },
+  { name: "Lancer son e-commerce en Afrique", price: 35000 },
+  { name: "Pack de 50 modèles de factures", price: 5000 },
+  { name: "Comptabilité simple pour freelances", price: 15000 },
+  { name: "Vendre sur WhatsApp Business", price: 20000 },
+];
+const olderMethods = ["Wave", "Orange Money", "Carte bancaire", "MTN MoMo"];
+for (let i = 0; i < 26; i++) {
+  const name = olderClients[i % olderClients.length];
+  const prod = olderProducts[(i * 3) % olderProducts.length];
+  allOrders.push({
+    id: `#SP-${4811 - i}`,
+    client: name,
+    email: `${name.split(" ")[0].toLowerCase()}@email.com`,
+    product: prod.name,
+    amount: prod.price,
+    method: olderMethods[i % olderMethods.length],
+    status: (i % 9 === 4 ? "Échoué" : i % 7 === 2 ? "En attente" : "Payé") as OrderStatus,
+    when: `${9 - Math.floor(i / 3)} oct. 2026, ${String(8 + ((i * 5) % 11)).padStart(2, "0")}:${String((i * 17) % 60).padStart(2, "0")}`,
+  });
+}
 
 type StatusFilter = "Toutes" | OrderStatus;
 const statusFilters: StatusFilter[] = ["Toutes", "Payé", "En attente", "Échoué"];
@@ -37,6 +63,7 @@ export default function CommandesPage() {
     const matchStatus = statusFilter === "Toutes" || o.status === statusFilter;
     return matchSearch && matchStatus;
   });
+  const pager = usePagination(filtered, 10, `${search}|${statusFilter}`);
 
   const paid = allOrders.filter((o) => o.status === "Payé");
   const paidPct = Math.round((paid.length / allOrders.length) * 100);
@@ -72,7 +99,7 @@ export default function CommandesPage() {
           </div>
 
           {/* Search + filter */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div ref={pager.anchorRef} className="flex scroll-mt-20 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="relative sm:w-[280px]">
               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-2" />
               <input
@@ -88,7 +115,7 @@ export default function CommandesPage() {
                 <button
                   key={s}
                   onClick={() => setStatusFilter(s)}
-                  className={`whitespace-nowrap rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${
+                  className={`min-h-10 whitespace-nowrap rounded-lg px-4 text-sm font-medium transition-colors ${
                     statusFilter === s ? "bg-primary text-white" : "text-ink-2 hover:text-ink"
                   }`}
                 >
@@ -100,7 +127,7 @@ export default function CommandesPage() {
 
           {/* Mobile cards */}
           <ul className="space-y-3 sm:hidden">
-            {filtered.map((o) => (
+            {pager.pageItems.map((o) => (
               <li
                 key={o.id}
                 onClick={() => setSelected(o)}
@@ -136,7 +163,7 @@ export default function CommandesPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
-                  {filtered.map((o) => (
+                  {pager.pageItems.map((o) => (
                     <tr
                       key={o.id}
                       onClick={() => setSelected(o)}
@@ -148,16 +175,22 @@ export default function CommandesPage() {
                         <div className="text-xs text-ink-2">{o.email}</div>
                       </td>
                       <td className="max-w-[200px] truncate px-6 py-4 text-ink-2">{o.product}</td>
-                      <td className="num px-6 py-4 text-right font-semibold text-gold-ink">{fcfa(o.amount)}</td>
-                      <td className="px-6 py-4 text-ink-2">{o.method}</td>
+                      <td className="num whitespace-nowrap px-6 py-4 text-right font-semibold text-gold-ink">{fcfa(o.amount)}</td>
+                      <td className="whitespace-nowrap px-6 py-4 text-ink-2">{o.method}</td>
                       <td className="px-6 py-4"><StatusBadge status={o.status} /></td>
-                      <td className="px-6 py-4 text-ink-2">{o.when}</td>
+                      <td className="whitespace-nowrap px-6 py-4 text-ink-2">{o.when}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </section>
+
+          {filtered.length === 0 ? (
+            <p className="rounded-card border border-dashed border-line bg-white py-12 text-center text-sm text-ink-2">Aucune commande ne correspond à votre recherche.</p>
+          ) : (
+            <Pagination {...pager} onChange={pager.setPage} label="commandes" />
+          )}
         </main>
       </div>
       <BottomNav active="Commandes" />

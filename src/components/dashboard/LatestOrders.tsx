@@ -19,9 +19,9 @@ export function StatusBadge({ status }: { status: OrderStatus }) {
 export default function LatestOrders() {
   return (
     <section className="rounded-card border border-line bg-white shadow-soft">
-      <div className="flex items-center justify-between p-4 sm:p-6 sm:pb-4">
+      <div className="flex items-center justify-between gap-3 p-4 sm:p-6 sm:pb-4">
         <h2 className="font-heading text-lg font-bold">Dernières commandes</h2>
-        <a href="#" onClick={(e) => e.preventDefault()} className="text-sm font-medium text-primary hover:underline">Voir tout</a>
+        <a href="/dashboard/commandes" className="-my-3 -mr-2 shrink-0 whitespace-nowrap px-2 py-3 text-sm font-medium text-primary hover:underline">Voir tout</a>
       </div>
 
       <ul className="divide-y divide-line border-t border-line sm:hidden">

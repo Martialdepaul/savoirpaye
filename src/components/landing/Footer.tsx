@@ -20,9 +20,9 @@ export default function Footer() {
           {cols.map((c) => (
             <div key={c.title}>
               <h4 className="font-heading text-sm font-bold">{c.title}</h4>
-              <ul className="mt-4 space-y-2.5">
+              <ul className="mt-3 space-y-0.5">
                 {c.links.map((l) => (
-                  <li key={l}><a href="#" className="text-sm text-white/70 transition-colors hover:text-white">{l}</a></li>
+                  <li key={l}><a href="#" className="inline-block py-2 text-sm text-white/70 transition-colors hover:text-white">{l}</a></li>
                 ))}
               </ul>
             </div>

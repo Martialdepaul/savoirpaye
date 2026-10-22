@@ -30,7 +30,7 @@ export default function SalesPage() {
       <header className="border-b border-line bg-page/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
           <Logo />
-          <a href="/dashboard" className="text-sm font-medium text-ink-2 hover:text-ink">Connexion</a>
+          <a href="/dashboard" className="-mr-3 px-3 py-3 text-sm font-medium text-ink-2 hover:text-ink">Connexion</a>
         </div>
       </header>
 
