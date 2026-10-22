@@ -147,3 +147,4 @@
 
 # Images du site servies telles quelles (Vercel ne récupère pas les fichiers LFS par défaut)
 public/images/*.jpg -filter -diff -merge -text
+src/app/apple-icon.png -filter -diff -merge -text
