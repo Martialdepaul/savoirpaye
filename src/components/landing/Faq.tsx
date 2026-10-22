@@ -4,13 +4,12 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { faqs } from "../../lib/mock-data";
 
-type Level = "h1" | "h2";
-
-export default function Faq({ level: H = "h2" }: { level?: Level }) {
+export default function Faq() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section id="faq" className="mx-auto max-w-3xl px-5 py-12 sm:py-16 lg:py-20">
-      <H className="text-center font-heading text-3xl font-extrabold sm:text-4xl">Questions fréquentes</H>
+    <section id="faq" className="mx-auto max-w-3xl px-5 py-20 lg:py-24">
+      <p className="text-center text-xs font-bold uppercase tracking-wider text-primary">Ressources</p>
+      <h2 className="mt-3 text-center font-heading text-3xl font-extrabold sm:text-4xl">Questions fréquentes</h2>
       <div className="mt-10 divide-y divide-line rounded-card border border-line bg-white shadow-soft">
         {faqs.map((f, i) => {
           const isOpen = open === i;

@@ -1,3 +1,5 @@
+import { BarChart3, CreditCard, FileText, GraduationCap, ShieldCheck, Sparkles, TrendingUp, UserRound, Users } from "lucide-react";
+
 export const paymentMethods = [
   { name: "Orange Money", color: "#FF7900" },
   { name: "Wave", color: "#1DC8FF" },
@@ -8,10 +10,25 @@ export const paymentMethods = [
 ];
 
 export const steps = [
-  { title: "Créez votre compte", text: "Inscrivez-vous en deux minutes, sans carte bancaire ni frais d'ouverture." },
-  { title: "Construisez votre cours", text: "Importez vos vidéos et documents, ou laissez l'IA structurer le plan à votre place." },
-  { title: "Fixez votre prix", text: "Choisissez un tarif en FCFA, un abonnement ou un paiement unique, et publiez votre page de vente." },
-  { title: "Encaissez et retirez", text: "Vos élèves paient par Mobile Money ou carte. Retirez vos gains sur votre numéro en quelques minutes." },
+  { icon: UserRound, title: "Inscrivez-vous", text: "Créez votre compte en quelques minutes. C'est gratuit." },
+  { icon: GraduationCap, title: "Créez vos contenus", text: "Ajoutez vos formations, produits numériques ou services." },
+  { icon: CreditCard, title: "Recevez vos paiements", text: "Vos clients paient via Mobile Money, carte bancaire ou autres moyens." },
+  { icon: TrendingUp, title: "Retirez vos gains", text: "Suivez vos ventes et retirez vos fonds en toute sécurité." },
+];
+
+export const features = [
+  { icon: GraduationCap, title: "Vente de formations", text: "Créez des cours vidéo, PDF, quiz et plus encore.", tint: "bg-[#e3f4ec] text-[#138a5b]" },
+  { icon: FileText, title: "Produits numériques", text: "Vendez e-books, templates, logiciels, etc.", tint: "bg-[#efeafd] text-[#6a4fd8]" },
+  { icon: Sparkles, title: "Assistant IA", text: "Générez des idées, des titres et même le contenu de vos cours.", tint: "bg-[#fef1e1] text-[#e07b00]" },
+  { icon: Users, title: "Gestion des clients", text: "Suivez vos apprenants et communiquez facilement.", tint: "bg-[#e6f0fd] text-[#2f6fd6]" },
+  { icon: BarChart3, title: "Analytics avancés", text: "Analysez vos ventes, votre audience et votre croissance.", tint: "bg-[#fde8ef] text-[#d6336c]" },
+  { icon: ShieldCheck, title: "Sécurité multi-tenant", text: "Vos données sont protégées et isolées de celles des autres.", tint: "bg-[#e0f5f3] text-[#0f8f84]" },
+];
+
+export const testimonials = [
+  { quote: "Grâce à Savoirpay, j'ai pu vendre ma formation en ligne et générer mes premiers revenus. C'est simple et vraiment efficace !", name: "Aïssata Traoré", role: "Formatrice en développement personnel", photo: "/images/avatar-aissata.jpg" },
+  { quote: "La plateforme est intuitive et le support est réactif. Je recommande à tous les créateurs de contenu !", name: "Moussa Diallo", role: "Coach business", photo: "/images/avatar-moussa.jpg" },
+  { quote: "L'assistant IA m'a beaucoup aidé à créer mes cours plus rapidement. Savoirpay est une vraie opportunité pour nous les Africains.", name: "Kevin Mensah", role: "Créateur de contenu YouTube", photo: "/images/avatar-kevin.jpg" },
 ];
 
 export const plans = [

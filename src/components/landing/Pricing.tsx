@@ -1,21 +1,20 @@
 import { Check } from "lucide-react";
 import { plans } from "../../lib/mock-data";
 
-type Level = "h1" | "h2";
-
-export default function Pricing({ level: H = "h2" }: { level?: Level }) {
+export default function Pricing() {
   return (
-    <section id="tarifs">
-      <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16 lg:py-20">
-        <div className="mx-auto max-w-2xl text-center">
-          <H className="font-heading text-3xl font-extrabold sm:text-4xl">Des tarifs simples, en FCFA</H>
-          <p className="mt-3 text-lg text-ink-2">Commencez gratuitement, évoluez quand vos ventes décollent.</p>
+    <section id="tarifs" className="bg-white">
+      <div className="mx-auto max-w-6xl px-5 py-20 lg:py-24">
+        <div className="max-w-2xl">
+          <p className="text-xs font-bold uppercase tracking-wider text-primary">Nos offres</p>
+          <h2 className="mt-3 font-heading text-3xl font-extrabold sm:text-4xl">Choisissez le plan qui correspond à vos objectifs</h2>
+          <p className="mt-3 text-ink-2">Des tarifs simples et transparents. Sans engagement. Vous pouvez changer à tout moment.</p>
         </div>
         <div className="mt-12 grid gap-5 lg:grid-cols-3 lg:items-stretch">
           {plans.map((p) => (
             <div
               key={p.name}
-              className={`relative flex flex-col rounded-card border bg-white p-7 shadow-soft ${p.featured ? "border-primary ring-1 ring-primary" : "border-line"}`}
+              className={`relative flex flex-col rounded-card border bg-white p-7 ${p.featured ? "border-primary shadow-lift ring-1 ring-primary lg:-my-3 lg:py-10" : "border-line shadow-soft"}`}
             >
               {p.featured && (
                 <span className="absolute -top-3 left-7 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">Le plus populaire</span>
@@ -23,7 +22,7 @@ export default function Pricing({ level: H = "h2" }: { level?: Level }) {
               <h3 className="font-heading text-xl font-bold">{p.name}</h3>
               <p className="mt-1 text-sm text-ink-2">{p.tagline}</p>
               <div className="num mt-6 flex items-baseline gap-1.5">
-                <span className="font-heading text-4xl font-extrabold">{p.price}</span>
+                <span className="font-heading text-4xl font-extrabold text-ink">{p.price}</span>
                 <span className="text-sm text-ink-2">/ mois</span>
               </div>
               <ul className="mt-6 flex-1 space-y-3">
@@ -36,7 +35,7 @@ export default function Pricing({ level: H = "h2" }: { level?: Level }) {
               <a
                 href={`/inscription?offre=${p.name.toLowerCase()}`}
                 className={`mt-8 rounded-btn px-5 py-3 text-center font-semibold transition-colors ${
-                  p.featured ? "bg-primary text-white hover:bg-primary-hover" : "border border-line bg-white text-ink hover:bg-primary-light"
+                  p.featured ? "bg-primary text-white hover:bg-primary-hover" : "border border-primary/40 bg-white text-primary hover:bg-primary-light"
                 }`}
               >
                 {p.cta}

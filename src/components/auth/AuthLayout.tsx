@@ -24,11 +24,9 @@ export default function AuthLayout({ title, subtitle, children, footer }: { titl
         </p>
       </div>
 
-      <aside className="relative hidden overflow-hidden bg-primary p-12 text-white lg:flex lg:flex-col lg:justify-center">
-        <div className="absolute -right-24 -top-24 size-96 rounded-full bg-white/5" aria-hidden="true" />
-        <div className="absolute -bottom-32 -left-16 size-80 rounded-full bg-gold/15" aria-hidden="true" />
-        <div className="relative max-w-md">
-          <p className="font-heading text-3xl font-extrabold leading-tight">Transformez votre savoir en revenus, en FCFA.</p>
+      <aside className="bg-forest-glow relative hidden overflow-hidden p-12 text-white lg:flex lg:flex-col lg:justify-center">
+                        <div className="relative max-w-md">
+          <p className="font-heading text-3xl font-extrabold leading-tight">Transformez votre savoir en <span className="text-gold">revenus</span>, en FCFA.</p>
           <ul className="mt-8 space-y-4">
             {perks.map((p) => (
               <li key={p} className="flex items-start gap-3 text-white/90">
@@ -36,10 +34,14 @@ export default function AuthLayout({ title, subtitle, children, footer }: { titl
               </li>
             ))}
           </ul>
-          <figure className="mt-10 rounded-card bg-white/10 p-5 backdrop-blur">
-            <blockquote className="text-[15px] leading-relaxed text-white/90">« J'ai vendu ma première formation en 3 jours. Mes élèves paient avec Wave, et je retire le soir même. »</blockquote>
-            <figcaption className="mt-3 text-sm font-semibold">Aminata D., formatrice à Dakar</figcaption>
-          </figure>
+          <div className="relative mx-auto mt-10 w-full max-w-xs">
+            <img src="/images/auth-creatrice.jpg" alt="" className="aspect-[4/5] w-full rounded-[28px] object-cover shadow-lift" />
+            <div className="absolute -left-8 bottom-10 rounded-card bg-white px-4 py-3 text-ink shadow-lift">
+              <div className="text-[11px] text-ink-2">Ventes ce mois</div>
+              <div className="num font-heading text-lg font-extrabold">1 248 500 FCFA</div>
+            </div>
+            <div className="absolute -right-6 top-10 rounded-card bg-gold px-4 py-2.5 text-sm font-bold text-forest shadow-lift">+25 000 FCFA</div>
+          </div>
         </div>
       </aside>
     </div>

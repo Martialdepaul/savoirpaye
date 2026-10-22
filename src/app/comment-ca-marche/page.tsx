@@ -1,19 +1,24 @@
 import type { Metadata } from "next";
-import MarketingLayout from "@/components/landing/MarketingLayout";
+import SiteShell from "@/components/site/SiteShell";
+import PageHero from "@/components/site/PageHero";
 import HowItWorks from "@/components/landing/HowItWorks";
 import PaymentStrip from "@/components/landing/PaymentStrip";
 
 export const metadata: Metadata = {
-  title: "Comment ça marche | SavoirPaye",
-  description: "Créez votre compte, construisez votre cours, fixez votre prix en FCFA et encaissez par Mobile Money.",
+  title: "Comment ça marche · Savoirpay",
+  description: "Inscrivez-vous, créez vos contenus, recevez vos paiements en Mobile Money et retirez vos gains.",
 };
 
 export default function HowItWorksPage() {
   return (
-    <MarketingLayout>
-      <HowItWorks level="h1" />
-      <PaymentStrip />
-      <div className="h-12 sm:h-16" />
-    </MarketingLayout>
+    <SiteShell>
+      <PageHero
+        eyebrow="Comment ça marche"
+        title={<>De votre expertise <span className="text-gold">à vos premiers revenus</span></>}
+        text="Quatre étapes simples, depuis votre téléphone ou votre ordinateur. Aucune compétence technique n'est nécessaire."
+      />
+      <HowItWorks />
+      <div id="paiements" className="scroll-mt-16"><PaymentStrip /></div>
+    </SiteShell>
   );
 }

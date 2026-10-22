@@ -1,61 +1,82 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, ArrowRight } from "lucide-react";
 import Logo from "../ui/Logo";
-
-export const links = [
-  { label: "Comment ça marche", href: "/comment-ca-marche" },
-  { label: "Créateur IA", href: "/createur-ia" },
-  { label: "Tarifs", href: "/tarifs" },
-  { label: "FAQ", href: "/faq" },
-];
+import { navLinks } from "../../lib/site-data";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-page/90 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-        <Logo />
-        <nav className="hidden items-center gap-6 lg:flex" aria-label="Navigation principale">
-          {links.map((l) => (
-            <a key={l.href} href={l.href} aria-current={pathname === l.href ? "page" : undefined}
-              className={`py-3 text-sm font-medium transition-colors hover:text-ink ${pathname === l.href ? "text-primary" : "text-ink-2"}`}>
-              {l.label}
-            </a>
-          ))}
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-forest/95 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-5">
+        <Logo tone="light" />
+        <nav className="hidden items-center gap-8 lg:flex" aria-label="Navigation principale">
+          {navLinks.map((l) => {
+            const active = isActive(l.href);
+            return (
+              <a
+                key={l.href}
+                href={l.href}
+                aria-current={active ? "page" : undefined}
+                className={`relative py-3 text-sm font-medium transition-colors hover:text-white ${
+                  active ? "text-white after:absolute after:inset-x-0 after:bottom-1.5 after:h-0.5 after:rounded-full after:bg-gold" : "text-white/75"
+                }`}
+              >
+                {l.label}
+              </a>
+            );
+          })}
         </nav>
         <div className="hidden items-center gap-3 lg:flex">
-          <a href="/connexion" className="rounded-btn px-3 py-2 text-sm font-medium text-ink hover:bg-black/5">Connexion</a>
-          <a href="/inscription" className="rounded-btn bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover">
-            Commencer gratuitement
+          <a href="/connexion" className="inline-flex items-center gap-2 rounded-btn border border-white/30 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10">
+            <User size={16} /> Se connecter
+          </a>
+          <a href="/inscription" className="rounded-btn bg-gold px-4 py-2.5 text-sm font-bold text-forest transition-colors hover:bg-gold-hover">
+            Créer mon compte
           </a>
         </div>
         <button
-          className="flex size-11 items-center justify-center rounded-btn border border-line bg-white lg:hidden"
+          className="flex size-10 items-center justify-center rounded-btn border border-white/20 text-white lg:hidden"
           onClick={() => setOpen(!open)}
           aria-expanded={open}
+          aria-controls="menu-mobile"
           aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
         >
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
       {open && (
-        <div className="border-t border-line bg-page px-5 pb-5 lg:hidden">
+        <div id="menu-mobile" className="h-[calc(100dvh-4rem)] overflow-y-auto border-t border-white/10 bg-forest px-4 pb-8 sm:px-5 lg:hidden">
           <nav className="flex flex-col py-2" aria-label="Navigation mobile">
-            {links.map((l) => (
-              <a key={l.href} href={l.href} onClick={() => setOpen(false)} aria-current={pathname === l.href ? "page" : undefined}
-                className={`border-b border-line py-3.5 text-base font-medium ${pathname === l.href ? "text-primary" : "text-ink"}`}>
-                {l.label}
+            {navLinks.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                aria-current={isActive(l.href) ? "page" : undefined}
+                className={`flex items-center justify-between border-b border-white/10 py-4 text-base font-medium ${isActive(l.href) ? "text-gold" : "text-white"}`}
+              >
+                {l.label} <ArrowRight size={16} className="opacity-50" />
               </a>
             ))}
-            <a href="/connexion" className="py-3.5 text-base font-medium text-ink">Connexion</a>
+            <a href="/contact" className="flex items-center justify-between border-b border-white/10 py-4 text-base font-medium text-white">
+              Contact <ArrowRight size={16} className="opacity-50" />
+            </a>
           </nav>
-          <a href="/inscription" className="mt-1 block rounded-btn bg-primary py-3 text-center font-semibold text-white">
-            Commencer gratuitement
-          </a>
+          <div className="mt-6 grid gap-3">
+            <a href="/inscription" className="block rounded-btn bg-gold py-3.5 text-center font-bold text-forest">Créer mon compte</a>
+            <a href="/connexion" className="block rounded-btn border border-white/30 py-3.5 text-center font-semibold text-white">Se connecter</a>
+          </div>
         </div>
       )}
     </header>
