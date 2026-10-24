@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Clock, Share2 } from "lucide-react";
@@ -27,9 +28,9 @@ export default async function ArticlePage({ params }: Props) {
       <article>
         <header className="bg-forest-glow text-white">
           <div className="mx-auto max-w-3xl px-4 pb-24 pt-10 sm:px-5 lg:pt-14">
-            <a href="/ressources" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-white/75 hover:text-white">
+            <Link href="/ressources" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-white/75 hover:text-white">
               <ArrowLeft size={16} /> Toutes les ressources
-            </a>
+            </Link>
             <span className="mt-6 block w-fit rounded-full bg-gold px-3 py-1 text-xs font-bold text-forest">{article.category}</span>
             <h1 className="mt-4 font-heading text-3xl font-extrabold leading-tight sm:text-5xl">{article.title}</h1>
             <p className="mt-4 text-lg text-white/80">{article.excerpt}</p>
@@ -62,7 +63,7 @@ export default async function ArticlePage({ params }: Props) {
               <div className="font-heading text-lg font-bold">Prêt à passer à l'action ?</div>
               <p className="text-sm text-ink-2">Créez votre boutique gratuitement et publiez votre premier produit aujourd'hui.</p>
             </div>
-            <a href="/inscription" className="shrink-0 rounded-btn bg-gold px-5 py-3 text-center font-bold text-forest hover:bg-gold-hover">Commencer gratuitement</a>
+            <Link href="/inscription" className="shrink-0 rounded-btn bg-gold px-5 py-3 text-center font-bold text-forest hover:bg-gold-hover">Commencer gratuitement</Link>
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-2 text-sm text-ink-2">
@@ -84,13 +85,13 @@ export default async function ArticlePage({ params }: Props) {
           <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((a) => (
               <li key={a.slug}>
-                <a href={`/ressources/${a.slug}`} className="group block overflow-hidden rounded-card border border-line bg-white shadow-soft">
+                <Link href={`/ressources/${a.slug}`} className="group block overflow-hidden rounded-card border border-line bg-white shadow-soft">
                   <img src={a.image} alt="" loading="lazy" className="aspect-[16/10] w-full object-cover" />
                   <div className="p-5">
                     <span className="text-xs font-bold uppercase tracking-wider text-primary">{a.category}</span>
                     <h3 className="mt-2 font-heading text-base font-bold group-hover:text-primary">{a.title}</h3>
                   </div>
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

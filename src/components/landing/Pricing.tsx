@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Check } from "lucide-react";
 import { plans } from "../../lib/mock-data";
 
@@ -32,14 +33,14 @@ export default function Pricing() {
                   </li>
                 ))}
               </ul>
-              <a
+              <Link
                 href={`/inscription?offre=${p.name.toLowerCase()}`}
                 className={`mt-8 rounded-btn px-5 py-3 text-center font-semibold transition-colors ${
                   p.featured ? "bg-primary text-white hover:bg-primary-hover" : "border border-primary/40 bg-white text-primary hover:bg-primary-light"
                 }`}
               >
                 {p.cta}
-              </a>
+              </Link>
             </div>
           ))}
         </div>

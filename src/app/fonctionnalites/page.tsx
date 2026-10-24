@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import SiteShell from "../../components/site/SiteShell";
@@ -60,9 +61,9 @@ export default function FonctionnalitesPage() {
       <AiCreator />
 
       <section className="bg-white pb-20 pt-4 text-center lg:pb-24">
-        <a href="/tarifs" className="inline-flex items-center gap-2 rounded-btn border border-primary/40 px-6 py-3 font-semibold text-primary transition-colors hover:bg-primary-light">
+        <Link href="/tarifs" className="inline-flex items-center gap-2 rounded-btn border border-primary/40 px-6 py-3 font-semibold text-primary transition-colors hover:bg-primary-light">
           Comparer les offres <ArrowRight size={17} />
-        </a>
+        </Link>
       </section>
     </SiteShell>
   );

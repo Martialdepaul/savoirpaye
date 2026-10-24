@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight, Wallet, TrendingUp } from "lucide-react";
 
 export default function CtaBand() {
@@ -21,9 +22,9 @@ export default function CtaBand() {
           <p className="text-xs font-bold uppercase tracking-wider text-primary">Prêt à transformer votre expertise en revenu ?</p>
           <h2 className="mt-3 font-heading text-3xl font-extrabold text-primary sm:text-4xl">Rejoignez des milliers de créateurs qui ont déjà choisi Savoirpay !</h2>
           <p className="mt-3 text-ink-2">Créez votre compte maintenant et commencez à vendre en quelques minutes.</p>
-          <a href="/inscription" className="mt-7 inline-flex items-center gap-2 rounded-btn bg-gold px-6 py-3.5 font-bold text-forest transition-colors hover:bg-gold-hover">
+          <Link href="/inscription" className="mt-7 inline-flex items-center gap-2 rounded-btn bg-gold px-6 py-3.5 font-bold text-forest transition-colors hover:bg-gold-hover">
             Créer mon compte gratuitement <ArrowRight size={18} />
-          </a>
+          </Link>
         </div>
 
         <p aria-hidden className="hidden rotate-[-6deg] text-center font-hand text-3xl leading-tight text-primary lg:block">

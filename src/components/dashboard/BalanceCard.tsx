@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Wallet, Clock, ArrowUpRight } from "lucide-react";
 import { fcfa, wallet } from "../../lib/dashboard-data";
 
@@ -12,9 +13,9 @@ export default function BalanceCard() {
             <Clock size={15} /> <span className="num font-semibold text-gold">{fcfa(wallet.pending)}</span> en attente de validation
           </div>
         </div>
-        <a href="/dashboard/portefeuille?retrait=1" className="flex min-h-12 items-center justify-center gap-2 rounded-btn bg-gold px-6 font-bold text-forest transition-colors hover:bg-gold-hover">
+        <Link href="/dashboard/portefeuille?retrait=1" className="flex min-h-12 items-center justify-center gap-2 rounded-btn bg-gold px-6 font-bold text-forest transition-colors hover:bg-gold-hover">
           Retirer <ArrowUpRight size={18} />
-        </a>
+        </Link>
       </div>
     </section>
   );

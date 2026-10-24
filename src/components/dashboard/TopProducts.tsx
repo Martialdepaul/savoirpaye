@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { fcfa, topProducts } from "../../lib/dashboard-data";
 
 export default function TopProducts() {
@@ -6,7 +7,7 @@ export default function TopProducts() {
     <section className="rounded-card border border-line bg-white p-4 shadow-soft sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="font-heading text-lg font-bold">Meilleurs produits</h2>
-        <a href="/dashboard/produits" className="-my-3 -mr-2 shrink-0 whitespace-nowrap px-2 py-3 text-sm font-medium text-primary hover:underline">Voir tout</a>
+        <Link href="/dashboard/produits" className="-my-3 -mr-2 shrink-0 whitespace-nowrap px-2 py-3 text-sm font-medium text-primary hover:underline">Voir tout</Link>
       </div>
       <ul className="space-y-4">
         {topProducts.map((p, i) => (

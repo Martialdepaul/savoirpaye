@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X, LogOut } from "lucide-react";
@@ -38,9 +39,9 @@ export default function Topbar() {
         <div className="flex items-center gap-2 sm:gap-3">
           <CreateButton />
           <Notifications />
-          <a href="/dashboard/parametres" aria-label="Mon profil" className="lg:hidden">
+          <Link href="/dashboard/parametres" aria-label="Mon profil" className="lg:hidden">
             <img src="/images/team-1.jpg" alt="" className="size-10 rounded-full object-cover" />
-          </a>
+          </Link>
         </div>
       </header>
 
@@ -55,7 +56,7 @@ export default function Topbar() {
             <div className="flex-1 overflow-y-auto p-3"><NavList onNavigate={() => setOpen(false)} /></div>
             <div className="flex items-center justify-between border-t border-line p-4">
               <SellerCard />
-              <a href="/connexion" aria-label="Se déconnecter" className="flex size-10 items-center justify-center rounded-btn text-ink-2 hover:bg-page hover:text-danger"><LogOut size={18} /></a>
+              <Link href="/connexion" aria-label="Se déconnecter" className="flex size-10 items-center justify-center rounded-btn text-ink-2 hover:bg-page hover:text-danger"><LogOut size={18} /></Link>
             </div>
           </div>
         </div>

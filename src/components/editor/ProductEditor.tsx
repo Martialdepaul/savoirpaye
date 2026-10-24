@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { AlertCircle, ArrowLeft, Check, Eye, FileDown, GraduationCap, ImagePlus, Loader2, Plus, Trash2, Upload, Video, X } from "lucide-react";
 import Sidebar from "../dashboard/Sidebar";
@@ -53,6 +55,7 @@ export function TypePicker({ onPick }: { onPick: (t: ProductType) => void }) {
 }
 
 export default function ProductEditor({ initial, isNew }: { initial: Draft; isNew: boolean }) {
+  const router = useRouter();
   const [d, setD] = useState<Draft>(initial);
   const [errors, setErrors] = useState<Errors>({});
   const [saving, setSaving] = useState(false);
@@ -112,7 +115,7 @@ export default function ProductEditor({ initial, isNew }: { initial: Draft; isNe
       setSaving(false);
       setDirty(false);
       showToast(d.status === "En ligne" ? "Produit publié" : "Modifications enregistrées");
-      if (isNew) setTimeout(() => (window.location.href = "/dashboard/produits"), 900);
+      if (isNew) setTimeout(() => router.push("/dashboard/produits"), 900);
     }, 700);
   };
 
@@ -125,7 +128,7 @@ export default function ProductEditor({ initial, isNew }: { initial: Draft; isNe
         <Topbar />
         <form onSubmit={save} noValidate className="mx-auto max-w-3xl space-y-5 px-4 pb-36 pt-6 sm:px-8">
           <div>
-            <a href="/dashboard/produits" className="-ml-1 inline-flex items-center gap-2 px-1 py-2 text-sm font-medium text-ink-2 hover:text-ink"><ArrowLeft size={16} /> Produits</a>
+            <Link href="/dashboard/produits" className="-ml-1 inline-flex items-center gap-2 px-1 py-2 text-sm font-medium text-ink-2 hover:text-ink"><ArrowLeft size={16} /> Produits</Link>
             <div className="mt-1 flex flex-wrap items-center gap-3">
               <h1 className="font-heading text-2xl font-extrabold sm:text-3xl">{isNew ? `Nouveau : ${d.type.toLowerCase()}` : "Modifier le produit"}</h1>
             </div>

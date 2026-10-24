@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { Check } from "lucide-react";
 import Logo from "../ui/Logo";
@@ -20,7 +21,7 @@ export default function AuthLayout({ title, subtitle, children, footer }: { titl
           {footer && <div className="mt-8 text-center text-sm text-ink-2">{footer}</div>}
         </main>
         <p className="text-center text-xs text-ink-2">
-          © 2026 savoirpay · <a href="/cgu" className="inline-block px-1.5 py-3 hover:text-ink">CGU</a> · <a href="/confidentialite" className="inline-block px-1.5 py-3 hover:text-ink">Confidentialité</a>
+          © 2026 savoirpay · <Link href="/cgu" className="inline-block px-1.5 py-3 hover:text-ink">CGU</Link> · <Link href="/confidentialite" className="inline-block px-1.5 py-3 hover:text-ink">Confidentialité</Link>
         </p>
       </div>
 

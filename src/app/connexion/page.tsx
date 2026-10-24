@@ -1,10 +1,13 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { Field, PasswordInput, SubmitButton, inputCls, isEmail, isPhone } from "@/components/auth/fields";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
@@ -21,14 +24,14 @@ export default function LoginPage() {
     if (er.password) return document.getElementById("password")?.focus();
     setLoading(true);
     // Simulation de la connexion, à remplacer par l'API
-    setTimeout(() => (window.location.href = "/dashboard"), 800);
+    setTimeout(() => router.push("/dashboard"), 800);
   };
 
   return (
     <AuthLayout
       title="Bon retour parmi nous"
       subtitle="Connectez-vous pour gérer votre boutique et suivre vos ventes."
-      footer={<>Pas encore de compte ? <a href="/inscription" className="inline-block py-2 font-semibold text-primary hover:underline">Créer un compte gratuit</a></>}
+      footer={<>Pas encore de compte ? <Link href="/inscription" className="inline-block py-2 font-semibold text-primary hover:underline">Créer un compte gratuit</Link></>}
     >
       <form onSubmit={submit} noValidate className="space-y-5">
         <Field id="login-id" label="E-mail ou numéro de téléphone" error={errors.id}>
@@ -43,7 +46,7 @@ export default function LoginPage() {
             <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="size-5 accent-[var(--color-primary)]" />
             Rester connecté
           </label>
-          <a href="/mot-de-passe-oublie" className="inline-flex min-h-11 items-center text-sm font-semibold text-primary hover:underline">Mot de passe oublié ?</a>
+          <Link href="/mot-de-passe-oublie" className="inline-flex min-h-11 items-center text-sm font-semibold text-primary hover:underline">Mot de passe oublié ?</Link>
         </div>
         <SubmitButton loading={loading}>{loading ? "Connexion…" : "Se connecter"}</SubmitButton>
       </form>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X, User, ArrowRight } from "lucide-react";
@@ -25,7 +26,7 @@ export default function Header() {
           {navLinks.map((l) => {
             const active = isActive(l.href);
             return (
-              <a
+              <Link
                 key={l.href}
                 href={l.href}
                 aria-current={active ? "page" : undefined}
@@ -34,17 +35,17 @@ export default function Header() {
                 }`}
               >
                 {l.label}
-              </a>
+              </Link>
             );
           })}
         </nav>
         <div className="hidden items-center gap-3 lg:flex">
-          <a href="/connexion" className="inline-flex items-center gap-2 rounded-btn border border-white/30 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10">
+          <Link href="/connexion" className="inline-flex items-center gap-2 rounded-btn border border-white/30 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10">
             <User size={16} /> Se connecter
-          </a>
-          <a href="/inscription" className="rounded-btn bg-gold px-4 py-2.5 text-sm font-bold text-forest transition-colors hover:bg-gold-hover">
+          </Link>
+          <Link href="/inscription" className="rounded-btn bg-gold px-4 py-2.5 text-sm font-bold text-forest transition-colors hover:bg-gold-hover">
             Créer mon compte
-          </a>
+          </Link>
         </div>
         <button
           className="flex size-10 items-center justify-center rounded-btn border border-white/20 text-white lg:hidden"
@@ -60,22 +61,22 @@ export default function Header() {
         <div id="menu-mobile" className="h-[calc(100dvh-4rem)] overflow-y-auto border-t border-white/10 bg-forest px-4 pb-8 sm:px-5 lg:hidden">
           <nav className="flex flex-col py-2" aria-label="Navigation mobile">
             {navLinks.map((l) => (
-              <a
+              <Link
                 key={l.href}
                 href={l.href}
                 aria-current={isActive(l.href) ? "page" : undefined}
                 className={`flex items-center justify-between border-b border-white/10 py-4 text-base font-medium ${isActive(l.href) ? "text-gold" : "text-white"}`}
               >
                 {l.label} <ArrowRight size={16} className="opacity-50" />
-              </a>
+              </Link>
             ))}
-            <a href="/contact" className="flex items-center justify-between border-b border-white/10 py-4 text-base font-medium text-white">
+            <Link href="/contact" className="flex items-center justify-between border-b border-white/10 py-4 text-base font-medium text-white">
               Contact <ArrowRight size={16} className="opacity-50" />
-            </a>
+            </Link>
           </nav>
           <div className="mt-6 grid gap-3">
-            <a href="/inscription" className="block rounded-btn bg-gold py-3.5 text-center font-bold text-forest">Créer mon compte</a>
-            <a href="/connexion" className="block rounded-btn border border-white/30 py-3.5 text-center font-semibold text-white">Se connecter</a>
+            <Link href="/inscription" className="block rounded-btn bg-gold py-3.5 text-center font-bold text-forest">Créer mon compte</Link>
+            <Link href="/connexion" className="block rounded-btn border border-white/30 py-3.5 text-center font-semibold text-white">Se connecter</Link>
           </div>
         </div>
       )}

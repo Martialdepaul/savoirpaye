@@ -1,10 +1,11 @@
+import Link from "next/link";
 import type { Formation } from "@/lib/student-data";
 import { BookOpen, PlayCircle } from "lucide-react";
 
 export default function FormationCard({ formation: f }: { formation: Formation }) {
   const pct = f.progress;
   return (
-    <a
+    <Link
       href={`/dashboard/mes-formations/${f.slug}`}
       className="group flex flex-col rounded-card border border-line bg-white shadow-soft transition-shadow hover:shadow-[0_4px_20px_rgb(28_25_23/0.1)]"
     >
@@ -40,6 +41,6 @@ export default function FormationCard({ formation: f }: { formation: Formation }
           {pct === 0 ? "Commencer" : pct === 100 ? "Revoir" : "Continuer"}
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

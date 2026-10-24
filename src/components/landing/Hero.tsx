@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight, Play, Smartphone, Zap, Sparkles, ShieldCheck, LayoutDashboard, Package, GraduationCap, ShoppingBag, Users, Wallet, BarChart3, TrendingUp } from "lucide-react";
 
 const perks = [
@@ -122,13 +123,13 @@ export default function Hero() {
             Créez, vendez et gérez vos formations, produits numériques et services en ligne. Vos clients paient par Mobile Money ou carte, et vous retirez vos gains en FCFA.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a href="/inscription" className="inline-flex items-center justify-center gap-2 rounded-btn bg-gold px-6 py-3.5 font-bold text-forest transition-colors hover:bg-gold-hover">
+            <Link href="/inscription" className="inline-flex items-center justify-center gap-2 rounded-btn bg-gold px-6 py-3.5 font-bold text-forest transition-colors hover:bg-gold-hover">
               Commencer gratuitement <ArrowRight size={18} />
-            </a>
-            <a href="/comment-ca-marche" className="inline-flex items-center justify-center gap-2.5 rounded-btn border border-white/30 px-6 py-3.5 font-semibold text-white transition-colors hover:bg-white/10">
+            </Link>
+            <Link href="/comment-ca-marche" className="inline-flex items-center justify-center gap-2.5 rounded-btn border border-white/30 px-6 py-3.5 font-semibold text-white transition-colors hover:bg-white/10">
               <span className="flex size-6 items-center justify-center rounded-full bg-white text-forest"><Play size={12} fill="currentColor" /></span>
               Voir la démo
-            </a>
+            </Link>
           </div>
         </div>
 

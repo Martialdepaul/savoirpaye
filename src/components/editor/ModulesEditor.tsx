@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { ArrowDown, ArrowUp, ChevronDown, Film, Plus, Sparkles, Trash2, Upload, FileText } from "lucide-react";
 import { emptyLesson, emptyModule, type EditorLesson, type EditorModule } from "./types";
@@ -78,9 +79,9 @@ export default function ModulesEditor({ modules, onChange }: { modules: EditorMo
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="num text-sm text-ink-2">{modules.length} module{modules.length > 1 ? "s" : ""} · {lessonsTotal} leçon{lessonsTotal > 1 ? "s" : ""}</p>
-        <a href="/dashboard/createur-ia" className="inline-flex min-h-10 items-center gap-1.5 rounded-btn bg-ai-light px-3 text-sm font-semibold text-ai hover:bg-[#ebe8fd]">
+        <Link href="/dashboard/createur-ia" className="inline-flex min-h-10 items-center gap-1.5 rounded-btn bg-ai-light px-3 text-sm font-semibold text-ai hover:bg-[#ebe8fd]">
           <Sparkles size={15} /> Générer le plan avec l'IA
-        </a>
+        </Link>
       </div>
 
       <ol className="space-y-3">

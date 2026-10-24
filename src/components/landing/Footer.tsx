@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Logo from "../ui/Logo";
 
 const cols = [
@@ -46,7 +47,7 @@ export default function Footer() {
               <h2 className="font-heading text-sm font-bold">{c.title}</h2>
               <ul className="mt-3 space-y-0.5">
                 {c.links.map((l) => (
-                  <li key={l.label}><a href={l.href} className="inline-block py-2 text-sm text-white/70 transition-colors hover:text-white">{l.label}</a></li>
+                  <li key={l.label}><Link href={l.href} className="inline-block py-2 text-sm text-white/70 transition-colors hover:text-white">{l.label}</Link></li>
                 ))}
               </ul>
             </div>

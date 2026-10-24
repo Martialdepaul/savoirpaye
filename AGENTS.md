@@ -39,7 +39,8 @@ Les appels serveur sont simulés (`setTimeout`) et marqués `// Simulation … �
 - Sur mobile, les tableaux deviennent des listes de cartes (`sm:hidden` / `hidden sm:block`).
 - Les grilles contenant des graphiques Recharts doivent avoir `grid-cols-1` (sinon le graphique élargit la page).
 - Montants : utiliser `fcfa()` de `src/lib/dashboard-data.ts`, avec `whitespace-nowrap` dans les tableaux.
-- Thème et tokens de couleur dans `src/index.css` (Tailwind v4, pas de fichier de config Tailwind).
+- Thème et tokens de couleur dans `src/app/globals.css` (Tailwind v4, pas de fichier de config Tailwind) ; polices chargées par `next/font` dans `src/app/layout.tsx`.
+- Liens internes avec `next/link`, redirections avec `useRouter()` de `next/navigation` (jamais `<a href="/…">` ni `window.location.href`).
 
 ## Qualité du code
 

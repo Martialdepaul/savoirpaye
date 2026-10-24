@@ -5,8 +5,7 @@ build/
 out/
 .cache/
 .env*
-.vite/
-vite.config.*.timestamp-*
+.vercel/
 *.tsbuildinfo
 *-debug.log*
 logs/

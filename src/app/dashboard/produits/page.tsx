@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Plus, Search, Edit2, Eye, Link2 } from "lucide-react";
 import Pagination, { usePagination } from "@/components/ui/Pagination";
@@ -63,10 +64,10 @@ export default function ProduitsPage() {
               <h1 className="font-heading text-2xl font-extrabold sm:text-3xl">Produits</h1>
               <p className="mt-1 text-sm text-ink-2">Gérez vos produits et formations.</p>
             </div>
-            <a href="/dashboard/produits/nouveau" className="inline-flex items-center justify-center gap-2 rounded-btn bg-primary px-5 py-3 font-bold text-white hover:bg-primary-hover">
+            <Link href="/dashboard/produits/nouveau" className="inline-flex items-center justify-center gap-2 rounded-btn bg-primary px-5 py-3 font-bold text-white hover:bg-primary-hover">
               <Plus size={18} />
               Nouveau produit
-            </a>
+            </Link>
           </div>
 
           {/* Search */}
@@ -105,7 +106,7 @@ export default function ProduitsPage() {
           <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:hidden">
             {pager.pageItems.map((p) => (
               <li key={p.id} className="rounded-card border border-line bg-white shadow-soft">
-                <a href={editUrl(p.id)} className="block p-4 pb-3">
+                <Link href={editUrl(p.id)} className="block p-4 pb-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <p className="truncate font-semibold text-ink">{p.name}</p>
@@ -117,9 +118,9 @@ export default function ProduitsPage() {
                   <span className="num font-bold text-gold-ink">{fcfa(p.price)}</span>
                   <span className="text-ink-2">{p.sales} ventes</span>
                 </div>
-                </a>
+                </Link>
                 <div className="grid grid-cols-3 divide-x divide-line border-t border-line text-xs font-semibold text-ink-2">
-                  <a href={editUrl(p.id)} className="flex min-h-11 items-center justify-center gap-1.5 hover:text-ink"><Edit2 size={14} /> Modifier</a>
+                  <Link href={editUrl(p.id)} className="flex min-h-11 items-center justify-center gap-1.5 hover:text-ink"><Edit2 size={14} /> Modifier</Link>
                   <a href={productUrl(p)} target="_blank" rel="noopener" className="flex min-h-11 items-center justify-center gap-1.5 hover:text-ink"><Eye size={14} /> Aperçu</a>
                   <button onClick={() => copyLink(p)} className="flex min-h-11 items-center justify-center gap-1.5 hover:text-ink"><Link2 size={14} /> Lien</button>
                 </div>
@@ -144,7 +145,7 @@ export default function ProduitsPage() {
                   {pager.pageItems.map((p) => (
                     <tr key={p.id} className="hover:bg-page/60">
                       <td className="px-6 py-4">
-                        <a href={editUrl(p.id)} className="font-semibold text-ink hover:text-primary">{p.name}</a>
+                        <Link href={editUrl(p.id)} className="font-semibold text-ink hover:text-primary">{p.name}</Link>
                         <div className="text-xs text-ink-2">Créé le {p.createdAt}</div>
                       </td>
                       <td className="px-6 py-4">{typeBadge(p.type)}</td>
@@ -154,9 +155,9 @@ export default function ProduitsPage() {
                       <td className="px-6 py-4">{statusBadge(p.status)}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-1">
-                          <a href={editUrl(p.id)} className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Modifier" aria-label="Modifier">
+                          <Link href={editUrl(p.id)} className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Modifier" aria-label="Modifier">
                             <Edit2 size={15} />
-                          </a>
+                          </Link>
                           <a href={productUrl(p)} target="_blank" rel="noopener" className="flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-ink" title="Voir la page de vente" aria-label="Voir la page de vente">
                             <Eye size={15} />
                           </a>

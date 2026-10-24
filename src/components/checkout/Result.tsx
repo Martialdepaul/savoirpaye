@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CheckCircle2, XCircle, ArrowRight, RotateCcw, Mail } from "lucide-react";
 import { fcfa } from "../../lib/dashboard-data";
 import { productUrl, seller, type CatalogProduct } from "../../lib/catalog";
@@ -32,9 +33,9 @@ export function Success({ buyer, product: p }: { buyer: Buyer; product: CatalogP
         ))}
       </dl>
       <p className="mt-4 flex items-center justify-center gap-2 text-sm text-ink-2"><Mail size={15} /> Un reçu a été envoyé à {buyer.email}</p>
-      <a href={a.href} className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-btn bg-primary px-6 py-3.5 font-semibold text-white hover:bg-primary-hover">
+      <Link href={a.href} className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-btn bg-primary px-6 py-3.5 font-semibold text-white hover:bg-primary-hover">
         {a.cta} <ArrowRight size={18} />
-      </a>
+      </Link>
     </div>
   );
 }
@@ -52,7 +53,7 @@ export function Failure({ reason, product, onRetry }: { reason: "expired" | "dec
       <button onClick={onRetry} className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-btn bg-primary px-6 py-3.5 font-semibold text-white hover:bg-primary-hover">
         <RotateCcw size={17} /> Réessayer
       </button>
-      <a href={productUrl(product)} className="mt-3 inline-flex w-full justify-center rounded-btn border border-line bg-white px-6 py-3.5 font-semibold hover:bg-page">Retour au produit</a>
+      <Link href={productUrl(product)} className="mt-3 inline-flex w-full justify-center rounded-btn border border-line bg-white px-6 py-3.5 font-semibold hover:bg-page">Retour au produit</Link>
       <p className="mt-5 text-sm text-ink-2">Besoin d'aide ? Écrivez-nous à <span className="font-medium text-ink">aide@savoirpay.com</span></p>
     </div>
   );

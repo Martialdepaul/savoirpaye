@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Clock, Search } from "lucide-react";
 import { articles, categories } from "../../lib/site-data";
@@ -46,7 +47,7 @@ export default function ArticleList() {
         {!featured && <p className="mt-12 text-center text-ink-2">Aucun article ne correspond à votre recherche.</p>}
 
         {featured && (
-          <a href={`/ressources/${featured.slug}`} className="group mt-8 grid overflow-hidden rounded-card border border-line bg-white shadow-soft md:grid-cols-2">
+          <Link href={`/ressources/${featured.slug}`} className="group mt-8 grid overflow-hidden rounded-card border border-line bg-white shadow-soft md:grid-cols-2">
             <div className="overflow-hidden">
               <img src={featured.image} alt="" className="aspect-[16/10] size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
             </div>
@@ -62,13 +63,13 @@ export default function ArticleList() {
                 </div>
               </div>
             </div>
-          </a>
+          </Link>
         )}
 
         <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {rest.map((a) => (
             <li key={a.slug}>
-              <a href={`/ressources/${a.slug}`} className="group flex h-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-soft transition-shadow hover:shadow-lift">
+              <Link href={`/ressources/${a.slug}`} className="group flex h-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-soft transition-shadow hover:shadow-lift">
                 <div className="overflow-hidden">
                   <img src={a.image} alt="" loading="lazy" className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                 </div>
@@ -78,7 +79,7 @@ export default function ArticleList() {
                   <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-ink-2">{a.excerpt}</p>
                   <div className="mt-4 flex items-center gap-1.5 text-xs text-ink-2">{a.date} · <Clock size={12} /> {a.readTime}</div>
                 </div>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

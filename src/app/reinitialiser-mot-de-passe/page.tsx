@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import AuthLayout from "@/components/auth/AuthLayout";
@@ -30,7 +31,7 @@ export default function ResetPasswordPage() {
         <div className="rounded-card border border-line bg-white p-6 text-center shadow-soft">
           <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-[#ECF8EF] text-success"><CheckCircle2 size={28} /></span>
           <p className="mt-4 text-ink-2">Votre nouveau mot de passe est enregistré. Vous pouvez maintenant vous connecter.</p>
-          <a href="/connexion" className="mt-5 flex min-h-12 items-center justify-center rounded-btn bg-primary font-semibold text-white hover:bg-primary-hover">Se connecter</a>
+          <Link href="/connexion" className="mt-5 flex min-h-12 items-center justify-center rounded-btn bg-primary font-semibold text-white hover:bg-primary-hover">Se connecter</Link>
         </div>
       </AuthLayout>
     );

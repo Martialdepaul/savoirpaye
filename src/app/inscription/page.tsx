@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
 import AuthLayout from "@/components/auth/AuthLayout";
@@ -13,6 +15,7 @@ const iso: Record<string, string> = { "Sénégal": "SN", "Côte d'Ivoire": "CI",
 const offers: Record<string, string> = { starter: "Starter (gratuite)", pro: "Pro", business: "Business" };
 
 export default function SignupPage() {
+  const router = useRouter();
   // Lu côté client pour que le formulaire soit rendu dès le HTML initial
   const [offer, setOffer] = useState<string | undefined>();
   useEffect(() => setOffer(offers[new URLSearchParams(window.location.search).get("offre") ?? ""]), []);
@@ -35,14 +38,14 @@ export default function SignupPage() {
     if (first) return document.getElementById(first)?.focus();
     setLoading(true);
     // Simulation de la création de compte, à remplacer par l'API
-    setTimeout(() => (window.location.href = "/onboarding"), 900);
+    setTimeout(() => router.push("/onboarding"), 900);
   };
 
   return (
     <AuthLayout
       title="Créez votre compte"
       subtitle="Gratuit, sans carte bancaire. Votre boutique est prête en 2 minutes."
-      footer={<>Déjà un compte ? <a href="/connexion" className="inline-block py-2 font-semibold text-primary hover:underline">Se connecter</a></>}
+      footer={<>Déjà un compte ? <Link href="/connexion" className="inline-block py-2 font-semibold text-primary hover:underline">Se connecter</Link></>}
     >
       {offer && (
         <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-gold-light px-3.5 py-2 text-sm font-semibold text-gold-ink">
@@ -75,7 +78,7 @@ export default function SignupPage() {
         <div>
           <label className="flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-ink-2">
             <input id="terms" type="checkbox" checked={f.terms} onChange={(e) => set("terms", e.target.checked)} aria-invalid={!!errors.terms} className="mt-0.5 size-5 shrink-0 accent-[var(--color-primary)]" />
-            <span>J'accepte les <a href="/cgu" target="_blank" className="font-semibold text-primary hover:underline">conditions d'utilisation</a> et la <a href="/confidentialite" target="_blank" className="font-semibold text-primary hover:underline">politique de confidentialité</a>.</span>
+            <span>J'accepte les <Link href="/cgu" target="_blank" className="font-semibold text-primary hover:underline">conditions d'utilisation</Link> et la <Link href="/confidentialite" target="_blank" className="font-semibold text-primary hover:underline">politique de confidentialité</Link>.</span>
           </label>
           {errors.terms && <p role="alert" className="mt-1.5 text-sm text-danger">{errors.terms}</p>}
         </div>

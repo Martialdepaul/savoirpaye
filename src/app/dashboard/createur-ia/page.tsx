@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ShieldCheck, Sparkles, PartyPopper } from "lucide-react";
 import DashboardShell from "../../../components/dashboard/DashboardShell";
@@ -86,7 +87,7 @@ export default function CreateurIaPage() {
             <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary-light text-primary"><PartyPopper size={26} /></span>
             <h3 className="mt-4 font-heading text-xl font-bold">« {title} » est enregistrée en brouillon</h3>
             <p className="num mx-auto mt-2 max-w-md text-ink-2">{review.filter((r) => r.accepted).length} éléments validés. Vous pouvez la compléter, l'illustrer et fixer son prix avant de la publier.</p>
-            <a href="/dashboard" className="mt-6 inline-flex rounded-btn bg-primary px-6 py-3 font-semibold text-white hover:bg-primary-hover">Retour à l'accueil</a>
+            <Link href="/dashboard" className="mt-6 inline-flex rounded-btn bg-primary px-6 py-3 font-semibold text-white hover:bg-primary-hover">Retour à l'accueil</Link>
           </div>
         ) : (
           <>

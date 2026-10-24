@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, Globe, PartyPopper } from "lucide-react";
@@ -31,8 +32,8 @@ export default function OnboardingPage() {
           <p className="mt-2 text-ink-2">Elle est accessible à l'adresse :</p>
           <p className="mt-3 break-all rounded-btn bg-mint px-4 py-3 font-semibold text-primary">savoirpay.com/boutique/{slug}</p>
           <div className="mt-8 grid gap-3">
-            <a href="/dashboard/produits/nouveau" className="rounded-btn bg-gold py-3.5 font-bold text-forest hover:bg-gold-hover">Créer mon premier produit</a>
-            <a href="/dashboard" className="rounded-btn border border-line py-3.5 font-semibold hover:bg-page">Aller au tableau de bord</a>
+            <Link href="/dashboard/produits/nouveau" className="rounded-btn bg-gold py-3.5 font-bold text-forest hover:bg-gold-hover">Créer mon premier produit</Link>
+            <Link href="/dashboard" className="rounded-btn border border-line py-3.5 font-semibold hover:bg-page">Aller au tableau de bord</Link>
           </div>
         </div>
       </AuthShell>

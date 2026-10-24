@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowLeft } from "lucide-react";
 import Logo from "../ui/Logo";
@@ -16,17 +17,17 @@ export default function LegalPage({ title, updated, intro, sections, current }: 
       <header className="border-b border-line bg-page/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5">
           <Logo />
-          <a href="/" className="-mr-3 inline-flex items-center gap-1.5 px-3 py-3 text-sm font-medium text-ink-2 hover:text-ink"><ArrowLeft size={15} /> Accueil</a>
+          <Link href="/" className="-mr-3 inline-flex items-center gap-1.5 px-3 py-3 text-sm font-medium text-ink-2 hover:text-ink"><ArrowLeft size={15} /> Accueil</Link>
         </div>
       </header>
 
       <div className="mx-auto max-w-5xl px-5 py-8 sm:py-12">
         <nav aria-label="Documents légaux" className="-mx-5 mb-8 flex gap-2 overflow-x-auto px-5 pb-1">
           {pages.map((p) => (
-            <a key={p.href} href={p.href} aria-current={p.href === current ? "page" : undefined}
+            <Link key={p.href} href={p.href} aria-current={p.href === current ? "page" : undefined}
               className={`inline-flex min-h-11 shrink-0 items-center rounded-full border px-4 text-sm font-semibold ${p.href === current ? "border-primary bg-primary text-white" : "border-line bg-white text-ink-2 hover:text-ink"}`}>
               {p.label}
-            </a>
+            </Link>
           ))}
         </nav>
 

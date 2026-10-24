@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { ChevronDown, Mail, MessageCircle, Search, PlayCircle } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
@@ -67,7 +68,7 @@ export default function AidePage() {
                 <div className="font-semibold">{c.title}</div>
                 <div className="truncate text-sm text-ink-2">{c.text}</div>
               </div>
-              <a href={c.href} {...(c.href.startsWith("http") ? { target: "_blank", rel: "noopener" } : {})} className="-mr-2 inline-flex min-h-11 shrink-0 items-center px-2 text-sm font-semibold text-primary hover:underline">{c.cta}</a>
+              <Link href={c.href} {...(c.href.startsWith("http") ? { target: "_blank", rel: "noopener" } : {})} className="-mr-2 inline-flex min-h-11 shrink-0 items-center px-2 text-sm font-semibold text-primary hover:underline">{c.cta}</Link>
             </div>
           ))}
         </section>

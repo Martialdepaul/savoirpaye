@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowLeft, MailCheck } from "lucide-react";
 import AuthLayout from "@/components/auth/AuthLayout";
@@ -33,7 +34,7 @@ export default function ForgotPasswordPage() {
     send();
   };
 
-  const back = <a href="/connexion" className="inline-flex min-h-11 items-center gap-2 font-semibold text-primary hover:underline"><ArrowLeft size={16} /> Retour à la connexion</a>;
+  const back = <Link href="/connexion" className="inline-flex min-h-11 items-center gap-2 font-semibold text-primary hover:underline"><ArrowLeft size={16} /> Retour à la connexion</Link>;
 
   if (sent) {
     return (

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MapPin, MessageCircle, Star, Users } from "lucide-react";
@@ -29,7 +30,7 @@ export default async function ShopPage({ params }: Props) {
       <header className="border-b border-line bg-page/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
           <Logo />
-          <a href="/connexion" className="-mr-3 px-3 py-3 text-sm font-medium text-ink-2 hover:text-ink">Connexion</a>
+          <Link href="/connexion" className="-mr-3 px-3 py-3 text-sm font-medium text-ink-2 hover:text-ink">Connexion</Link>
         </div>
       </header>
 
@@ -61,7 +62,7 @@ export default async function ShopPage({ params }: Props) {
       </main>
 
       <footer className="border-t border-line py-8 text-center text-sm text-ink-2">
-        Boutique propulsée par <a href="/" className="inline-block py-2 font-semibold text-primary hover:underline">savoirpay</a>
+        Boutique propulsée par <Link href="/" className="inline-block py-2 font-semibold text-primary hover:underline">savoirpay</Link>
       </footer>
     </div>
   );

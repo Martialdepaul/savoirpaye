@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { FileDown, GraduationCap, Star, Users, Video } from "lucide-react";
 import Pagination, { usePagination } from "../ui/Pagination";
@@ -38,7 +39,7 @@ export default function ProductGrid({ products }: { products: CatalogProduct[] }
             const Icon = icons[p.type];
             return (
               <li key={p.id}>
-                <a href={productUrl(p)} className="group flex h-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-soft transition-shadow hover:shadow-[0_4px_20px_rgb(28_25_23/0.1)]">
+                <Link href={productUrl(p)} className="group flex h-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-soft transition-shadow hover:shadow-[0_4px_20px_rgb(28_25_23/0.1)]">
                   <div className="relative aspect-[16/9] bg-primary-light">
                     <img src={p.cover} alt="" loading="lazy" className="size-full object-cover" />
                     <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold"><Icon size={13} className="text-primary" /> {p.type}</span>
@@ -55,7 +56,7 @@ export default function ProductGrid({ products }: { products: CatalogProduct[] }
                       {p.comparePrice && <span className="num text-xs text-ink-2 line-through">{fcfa(p.comparePrice)}</span>}
                     </div>
                   </div>
-                </a>
+                </Link>
               </li>
             );
           })}

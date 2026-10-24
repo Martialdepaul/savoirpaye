@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Bell, MessageSquareQuote, ShoppingBag, Sparkles, Wallet } from "lucide-react";
 import { notifications as initial, type Notif } from "../../lib/site-data";
@@ -44,7 +45,7 @@ export default function Notifications() {
           <ul className="max-h-[60vh] divide-y divide-line overflow-y-auto">
             {items.map((n) => (
               <li key={n.id}>
-                <a href={links[n.kind] ?? "/dashboard/notifications"} className="flex gap-3 px-4 py-3 hover:bg-page">
+                <Link href={links[n.kind] ?? "/dashboard/notifications"} className="flex gap-3 px-4 py-3 hover:bg-page">
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">{(() => { const I = icons[n.kind]; return <I size={16} />; })()}</span>
                   <span className="min-w-0 flex-1">
                     <span className={`block text-sm ${n.unread ? "font-semibold text-ink" : "text-ink-2"}`}>{n.title}</span>
@@ -52,11 +53,11 @@ export default function Notifications() {
                     <span className="mt-0.5 block text-xs text-ink-2">{n.when}</span>
                   </span>
                   {n.unread && <span className="mt-1.5 size-2 shrink-0 rounded-full bg-primary" aria-label="Non lue" />}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
-          <a href="/dashboard/notifications" className="flex min-h-11 items-center justify-center border-t border-line text-sm font-semibold text-primary hover:bg-page">Voir toutes les notifications</a>
+          <Link href="/dashboard/notifications" className="flex min-h-11 items-center justify-center border-t border-line text-sm font-semibold text-primary hover:bg-page">Voir toutes les notifications</Link>
         </div>
       )}
     </div>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { features } from "../../lib/mock-data";
 
@@ -11,9 +12,9 @@ export default function Features() {
           <p className="mt-4 leading-relaxed text-ink-2">
             Savoirpay vous offre une suite complète d'outils pour créer, vendre et gérer votre business en ligne, avec l'aide de l'IA.
           </p>
-          <a href="/fonctionnalites" className="mt-7 inline-flex items-center gap-2 rounded-btn bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover">
+          <Link href="/fonctionnalites" className="mt-7 inline-flex items-center gap-2 rounded-btn bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover">
             Découvrir toutes les fonctionnalités <ArrowRight size={16} />
-          </a>
+          </Link>
         </div>
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Plus, Package, GraduationCap, Sparkles } from "lucide-react";
 
@@ -10,13 +11,14 @@ const items = [
 ];
 
 export function CreateMenuList({ onPick }: { onPick: () => void }) {
+  const router = useRouter();
   return (
     <ul role="menu">
       {items.map((i) => (
         <li key={i.label} role="none">
           <button
             role="menuitem"
-            onClick={() => { onPick(); window.location.href = i.href; }}
+            onClick={() => { onPick(); router.push(i.href); }}
             className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium hover:bg-page ${i.ai ? "text-ai" : "text-ink"}`}
           >
             <i.icon size={18} /> {i.label}

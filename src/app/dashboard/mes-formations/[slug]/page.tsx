@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useMemo } from "react";
 import { useParams } from "next/navigation";
 import { notFound } from "next/navigation";
@@ -44,9 +45,9 @@ export default function CoursePlayerPage() {
       {/* Top bar */}
       <header className="flex h-14 shrink-0 items-center justify-between border-b border-line bg-white px-4 sm:px-6">
         <div className="flex items-center gap-3">
-          <a href="/dashboard/mes-formations" className="-ml-2 flex items-center gap-1.5 px-2 py-3 text-sm font-medium text-ink-2 hover:text-ink">
+          <Link href="/dashboard/mes-formations" className="-ml-2 flex items-center gap-1.5 px-2 py-3 text-sm font-medium text-ink-2 hover:text-ink">
             <ChevronLeft size={18} /> Mes formations
-          </a>
+          </Link>
         </div>
         <div className="hidden lg:block"><Logo /></div>
         <div className="flex items-center gap-4">

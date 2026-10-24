@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { steps } from "../../lib/mock-data";
 
@@ -11,9 +12,9 @@ export default function HowItWorks() {
           <p className="mt-4 leading-relaxed text-ink-2">
             Savoirpay est simple et rapide à prendre en main. En quelques minutes, vous pouvez déjà commencer à vendre vos formations ou produits numériques.
           </p>
-          <a href="/inscription" className="mt-7 inline-flex items-center gap-2 rounded-btn bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover">
+          <Link href="/inscription" className="mt-7 inline-flex items-center gap-2 rounded-btn bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover">
             Créer mon compte maintenant <ArrowRight size={16} />
-          </a>
+          </Link>
         </div>
         <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
           {steps.map((s, i) => (

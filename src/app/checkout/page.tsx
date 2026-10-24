@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Suspense, useCallback, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowLeft, Lock } from "lucide-react";
@@ -28,7 +29,7 @@ function Checkout() {
     <main className="mx-auto max-w-5xl px-5 py-8 sm:py-12">
       {phase === "form" && (
         <>
-          <a href={productUrl(product)} className="mb-2 -ml-1 inline-flex items-center gap-2 px-1 py-3 text-sm font-medium text-ink-2 hover:text-ink"><ArrowLeft size={16} /> Retour au produit</a>
+          <Link href={productUrl(product)} className="mb-2 -ml-1 inline-flex items-center gap-2 px-1 py-3 text-sm font-medium text-ink-2 hover:text-ink"><ArrowLeft size={16} /> Retour au produit</Link>
           <h1 className="mb-6 font-heading text-3xl font-extrabold">Finaliser votre commande</h1>
           <div className="grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start lg:gap-10">
             <div className="order-2 lg:order-1"><CheckoutForm value={buyer} price={product.price} onChange={setBuyer} onSubmit={() => go("waiting")} /></div>

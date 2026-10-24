@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "../ui/Logo";
 import { activeLabel, navItems, secondaryNav } from "./nav";
@@ -10,7 +11,7 @@ export function NavList({ onNavigate }: { onNavigate?: () => void }) {
   const item = (n: (typeof navItems)[number] | (typeof secondaryNav)[number], ai = false) => {
     const active = n.label === current;
     return (
-      <a
+      <Link
         key={n.label}
         href={n.href}
         onClick={onNavigate}
@@ -22,7 +23,7 @@ export function NavList({ onNavigate }: { onNavigate?: () => void }) {
         <n.icon size={18} className={ai && !active ? "text-ai" : ""} />
         {n.label}
         {ai && <span className={`ml-auto rounded-md px-1.5 py-0.5 text-[11px] font-bold ${active ? "bg-white/20 text-white" : "bg-ai-light text-ai"}`}>IA</span>}
-      </a>
+      </Link>
     );
   };
   return (
@@ -60,7 +61,7 @@ export default function Sidebar(_: { active?: string }) {
         <div className="mb-4 rounded-card bg-forest p-4 text-white">
           <div className="text-xs text-white/70">Plan actuel</div>
           <div className="font-heading font-bold">Pro · <span className="text-gold">9 900 FCFA</span></div>
-          <a href="/tarifs" className="mt-1 inline-block py-1.5 text-xs font-semibold text-gold hover:underline">Passer à Business</a>
+          <Link href="/tarifs" className="mt-1 inline-block py-1.5 text-xs font-semibold text-gold hover:underline">Passer à Business</Link>
         </div>
         <SellerCard />
       </div>

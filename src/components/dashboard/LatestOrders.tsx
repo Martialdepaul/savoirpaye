@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import { fcfa, orders, type OrderStatus } from "../../lib/dashboard-data";
 
@@ -21,7 +22,7 @@ export default function LatestOrders() {
     <section className="rounded-card border border-line bg-white shadow-soft">
       <div className="flex items-center justify-between gap-3 p-4 sm:p-6 sm:pb-4">
         <h2 className="font-heading text-lg font-bold">Dernières commandes</h2>
-        <a href="/dashboard/commandes" className="-my-3 -mr-2 shrink-0 whitespace-nowrap px-2 py-3 text-sm font-medium text-primary hover:underline">Voir tout</a>
+        <Link href="/dashboard/commandes" className="-my-3 -mr-2 shrink-0 whitespace-nowrap px-2 py-3 text-sm font-medium text-primary hover:underline">Voir tout</Link>
       </div>
 
       <ul className="divide-y divide-line border-t border-line sm:hidden">

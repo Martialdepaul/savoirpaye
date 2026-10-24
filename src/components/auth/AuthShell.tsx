@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { Smartphone, ShieldCheck, Sparkles } from "lucide-react";
 import Logo from "../ui/Logo";
@@ -8,7 +9,7 @@ export default function AuthShell({ children, aside = true }: { children: ReactN
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-16 items-center justify-between px-4 sm:px-8">
           <Logo />
-          <a href="/" className="-mr-3 px-3 py-3 text-sm font-medium text-ink-2 hover:text-ink">Retour au site</a>
+          <Link href="/" className="-mr-3 px-3 py-3 text-sm font-medium text-ink-2 hover:text-ink">Retour au site</Link>
         </header>
         <main className="flex flex-1 items-start justify-center px-4 pb-12 pt-4 sm:items-center sm:px-8">
           <div className="w-full max-w-md">{children}</div>

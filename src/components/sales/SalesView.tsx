@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Check, Clock, Users, ShieldCheck, Infinity as Inf, Award, PlayCircle, FileDown, Video, Download, Eye } from "lucide-react";
 import Logo from "../ui/Logo";
 import Stars from "./Stars";
@@ -30,9 +31,9 @@ function BuyCard({ p }: { p: CatalogProduct }) {
     <div className="rounded-card border border-line bg-white p-6 shadow-soft">
       <Price p={p} large />
       <p className="mt-1 text-sm text-ink-2">{priceNote(p)}</p>
-      <a href={checkoutUrl(p)} className="mt-5 block rounded-btn bg-primary py-3.5 text-center font-semibold text-white transition-colors hover:bg-primary-hover">
+      <Link href={checkoutUrl(p)} className="mt-5 block rounded-btn bg-primary py-3.5 text-center font-semibold text-white transition-colors hover:bg-primary-hover">
         {ctaLabel(p)}
-      </a>
+      </Link>
       <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-ink-2"><ShieldCheck size={14} className="shrink-0 text-success" /> Remboursé sous 7 jours si le produit ne vous convient pas</p>
       <ul className="mt-5 space-y-2.5 border-t border-line pt-5">
         {p.includes.map((t) => (
@@ -57,7 +58,7 @@ export default function SalesView({ product: p }: { product: CatalogProduct }) {
       <header className="border-b border-line bg-page/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
           <Logo />
-          <a href="/connexion" className="-mr-3 px-3 py-3 text-sm font-medium text-ink-2 hover:text-ink">Connexion</a>
+          <Link href="/connexion" className="-mr-3 px-3 py-3 text-sm font-medium text-ink-2 hover:text-ink">Connexion</Link>
         </div>
       </header>
 
@@ -87,13 +88,13 @@ export default function SalesView({ product: p }: { product: CatalogProduct }) {
               {p.coaching && <span className="flex items-center gap-1.5 text-ink-2"><Clock size={15} /> {p.coaching.duration}</span>}
             </div>
 
-            <a href={`/boutique/${seller.slug}`} className="mt-5 inline-flex items-center gap-3 rounded-btn py-1 pr-2 hover:bg-white">
+            <Link href={`/boutique/${seller.slug}`} className="mt-5 inline-flex items-center gap-3 rounded-btn py-1 pr-2 hover:bg-white">
               <img src="/images/team-1.jpg" alt="" className="size-11 rounded-full object-cover" />
               <span>
                 <span className="block text-sm font-semibold">{seller.name}</span>
                 <span className="block text-xs text-ink-2">{seller.role} · Voir la boutique</span>
               </span>
-            </a>
+            </Link>
           </div>
 
           <section>
@@ -164,7 +165,7 @@ export default function SalesView({ product: p }: { product: CatalogProduct }) {
           <div className="text-xs text-ink-2">Paiement unique</div>
           <Price p={p} />
         </div>
-        <a href={checkoutUrl(p)} className="flex-1 rounded-btn bg-primary py-3.5 text-center font-semibold text-white hover:bg-primary-hover">{ctaLabel(p)}</a>
+        <Link href={checkoutUrl(p)} className="flex-1 rounded-btn bg-primary py-3.5 text-center font-semibold text-white hover:bg-primary-hover">{ctaLabel(p)}</Link>
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Copy, Trash2, Edit2, Check, X } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
@@ -147,9 +149,9 @@ function TabBoutique({ notify }: { notify: Notify }) {
           <button onClick={() => notify("Boutique enregistrée")} className="min-h-11 rounded-btn bg-primary px-5 font-bold text-white hover:bg-primary-hover">
             Enregistrer
           </button>
-          <a href="/boutique/aminata-diallo" target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-btn border border-line bg-white px-5 font-semibold text-ink hover:bg-page">
+          <Link href="/boutique/aminata-diallo" target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-btn border border-line bg-white px-5 font-semibold text-ink hover:bg-page">
             Voir ma boutique
-          </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -278,6 +280,7 @@ function TabPaiements({ notify }: { notify: Notify }) {
 }
 
 function TabSecurite({ notify }: { notify: Notify }) {
+  const router = useRouter();
   const [current, setCurrent] = useState("");
   const [newPwd, setNewPwd] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -298,7 +301,7 @@ function TabSecurite({ notify }: { notify: Notify }) {
 
   const deleteAccount = () => {
     const answer = window.prompt("Cette action est définitive. Tapez SUPPRIMER pour confirmer la suppression de votre compte.");
-    if (answer?.trim().toUpperCase() === "SUPPRIMER") window.location.href = "/";
+    if (answer?.trim().toUpperCase() === "SUPPRIMER") router.push("/");
   };
 
   return (
