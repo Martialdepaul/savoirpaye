@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Caveat, Inter, Plus_Jakarta_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { site } from "@/lib/site-config";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-inter" });
-const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["500", "600", "700", "800"], variable: "--font-jakarta" });
-const caveat = Caveat({ subsets: ["latin"], weight: ["600", "700"], variable: "--font-caveat" });
+// Polices hébergées dans le projet (sous-ensemble latin, polices variables) :
+// le build ne dépend pas du téléchargement depuis Google Fonts.
+const inter = localFont({ src: "./fonts/inter.woff2", weight: "400 600", variable: "--font-inter", display: "swap" });
+const jakarta = localFont({ src: "./fonts/plus-jakarta-sans.woff2", weight: "500 800", variable: "--font-jakarta", display: "swap" });
+const caveat = localFont({ src: "./fonts/caveat.woff2", weight: "600 700", variable: "--font-caveat", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
