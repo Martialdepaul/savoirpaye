@@ -1,7 +1,5 @@
 import { buildCourse } from "./course-data";
 
-export const COURSE_PRICE = 25000;
-export const COURSE_URL = "/formations/vendre-sur-whatsapp-business";
 export const COVER = "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=1400&h=800&fit=crop&auto=format";
 
 export const course = {
@@ -9,8 +7,7 @@ export const course = {
   subtitle: "Trouvez vos premiers clients, présentez vos produits et encaissez par Mobile Money, depuis votre téléphone.",
   instructor: { name: "Aminata Diallo", role: "Formatrice à Dakar", initials: "AD" },
   rating: 4.8,
-  reviewsCount: 312,
-  students: 1247,
+  reviewsCount: 31,
   duration: "4 h 20",
   updated: "Octobre 2026",
 };

@@ -12,7 +12,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = findProductById((await params).id);
-  return { title: p ? `Modifier « ${p.name} » | SavoirPaye` : "Produit introuvable" };
+  return { title: p ? `Modifier « ${p.name} »` : "Produit introuvable" };
 }
 
 export default async function EditProductPage({ params }: Props) {

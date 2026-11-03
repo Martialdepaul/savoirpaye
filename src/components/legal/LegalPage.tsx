@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowLeft } from "lucide-react";
 import Logo from "../ui/Logo";
+import { emails } from "../../lib/site-config";
 
 export type LegalSection = { id: string; title: string; body: ReactNode };
 
@@ -49,10 +50,10 @@ export default function LegalPage({ title, updated, intro, sections, current }: 
             <div className="mt-6 text-[15px] leading-relaxed text-ink-2">{intro}</div>
 
             <details className="mt-6 rounded-card border border-line bg-white p-4 lg:hidden">
-              <summary className="min-h-6 cursor-pointer font-semibold">Sommaire</summary>
+              <summary className="flex min-h-11 cursor-pointer items-center font-semibold">Sommaire</summary>
               <ol className="mt-3 space-y-1 text-sm">
                 {sections.map((s, i) => (
-                  <li key={s.id}><a href={`#${s.id}`} className="block py-2 text-ink-2 hover:text-ink">{i + 1}. {s.title}</a></li>
+                  <li key={s.id}><a href={`#${s.id}`} className="block py-3 text-ink-2 hover:text-ink">{i + 1}. {s.title}</a></li>
                 ))}
               </ol>
             </details>
@@ -67,7 +68,7 @@ export default function LegalPage({ title, updated, intro, sections, current }: 
             </div>
 
             <p className="mt-12 rounded-card border border-line bg-white p-5 text-sm text-ink-2">
-              Une question sur ce document ? Écrivez-nous à <a href="mailto:juridique@savoirpay.com" className="font-semibold text-primary hover:underline">juridique@savoirpay.com</a>.
+              Une question sur ce document ? Écrivez-nous à <a href={`mailto:${emails.legal}`} className="font-semibold text-primary hover:underline">{emails.legal}</a>.
             </p>
           </article>
         </div>

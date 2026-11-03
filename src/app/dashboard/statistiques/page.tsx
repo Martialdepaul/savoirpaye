@@ -60,7 +60,7 @@ export default function StatistiquesPage() {
                   role="tab"
                   aria-selected={period === p.id}
                   onClick={() => setPeriod(p.id)}
-                  className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors sm:flex-none ${
+                  className={`flex-1 rounded-lg min-h-11 px-4 text-sm font-medium transition-colors sm:flex-none ${
                     period === p.id ? "bg-primary text-white" : "text-ink-2 hover:text-ink"
                   }`}
                 >

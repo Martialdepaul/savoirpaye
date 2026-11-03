@@ -5,7 +5,7 @@ import HowItWorks from "@/components/landing/HowItWorks";
 import PaymentStrip from "@/components/landing/PaymentStrip";
 
 export const metadata: Metadata = {
-  title: "Comment ça marche · Savoirpay",
+  title: "Comment ça marche",
   description: "Inscrivez-vous, créez vos contenus, recevez vos paiements en Mobile Money et retirez vos gains.",
 };
 

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ChevronDown, Mail, MessageCircle, Search, PlayCircle } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
+import { emails, phones, waLink } from "@/lib/site-config";
 import { helpFaqs, helpTopics } from "@/lib/site-data";
 
 export default function AidePage() {
@@ -58,8 +59,8 @@ export default function AidePage() {
 
         <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {[
-            { icon: MessageCircle, title: "WhatsApp", text: "Réponse en moins de 2 h", cta: "Écrire", href: "https://wa.me/221770000000", cls: "bg-[#25D366] text-white" },
-            { icon: Mail, title: "E-mail", text: "support@savoirpay.com", cta: "Envoyer", href: "/contact", cls: "bg-primary text-white" },
+            { icon: MessageCircle, title: "WhatsApp", text: "Réponse en moins de 2 h", cta: "Écrire", href: waLink(phones.whatsapp, "Bonjour, j'ai besoin d'aide sur mon compte Savoirpay."), cls: "bg-[#25D366] text-white" },
+            { icon: Mail, title: "E-mail", text: emails.support, cta: "Envoyer", href: `mailto:${emails.support}`, cls: "bg-primary text-white" },
             { icon: PlayCircle, title: "Tutoriels vidéo", text: "Prise en main en 10 min", cta: "Regarder", href: "/ressources", cls: "bg-gold text-forest" },
           ].map((c) => (
             <div key={c.title} className="flex min-w-0 items-center gap-3 rounded-card border border-line bg-white p-4 shadow-soft sm:gap-4 sm:p-5">
@@ -68,7 +69,11 @@ export default function AidePage() {
                 <div className="font-semibold">{c.title}</div>
                 <div className="truncate text-sm text-ink-2">{c.text}</div>
               </div>
-              <Link href={c.href} {...(c.href.startsWith("http") ? { target: "_blank", rel: "noopener" } : {})} className="-mr-2 inline-flex min-h-11 shrink-0 items-center px-2 text-sm font-semibold text-primary hover:underline">{c.cta}</Link>
+              {c.href.startsWith("/") ? (
+                <Link href={c.href} className="-mr-2 inline-flex min-h-11 shrink-0 items-center px-2 text-sm font-semibold text-primary hover:underline">{c.cta}</Link>
+              ) : (
+                <a href={c.href} {...(c.href.startsWith("http") ? { target: "_blank", rel: "noopener" } : {})} className="-mr-2 inline-flex min-h-11 shrink-0 items-center px-2 text-sm font-semibold text-primary hover:underline">{c.cta}</a>
+              )}
             </div>
           ))}
         </section>

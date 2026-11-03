@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Clock, Share2 } from "lucide-react";
 import SiteShell from "../../../components/site/SiteShell";
 import { articles } from "../../../lib/site-data";
+import { site } from "../../../lib/site-config";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -14,13 +15,14 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const a = articles.find((x) => x.slug === slug);
-  return { title: a ? `${a.title} · Savoirpay` : "Article · Savoirpay", description: a?.excerpt };
+  return { title: a ? a.title : "Article", description: a?.excerpt };
 }
 
 export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
   const article = articles.find((a) => a.slug === slug);
   if (!article) notFound();
+  const url = `${site.url}/ressources/${article.slug}`;
   const related = articles.filter((a) => a.slug !== slug).slice(0, 3);
 
   return (
@@ -69,9 +71,9 @@ export default async function ArticlePage({ params }: Props) {
           <div className="mt-8 flex flex-wrap items-center gap-2 text-sm text-ink-2">
             <span className="mr-1 flex items-center gap-2"><Share2 size={16} /> Partager :</span>
             {[
-              ["WhatsApp", `https://wa.me/?text=${encodeURIComponent(`${article.title} https://savoirpaye.vercel.app/ressources/${article.slug}`)}`],
-              ["Facebook", `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://savoirpaye.vercel.app/ressources/${article.slug}`)}`],
-              ["LinkedIn", `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://savoirpaye.vercel.app/ressources/${article.slug}`)}`],
+              ["WhatsApp", `https://wa.me/?text=${encodeURIComponent(`${article.title} ${url}`)}`],
+              ["Facebook", `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${url}`)}`],
+              ["LinkedIn", `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`${url}`)}`],
             ].map(([label, href]) => (
               <a key={label} href={href} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-full border border-line bg-white px-4 font-medium text-ink hover:border-primary">{label}</a>
             ))}

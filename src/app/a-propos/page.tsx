@@ -5,7 +5,7 @@ import Testimonials from "../../components/landing/Testimonials";
 import { aboutStats, team, values } from "../../lib/site-data";
 
 export const metadata: Metadata = {
-  title: "À propos · Savoirpay",
+  title: "À propos",
   description: "Notre mission : permettre à chaque expert africain de vivre de son savoir.",
 };
 
@@ -36,7 +36,7 @@ export default function AProposPage() {
             <h2 className="mt-3 font-heading text-3xl font-extrabold sm:text-4xl">Tout a commencé par une formation Excel vendue sur WhatsApp</h2>
             <div className="mt-5 space-y-4 leading-relaxed text-ink-2">
               <p>En 2023, Aminata vendait ses formations par messages privés, encaissait par Orange Money et envoyait les vidéos une par une. Ça fonctionnait, mais ça lui prenait des heures chaque semaine.</p>
-              <p>Les plateformes existantes ne parlaient ni FCFA ni Mobile Money. Avec Kevin, elle a décidé de construire l'outil qu'elle aurait voulu avoir : simple, mobile, et payé comme on paie chez nous.</p>
+              <p>Les plateformes existantes ne parlaient ni FCFA ni Mobile Money. Avec Yao Kouassi, développeur à Abidjan, elle a décidé de construire l'outil qu'elle aurait voulu avoir : simple, mobile, et payé comme on paie chez nous.</p>
               <p>Aujourd'hui, plus de 12 000 créateurs dans 14 pays utilisent Savoirpay pour transmettre leur savoir et en vivre.</p>
             </div>
           </div>
@@ -72,9 +72,16 @@ export default function AProposPage() {
           <ul className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
             {team.map((m) => (
               <li key={m.name} className="text-center">
-                <img src={m.photo} alt={`Portrait de ${m.name}`} loading="lazy" className="aspect-square w-full rounded-[20px] object-cover" />
+                {m.photo ? (
+                  <img src={m.photo} alt={`Portrait de ${m.name}`} loading="lazy" className="aspect-square w-full rounded-[20px] object-cover" />
+                ) : (
+                  <span aria-hidden="true" className="bg-forest-glow flex aspect-square w-full items-center justify-center rounded-[20px] font-heading text-4xl font-extrabold text-gold sm:text-5xl">
+                    {m.name.split(" ").map((w) => w[0]).join("")}
+                  </span>
+                )}
                 <div className="mt-3 font-heading text-base font-bold">{m.name}</div>
                 <div className="text-sm text-ink-2">{m.role}</div>
+                <div className="text-xs text-ink-2">{m.city}</div>
               </li>
             ))}
           </ul>

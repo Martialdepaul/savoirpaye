@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
 import AuthLayout from "@/components/auth/AuthLayout";
-import { Field, PasswordInput, PasswordStrength, SubmitButton, inputCls, isEmail, isPhone, passwordOk } from "@/components/auth/fields";
+import { Divider, Field, GoogleButton, PasswordInput, PasswordStrength, SubmitButton, inputCls, isEmail, isPhone, passwordOk } from "@/components/auth/fields";
 import { countries } from "@/components/checkout/CheckoutForm";
 
 type Form = { name: string; email: string; country: string; phone: string; password: string; terms: boolean };
@@ -22,6 +22,7 @@ export default function SignupPage() {
   const [f, setF] = useState<Form>({ name: "", email: "", country: "Sénégal", phone: "", password: "", terms: false });
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
+  const [google, setGoogle] = useState(false);
   const set = <K extends keyof Form>(k: K, v: Form[K]) => { setF({ ...f, [k]: v }); if (errors[k]) setErrors({ ...errors, [k]: undefined }); };
   const dial = countries.find((c) => c.name === f.country)?.dial;
 
@@ -41,17 +42,26 @@ export default function SignupPage() {
     setTimeout(() => router.push("/onboarding"), 900);
   };
 
+  const withGoogle = () => {
+    setGoogle(true);
+    // Simulation de l'inscription Google (OAuth), à remplacer par la redirection vers le fournisseur
+    setTimeout(() => router.push("/onboarding"), 900);
+  };
+
   return (
     <AuthLayout
       title="Créez votre compte"
       subtitle="Gratuit, sans carte bancaire. Votre boutique est prête en 2 minutes."
-      footer={<>Déjà un compte ? <Link href="/connexion" className="inline-block py-2 font-semibold text-primary hover:underline">Se connecter</Link></>}
+      footer={<>Déjà un compte ? <Link href="/connexion" className="inline-block py-3 font-semibold text-primary hover:underline">Se connecter</Link></>}
     >
       {offer && (
         <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-gold-light px-3.5 py-2 text-sm font-semibold text-gold-ink">
           <Sparkles size={15} /> Offre {offer} sélectionnée
         </p>
       )}
+      <GoogleButton loading={google} disabled={loading} onClick={withGoogle}>S'inscrire avec Google</GoogleButton>
+      <p className="mt-2 text-center text-xs text-ink-2">En continuant avec Google, vous acceptez les <Link href="/cgu" className="underline hover:text-ink">CGU</Link> et la <Link href="/confidentialite" className="underline hover:text-ink">politique de confidentialité</Link>.</p>
+      <Divider>ou avec votre e-mail</Divider>
       <form onSubmit={submit} noValidate className="space-y-5">
         <Field id="name" label="Nom complet" error={errors.name}>
           <input id="name" autoComplete="name" value={f.name} onChange={(e) => set("name", e.target.value)} placeholder="Ex. : Aminata Diallo"
@@ -82,7 +92,7 @@ export default function SignupPage() {
           </label>
           {errors.terms && <p role="alert" className="mt-1.5 text-sm text-danger">{errors.terms}</p>}
         </div>
-        <SubmitButton loading={loading}>{loading ? "Création du compte…" : "Créer mon compte"}</SubmitButton>
+        <SubmitButton loading={loading} disabled={google}>{loading ? "Création du compte…" : "Créer mon compte"}</SubmitButton>
       </form>
     </AuthLayout>
   );

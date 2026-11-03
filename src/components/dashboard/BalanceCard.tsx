@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Wallet, Clock, ArrowUpRight } from "lucide-react";
-import { fcfa, wallet } from "../../lib/dashboard-data";
+import { fcfa, walletBalance as wallet } from "../../lib/wallet-data";
 
 export default function BalanceCard() {
   return (

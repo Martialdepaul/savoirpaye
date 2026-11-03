@@ -58,7 +58,7 @@ export default function CoursePlayerPage() {
             <span className="num font-medium">{progressPct} %</span>
           </div>
           <button
-            className="flex items-center gap-1.5 rounded-btn border border-line bg-white px-3 py-1.5 text-sm font-medium text-ink-2 hover:text-ink lg:hidden"
+            className="flex min-h-11 items-center gap-1.5 rounded-btn border border-line bg-white px-3 text-sm font-medium text-ink-2 hover:text-ink lg:hidden"
             onClick={() => setDrawerOpen(true)}
             aria-label="Ouvrir le curriculum"
           >

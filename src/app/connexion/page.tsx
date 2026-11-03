@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AuthLayout from "@/components/auth/AuthLayout";
-import { Field, PasswordInput, SubmitButton, inputCls, isEmail, isPhone } from "@/components/auth/fields";
+import { Divider, Field, GoogleButton, PasswordInput, SubmitButton, inputCls, isEmail, isPhone } from "@/components/auth/fields";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,6 +13,13 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(true);
   const [errors, setErrors] = useState<{ id?: string; password?: string }>({});
   const [loading, setLoading] = useState(false);
+  const [google, setGoogle] = useState(false);
+
+  const withGoogle = () => {
+    setGoogle(true);
+    // Simulation de la connexion Google (OAuth), à remplacer par la redirection vers le fournisseur
+    setTimeout(() => router.push("/dashboard"), 900);
+  };
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,8 +38,10 @@ export default function LoginPage() {
     <AuthLayout
       title="Bon retour parmi nous"
       subtitle="Connectez-vous pour gérer votre boutique et suivre vos ventes."
-      footer={<>Pas encore de compte ? <Link href="/inscription" className="inline-block py-2 font-semibold text-primary hover:underline">Créer un compte gratuit</Link></>}
+      footer={<>Pas encore de compte ? <Link href="/inscription" className="inline-block py-3 font-semibold text-primary hover:underline">Créer un compte gratuit</Link></>}
     >
+      <GoogleButton loading={google} disabled={loading} onClick={withGoogle} />
+      <Divider>ou avec votre e-mail</Divider>
       <form onSubmit={submit} noValidate className="space-y-5">
         <Field id="login-id" label="E-mail ou numéro de téléphone" error={errors.id}>
           <input id="login-id" autoComplete="username" value={id} onChange={(e) => { setId(e.target.value); setErrors({ ...errors, id: undefined }); }}
@@ -48,7 +57,7 @@ export default function LoginPage() {
           </label>
           <Link href="/mot-de-passe-oublie" className="inline-flex min-h-11 items-center text-sm font-semibold text-primary hover:underline">Mot de passe oublié ?</Link>
         </div>
-        <SubmitButton loading={loading}>{loading ? "Connexion…" : "Se connecter"}</SubmitButton>
+        <SubmitButton loading={loading} disabled={google}>{loading ? "Connexion…" : "Se connecter"}</SubmitButton>
       </form>
     </AuthLayout>
   );

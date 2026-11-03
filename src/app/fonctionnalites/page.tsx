@@ -8,7 +8,7 @@ import PaymentStrip from "../../components/landing/PaymentStrip";
 import { featureGroups } from "../../lib/site-data";
 
 export const metadata: Metadata = {
-  title: "Fonctionnalités · Savoirpay",
+  title: "Fonctionnalités",
   description: "Créez, vendez et gérez vos formations et produits numériques avec Savoirpay.",
 };
 
@@ -22,7 +22,7 @@ export default function FonctionnalitesPage() {
       >
         <nav aria-label="Sections" className="mt-8 flex flex-wrap gap-2">
           {featureGroups.map((g) => (
-            <a key={g.id} href={`#${g.id}`} className="rounded-full border border-white/25 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10">
+            <a key={g.id} href={`#${g.id}`} className="inline-flex min-h-11 items-center rounded-full border border-white/25 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/10">
               {g.eyebrow}
             </a>
           ))}

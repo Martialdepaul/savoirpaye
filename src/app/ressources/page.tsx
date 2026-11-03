@@ -4,7 +4,7 @@ import PageHero from "../../components/site/PageHero";
 import ArticleList from "../../components/site/ArticleList";
 
 export const metadata: Metadata = {
-  title: "Ressources · Savoirpay",
+  title: "Ressources",
   description: "Guides, conseils et témoignages pour vendre vos formations en ligne.",
 };
 

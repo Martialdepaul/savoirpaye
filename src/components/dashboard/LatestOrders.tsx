@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CheckCircle2, Clock, XCircle } from "lucide-react";
-import { fcfa, orders, type OrderStatus } from "../../lib/dashboard-data";
+import { fcfa, latestOrders as orders, type OrderStatus } from "../../lib/dashboard-data";
 
 const badge: Record<OrderStatus, { cls: string; icon: typeof Clock }> = {
   "Payé": { cls: "bg-[#ECF8EF] text-success", icon: CheckCircle2 },
@@ -56,9 +56,9 @@ export default function LatestOrders() {
                 <td className="num px-6 py-4 text-ink-2">{o.id}</td>
                 <td className="px-6 py-4 font-medium">{o.client}</td>
                 <td className="max-w-[220px] truncate px-6 py-4 text-ink-2">{o.product}</td>
-                <td className="num px-6 py-4 text-right font-semibold text-gold-ink">{fcfa(o.amount)}</td>
+                <td className="num whitespace-nowrap px-6 py-4 text-right font-semibold text-gold-ink">{fcfa(o.amount)}</td>
                 <td className="px-6 py-4"><StatusBadge status={o.status} /></td>
-                <td className="px-6 py-4 text-ink-2">{o.when}</td>
+                <td className="whitespace-nowrap px-6 py-4 text-ink-2">{o.when}</td>
               </tr>
             ))}
           </tbody>

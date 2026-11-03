@@ -9,6 +9,10 @@ import { passwordOk, PasswordStrength as Rules } from "@/components/auth/fields"
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import BottomNav from "@/components/dashboard/BottomNav";
+import { seller } from "@/lib/catalog";
+import { mobileMoney } from "@/lib/mock-data";
+import { shopCategories } from "@/lib/site-data";
+import { site } from "@/lib/site-config";
 
 type Notify = (msg: string) => void;
 
@@ -51,12 +55,12 @@ function TextareaField({ label, id, ...props }: React.TextareaHTMLAttributes<HTM
 }
 
 function TabProfil({ notify }: { notify: Notify }) {
-  const [photo, setPhoto] = useState("");
-  const [prenom, setPrenom] = useState("Aminata");
-  const [nom, setNom] = useState("Diallo");
-  const [email, setEmail] = useState("aminata@savoirpaye.com");
-  const [phone, setPhone] = useState("+221 77 000 00 00");
-  const [bio, setBio] = useState("Formatrice spécialisée en bureautique et e-commerce à Dakar.");
+  const [photo, setPhoto] = useState(seller.photo);
+  const [prenom, setPrenom] = useState(seller.firstName);
+  const [nom, setNom] = useState(seller.lastName);
+  const [email, setEmail] = useState(seller.email);
+  const [phone, setPhone] = useState(seller.whatsapp);
+  const [bio, setBio] = useState(seller.bio);
 
   return (
     <div className="space-y-6">
@@ -66,7 +70,7 @@ function TabProfil({ notify }: { notify: Notify }) {
           <img src={photo} alt="Photo de profil" className="size-20 shrink-0 rounded-full object-cover" />
         ) : (
           <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-primary font-heading text-2xl font-bold text-white">
-            AD
+            {seller.initials}
           </span>
         )}
         <div>
@@ -82,8 +86,8 @@ function TabProfil({ notify }: { notify: Notify }) {
         <InputField label="Prénom" id="prenom" value={prenom} onChange={(e) => setPrenom(e.target.value)} />
         <InputField label="Nom" id="nom" value={nom} onChange={(e) => setNom(e.target.value)} />
       </div>
-      <InputField label="Email" id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <InputField label="Téléphone" id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+      <InputField label="E-mail" id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <InputField label="Numéro WhatsApp" id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
       <TextareaField label="Bio / À propos" id="bio" value={bio} onChange={(e) => setBio(e.target.value)} />
 
       <div>
@@ -96,10 +100,10 @@ function TabProfil({ notify }: { notify: Notify }) {
 }
 
 function TabBoutique({ notify }: { notify: Notify }) {
-  const [nomBoutique, setNomBoutique] = useState("SavoirPay Academy");
-  const [desc, setDesc] = useState("Formez-vous aux compétences numériques essentielles pour réussir en Afrique.");
-  const [categorie, setCategorie] = useState("Bureautique");
-  const url = "savoirpay.com/boutique/aminata-diallo";
+  const [nomBoutique, setNomBoutique] = useState(seller.name);
+  const [desc, setDesc] = useState(seller.bio);
+  const [categorie, setCategorie] = useState(seller.category);
+  const url = `${site.url}/boutique/${seller.slug}`;
 
   return (
     <div className="space-y-5">
@@ -114,11 +118,11 @@ function TabBoutique({ notify }: { notify: Notify }) {
           <input
             id="url-boutique"
             readOnly
-            value={url}
+            value={url.replace(/^https?:\/\//, "")}
             className="flex-1 rounded-btn border border-line bg-page px-4 py-3 text-sm text-ink-2"
           />
           <button
-            onClick={() => navigator.clipboard.writeText(`https://${url}`).then(() => notify("Adresse copiée"), () => {})}
+            onClick={() => navigator.clipboard.writeText(url).then(() => notify("Adresse copiée"), () => {})}
             className="flex size-11 shrink-0 items-center justify-center rounded-btn border border-line bg-white text-ink-2 hover:text-ink"
             title="Copier l'URL"
             aria-label="Copier l'adresse de la boutique"
@@ -138,7 +142,7 @@ function TabBoutique({ notify }: { notify: Notify }) {
           onChange={(e) => setCategorie(e.target.value)}
           className="w-full rounded-btn border border-line bg-white px-4 py-3 text-sm focus:border-primary focus:outline-none"
         >
-          {["Bureautique", "E-commerce", "Finance", "Marketing", "Développement personnel"].map((c) => (
+          {shopCategories.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
@@ -149,7 +153,7 @@ function TabBoutique({ notify }: { notify: Notify }) {
           <button onClick={() => notify("Boutique enregistrée")} className="min-h-11 rounded-btn bg-primary px-5 font-bold text-white hover:bg-primary-hover">
             Enregistrer
           </button>
-          <Link href="/boutique/aminata-diallo" target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-btn border border-line bg-white px-5 font-semibold text-ink hover:bg-page">
+          <Link href={`/boutique/${seller.slug}`} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center rounded-btn border border-line bg-white px-5 font-semibold text-ink hover:bg-page">
             Voir ma boutique
           </Link>
         </div>
@@ -158,14 +162,11 @@ function TabBoutique({ notify }: { notify: Notify }) {
   );
 }
 
-const operators = ["Wave", "Orange Money", "Free Money", "MTN MoMo", "Moov Money"];
+const operators = mobileMoney.map((m) => m.name);
 
 function TabPaiements({ notify }: { notify: Notify }) {
   const [autoWithdraw, setAutoWithdraw] = useState(false);
-  const [accounts, setAccounts] = useState([
-    { id: 1, method: "Wave", number: "+221 77 000 00 00", active: true },
-    { id: 2, method: "Orange Money", number: "+221 76 000 00 00", active: true },
-  ]);
+  const [accounts, setAccounts] = useState(seller.payouts.map((p, i) => ({ id: i + 1, ...p, active: true })));
   // Formulaire d'ajout ou de modification : null = fermé, 0 = nouveau compte
   const [editing, setEditing] = useState<number | null>(null);
   const [form, setForm] = useState({ method: "Wave", number: "" });
@@ -285,6 +286,7 @@ function TabSecurite({ notify }: { notify: Notify }) {
   const [newPwd, setNewPwd] = useState("");
   const [confirm, setConfirm] = useState("");
   const [pwdError, setPwdError] = useState("");
+  const [google, setGoogle] = useState(false);
   const [sessions, setSessions] = useState([
     { device: "iPhone 14", location: "Dakar, Sénégal", status: "Actif maintenant", active: true },
     { device: "Chrome, Windows", location: "Dakar, Sénégal", status: "Il y a 2 h", active: false },
@@ -344,6 +346,27 @@ function TabSecurite({ notify }: { notify: Notify }) {
           {pwdError && <p role="alert" className="text-sm text-danger">{pwdError}</p>}
           <button onClick={changePassword} className="min-h-11 rounded-btn bg-primary px-5 font-bold text-white hover:bg-primary-hover">
             Mettre à jour
+          </button>
+        </div>
+      </div>
+
+      {/* Connected accounts */}
+      <div>
+        <h3 className="font-heading mb-4 font-bold text-ink">Connexion avec Google</h3>
+        <div className="rounded-card flex flex-wrap items-center justify-between gap-3 border border-line bg-white p-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-line font-heading text-lg font-bold text-[#4285F4]" aria-hidden="true">G</span>
+            <div className="min-w-0">
+              <p className="font-semibold text-ink">Compte Google</p>
+              <p className="text-sm text-ink-2">{google ? `Associé à ${seller.email}` : "Connectez-vous en un clic, sans mot de passe."}</p>
+            </div>
+          </div>
+          <button
+            // Simulation de l'association du compte Google (OAuth), à remplacer par l'API
+            onClick={() => { setGoogle(!google); notify(google ? "Compte Google dissocié" : "Compte Google associé"); }}
+            className="min-h-11 shrink-0 rounded-btn border border-line bg-white px-4 text-sm font-semibold text-ink hover:bg-page"
+          >
+            {google ? "Dissocier" : "Associer"}
           </button>
         </div>
       </div>

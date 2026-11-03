@@ -16,6 +16,7 @@ export interface CatalogProduct {
   type: ProductType;
   price: number;
   comparePrice?: number;
+  /** Ventes payées depuis la mise en ligne */
   sales: number;
   revenue: number;
   status: ProductStatus;
@@ -31,6 +32,7 @@ export interface CatalogProduct {
   rating: number;
   reviewsCount: number;
   reviews?: Review[];
+  /** Élèves (formations) ou clients (autres produits) */
   students: number;
   duration?: string;
 }
@@ -38,11 +40,22 @@ export interface CatalogProduct {
 export const seller = {
   slug: "aminata-diallo",
   name: "Aminata Diallo",
+  firstName: "Aminata",
+  lastName: "Diallo",
   initials: "AD",
+  photo: "/images/team-1.jpg",
   role: "Formatrice à Dakar",
-  bio: "J'aide les commerçants et indépendants d'Afrique de l'Ouest à vendre en ligne : WhatsApp, e-commerce, gestion et outils bureautiques. Plus de 2 000 élèves formés depuis 2021.",
+  bio: "J'aide les commerçants et indépendants d'Afrique de l'Ouest à vendre en ligne : WhatsApp, e-commerce, gestion et outils bureautiques.",
+  category: "Business et entrepreneuriat",
   city: "Dakar, Sénégal",
+  email: "aminata.diallo@exemple.com",
   whatsapp: "+221 77 123 45 67",
+  plan: "Pro" as const,
+  /** Comptes de retrait enregistrés */
+  payouts: [
+    { method: "Wave", number: "+221 77 123 45 67" },
+    { method: "Orange Money", number: "+221 76 543 21 09" },
+  ],
 };
 
 const img = (id: string) => `https://images.unsplash.com/${id}?w=1400&h=800&fit=crop&auto=format`;
@@ -53,7 +66,8 @@ const mod = (title: string, lessons: [string, string][], quiz?: string, previewF
   quiz,
 });
 
-export const catalog: CatalogProduct[] = [
+// Le chiffre d'affaires et le nombre d'élèves sont calculés à partir des ventes (voir plus bas).
+const products: Omit<CatalogProduct, "revenue" | "students">[] = [
   {
     id: "P001",
     slug: "maitriser-excel-7-jours",
@@ -61,8 +75,7 @@ export const catalog: CatalogProduct[] = [
     type: "Formation",
     price: 25000,
     comparePrice: 35000,
-    sales: 34,
-    revenue: 850000,
+    sales: 142,
     status: "En ligne",
     createdAt: "3 mars 2026",
     subtitle: "Tableaux, formules et graphiques : devenez autonome sur Excel en une semaine, avec des exercices tirés du quotidien.",
@@ -85,8 +98,7 @@ export const catalog: CatalogProduct[] = [
       mod("Jour 7 : projet final", [["Budget mensuel complet", "18 min"], ["Gestion de stock", "16 min"], ["Conseils pour aller plus loin", "6 min"]], "Quiz final"),
     ],
     rating: 4.7,
-    reviewsCount: 128,
-    students: 534,
+    reviewsCount: 38,
     duration: "4 h 30",
   },
   {
@@ -95,8 +107,7 @@ export const catalog: CatalogProduct[] = [
     name: "Lancer son e-commerce en Afrique",
     type: "Formation",
     price: 35000,
-    sales: 22,
-    revenue: 770000,
+    sales: 76,
     status: "En ligne",
     createdAt: "12 jan. 2026",
     subtitle: "De l'idée à la première vente : boutique en ligne, paiement Mobile Money, livraison et marketing sur les réseaux sociaux.",
@@ -118,8 +129,7 @@ export const catalog: CatalogProduct[] = [
       mod("Vendre sur les réseaux sociaux", [["Publicités Facebook à petit budget", "15 min"], ["TikTok pour les commerçants", "12 min"], ["Fidéliser avec WhatsApp", "9 min"]], "Quiz final"),
     ],
     rating: 4.8,
-    reviewsCount: 87,
-    students: 391,
+    reviewsCount: 21,
     duration: "3 h 50",
   },
   {
@@ -128,8 +138,7 @@ export const catalog: CatalogProduct[] = [
     name: "Pack de 50 modèles de factures",
     type: "Produit numérique",
     price: 5000,
-    sales: 61,
-    revenue: 305000,
+    sales: 214,
     status: "En ligne",
     createdAt: "5 fév. 2026",
     subtitle: "50 factures, devis et reçus prêts à l'emploi, au format Word, Excel et PDF, adaptés à la zone FCFA.",
@@ -148,8 +157,7 @@ export const catalog: CatalogProduct[] = [
       { name: "Factures-PDF.zip", size: "6,8 Mo" },
     ],
     rating: 4.9,
-    reviewsCount: 54,
-    students: 612,
+    reviewsCount: 47,
   },
   {
     id: "P004",
@@ -157,8 +165,7 @@ export const catalog: CatalogProduct[] = [
     name: "Comptabilité simple pour freelances",
     type: "Formation",
     price: 15000,
-    sales: 15,
-    revenue: 225000,
+    sales: 58,
     status: "En ligne",
     createdAt: "20 jan. 2026",
     subtitle: "Suivez vos revenus, vos dépenses et vos impôts sans être comptable, avec un tableau prêt à l'emploi.",
@@ -178,8 +185,7 @@ export const catalog: CatalogProduct[] = [
       mod("Impôts et déclarations", [["Les statuts possibles", "10 min"], ["Ce que vous devez déclarer", "9 min"], ["Calendrier fiscal", "6 min"]], "Quiz final"),
     ],
     rating: 4.6,
-    reviewsCount: 41,
-    students: 187,
+    reviewsCount: 14,
     duration: "2 h 10",
   },
   {
@@ -188,8 +194,7 @@ export const catalog: CatalogProduct[] = [
     name: whatsapp.title,
     type: "Formation",
     price: 25000,
-    sales: 8,
-    revenue: 200000,
+    sales: 97,
     status: "En ligne",
     createdAt: "1 avr. 2026",
     subtitle: whatsapp.subtitle,
@@ -201,7 +206,6 @@ export const catalog: CatalogProduct[] = [
     rating: whatsapp.rating,
     reviewsCount: whatsapp.reviewsCount,
     reviews: whatsappReviews,
-    students: whatsapp.students,
     duration: whatsapp.duration,
   },
   {
@@ -211,7 +215,6 @@ export const catalog: CatalogProduct[] = [
     type: "Produit numérique",
     price: 8000,
     sales: 0,
-    revenue: 0,
     status: "Brouillon",
     createdAt: "10 oct. 2026",
     subtitle: "Contrats de prestation, conditions générales et accords de confidentialité, prêts à adapter.",
@@ -222,7 +225,6 @@ export const catalog: CatalogProduct[] = [
     files: [{ name: "Contrats-freelance.zip", size: "1,8 Mo" }],
     rating: 0,
     reviewsCount: 0,
-    students: 0,
   },
   {
     id: "P007",
@@ -231,7 +233,6 @@ export const catalog: CatalogProduct[] = [
     type: "Coaching",
     price: 50000,
     sales: 3,
-    revenue: 150000,
     status: "Archivé",
     createdAt: "15 juil. 2026",
     subtitle: "Une heure en visio pour analyser votre activité et repartir avec un plan d'action concret.",
@@ -242,9 +243,10 @@ export const catalog: CatalogProduct[] = [
     coaching: { duration: "60 min", format: "Visio (Google Meet ou WhatsApp)" },
     rating: 5,
     reviewsCount: 3,
-    students: 3,
   },
 ];
+
+export const catalog: CatalogProduct[] = products.map((p) => ({ ...p, revenue: p.sales * p.price, students: p.sales }));
 
 export const findProduct = (slug: string) => catalog.find((p) => p.slug === slug);
 export const findProductById = (id: string) => catalog.find((p) => p.id === id);

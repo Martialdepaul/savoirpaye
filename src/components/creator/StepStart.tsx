@@ -43,7 +43,7 @@ export default function StepStart({ idea, setIdea, files, setFiles }: Props) {
             <button
               key={ex}
               onClick={() => setIdea(ex)}
-              className="rounded-full border border-line bg-white px-3.5 py-2 text-left text-sm transition-colors hover:border-ai hover:bg-ai-light hover:text-ai"
+              className="min-h-11 rounded-full border border-line bg-white px-3.5 py-2 text-left text-sm transition-colors hover:border-ai hover:bg-ai-light hover:text-ai"
             >
               {ex}
             </button>

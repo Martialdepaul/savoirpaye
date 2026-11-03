@@ -5,48 +5,12 @@ import { Search, X, Mail } from "lucide-react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import BottomNav from "@/components/dashboard/BottomNav";
-import { fcfa, type OrderStatus } from "@/lib/dashboard-data";
+import { fcfa, orders, type Order, type OrderStatus } from "@/lib/dashboard-data";
 import { StatusBadge } from "@/components/dashboard/LatestOrders";
 import Pagination, { usePagination } from "@/components/ui/Pagination";
 import { useToast } from "@/components/ui/Toast";
 
-const allOrders = [
-  { id: "#SP-4821", client: "Moussa Ndiaye", email: "moussa@email.com", product: "Maîtriser Excel en 7 jours", amount: 25000, method: "Wave", status: "Payé" as OrderStatus, when: "14 oct. 2026, 09:12" },
-  { id: "#SP-4820", client: "Awa Sarr", email: "awa@email.com", product: "Lancer son e-commerce en Afrique", amount: 35000, method: "Orange Money", status: "Payé" as OrderStatus, when: "14 oct. 2026, 08:30" },
-  { id: "#SP-4819", client: "Cheikh Fall", email: "cheikh@email.com", product: "Pack de 50 modèles de factures", amount: 5000, method: "Wave", status: "En attente" as OrderStatus, when: "14 oct. 2026, 07:58" },
-  { id: "#SP-4818", client: "Mariama Ba", email: "mariama@email.com", product: "Maîtriser Excel en 7 jours", amount: 25000, method: "Carte bancaire", status: "Échoué" as OrderStatus, when: "13 oct. 2026, 17:20" },
-  { id: "#SP-4817", client: "Ibrahima Sow", email: "ibrahima@email.com", product: "Comptabilité simple pour freelances", amount: 15000, method: "Orange Money", status: "Payé" as OrderStatus, when: "13 oct. 2026, 14:05" },
-  { id: "#SP-4816", client: "Fatou Diop", email: "fatou@email.com", product: "Vendre sur WhatsApp Business", amount: 20000, method: "Wave", status: "Payé" as OrderStatus, when: "12 oct. 2026, 11:30" },
-  { id: "#SP-4815", client: "Omar Faye", email: "omar@email.com", product: "Lancer son e-commerce en Afrique", amount: 35000, method: "Wave", status: "Payé" as OrderStatus, when: "12 oct. 2026, 09:15" },
-  { id: "#SP-4814", client: "Rokhaya Niang", email: "rokhaya@email.com", product: "Pack de 50 modèles de factures", amount: 5000, method: "Orange Money", status: "En attente" as OrderStatus, when: "11 oct. 2026, 16:40" },
-  { id: "#SP-4813", client: "Seydou Diallo", email: "seydou@email.com", product: "Maîtriser Excel en 7 jours", amount: 25000, method: "Wave", status: "Payé" as OrderStatus, when: "11 oct. 2026, 10:20" },
-  { id: "#SP-4812", client: "Aissatou Bah", email: "aissatou@email.com", product: "Comptabilité simple pour freelances", amount: 15000, method: "Carte bancaire", status: "Échoué" as OrderStatus, when: "10 oct. 2026, 14:00" },
-];
-
-// Historique plus ancien (données de démonstration) pour remplir plusieurs pages
-const olderClients = ["Khady Mbaye", "Babacar Gueye", "Ndeye Thiam", "Lamine Cissé", "Coumba Kane", "Pape Diouf", "Astou Sy", "Modou Lo", "Bineta Camara", "Alioune Ndour", "Mame Diarra Fall", "Abdou Seck"];
-const olderProducts = [
-  { name: "Maîtriser Excel en 7 jours", price: 25000 },
-  { name: "Lancer son e-commerce en Afrique", price: 35000 },
-  { name: "Pack de 50 modèles de factures", price: 5000 },
-  { name: "Comptabilité simple pour freelances", price: 15000 },
-  { name: "Vendre sur WhatsApp Business", price: 20000 },
-];
-const olderMethods = ["Wave", "Orange Money", "Carte bancaire", "MTN MoMo"];
-for (let i = 0; i < 26; i++) {
-  const name = olderClients[i % olderClients.length];
-  const prod = olderProducts[(i * 3) % olderProducts.length];
-  allOrders.push({
-    id: `#SP-${4811 - i}`,
-    client: name,
-    email: `${name.split(" ")[0].toLowerCase()}@email.com`,
-    product: prod.name,
-    amount: prod.price,
-    method: olderMethods[i % olderMethods.length],
-    status: (i % 9 === 4 ? "Échoué" : i % 7 === 2 ? "En attente" : "Payé") as OrderStatus,
-    when: `${9 - Math.floor(i / 3)} oct. 2026, ${String(8 + ((i * 5) % 11)).padStart(2, "0")}:${String((i * 17) % 60).padStart(2, "0")}`,
-  });
-}
+const allOrders = orders;
 
 type StatusFilter = "Toutes" | OrderStatus;
 const statusFilters: StatusFilter[] = ["Toutes", "Payé", "En attente", "Échoué"];
@@ -54,7 +18,7 @@ const statusFilters: StatusFilter[] = ["Toutes", "Payé", "En attente", "Échou�
 export default function CommandesPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("Toutes");
-  const [selected, setSelected] = useState<(typeof allOrders)[0] | null>(null);
+  const [selected, setSelected] = useState<Order | null>(null);
   const [toast, showToast] = useToast();
 
   const filtered = allOrders.filter((o) => {

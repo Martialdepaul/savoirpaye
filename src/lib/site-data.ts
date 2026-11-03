@@ -2,6 +2,7 @@ import {
   BarChart3, BookOpen, Bot, CreditCard, FileText, Gift, Globe, GraduationCap, Heart, LayoutTemplate, Lock, Mail,
   MessageCircle, Palette, Phone, Rocket, ShieldCheck, Smartphone, Sparkles, Tag, Target, Users, Video, Wallet, Zap,
 } from "lucide-react";
+import { emails, phones, site, waLink } from "./site-config";
 
 export const navLinks = [
   { label: "Accueil", href: "/" },
@@ -65,6 +66,7 @@ export const comparison: { label: string; values: [string | boolean, string | bo
   { label: "Créateur IA", values: [false, "20 / mois", "Illimité"] },
   { label: "Codes promo et ventes groupées", values: [false, true, true] },
   { label: "Retraits prioritaires", values: [false, true, true] },
+  { label: "Frais de retrait Mobile Money", values: ["1 à 1,5 %", "1 à 1,5 %", "1 à 1,5 %"] },
   { label: "Nom de domaine personnalisé", values: [false, false, true] },
   { label: "Membres d'équipe", values: ["1", "1", "Jusqu'à 5"] },
   { label: "Assistance", values: ["E-mail", "E-mail et chat", "WhatsApp dédié"] },
@@ -208,83 +210,21 @@ export const values = [
 ];
 
 export const team = [
-  { name: "Aminata Diallo", role: "Co-fondatrice et CEO", photo: "/images/team-1.jpg" },
-  { name: "Kevin Mensah", role: "Co-fondateur et CTO", photo: "/images/avatar-kevin.jpg" },
-  { name: "Aïssata Traoré", role: "Responsable Créateurs", photo: "/images/avatar-aissata.jpg" },
-  { name: "Moussa Diallo", role: "Responsable Paiements", photo: "/images/avatar-moussa.jpg" },
-];
+  { name: "Aminata Diallo", role: "Co-fondatrice et CEO", city: "Dakar", photo: "/images/team-1.jpg" },
+  { name: "Yao Kouassi", role: "Co-fondateur et CTO", city: "Abidjan" },
+  { name: "Mariama Sow", role: "Responsable Créateurs", city: "Dakar" },
+  { name: "Rodrigue Ahouansou", role: "Responsable Paiements", city: "Cotonou" },
+]
 
 /* ---------- Contact ---------- */
 
 export const contactChannels = [
-  { icon: MessageCircle, title: "WhatsApp", value: "+221 77 000 00 00", text: "Réponse en moins de 2 h, du lundi au samedi." },
-  { icon: Mail, title: "E-mail", value: "bonjour@savoirpay.com", text: "Pour toute question, partenariat ou presse." },
-  { icon: Phone, title: "Téléphone", value: "+225 07 00 00 00 00", text: "De 9 h à 18 h (GMT), du lundi au vendredi." },
+  { icon: MessageCircle, title: "WhatsApp", value: phones.whatsapp, href: waLink(phones.whatsapp), text: "Réponse en moins de 2 h, du lundi au samedi." },
+  { icon: Mail, title: "E-mail", value: emails.contact, href: `mailto:${emails.contact}`, text: "Pour toute question, partenariat ou presse." },
+  { icon: Phone, title: "Téléphone", value: phones.office, href: `tel:${phones.office.replace(/\s/g, "")}`, text: "De 9 h à 18 h (GMT), du lundi au vendredi." },
 ];
 
-export const offices = ["Dakar, Sénégal", "Abidjan, Côte d'Ivoire", "Cotonou, Bénin"];
-
-/* ---------- Pages légales ---------- */
-
-export const legalPages: Record<string, { title: string; updated: string; sections: { h: string; p: string }[] }> = {
-  conditions: {
-    title: "Conditions générales d'utilisation",
-    updated: "1er octobre 2026",
-    sections: [
-      { h: "1. Objet", p: "Les présentes conditions encadrent l'utilisation de la plateforme Savoirpay, qui permet aux créateurs de vendre des formations, produits numériques et services en ligne." },
-      { h: "2. Création de compte", p: "L'inscription est gratuite. Vous vous engagez à fournir des informations exactes et à garder vos identifiants confidentiels." },
-      { h: "3. Contenus des créateurs", p: "Chaque créateur reste propriétaire de ses contenus et garantit disposer des droits nécessaires à leur commercialisation." },
-      { h: "4. Paiements et commissions", p: "Savoirpay encaisse les paiements pour le compte des créateurs et prélève la commission prévue par la formule choisie avant de reverser le solde." },
-      { h: "5. Remboursements", p: "Les apprenants peuvent demander un remboursement dans les 7 jours suivant l'achat d'une formation, selon les conditions affichées sur la page de vente." },
-      { h: "6. Résiliation", p: "Vous pouvez fermer votre compte à tout moment depuis vos paramètres. Les soldes disponibles restent retirables pendant 90 jours." },
-    ],
-  },
-  confidentialite: {
-    title: "Politique de confidentialité",
-    updated: "1er octobre 2026",
-    sections: [
-      { h: "Données collectées", p: "Nous collectons les informations nécessaires à votre compte (nom, e-mail, téléphone), à vos ventes et à vos retraits." },
-      { h: "Utilisation", p: "Ces données servent à fournir le service, traiter les paiements, prévenir la fraude et vous informer des évolutions de la plateforme." },
-      { h: "Isolation des données", p: "Chaque boutique dispose d'un espace isolé : un créateur n'a jamais accès aux données des clients d'un autre créateur." },
-      { h: "Vos droits", p: "Vous pouvez accéder à vos données, les corriger ou demander leur suppression en écrivant à confidentialite@savoirpay.com." },
-    ],
-  },
-  "mentions-legales": {
-    title: "Mentions légales",
-    updated: "1er octobre 2026",
-    sections: [
-      { h: "Éditeur", p: "Savoirpay SAS, société au capital de 10 000 000 FCFA, siège social à Dakar, Sénégal." },
-      { h: "Directrice de la publication", p: "Aminata Diallo, en qualité de présidente." },
-      { h: "Hébergement", p: "Le site est hébergé sur une infrastructure cloud sécurisée, avec des sauvegardes quotidiennes." },
-      { h: "Contact", p: "bonjour@savoirpay.com" },
-    ],
-  },
-};
-
-/* ---------- Boutique publique (multi-tenant) ---------- */
-
-export const stores: Record<string, {
-  name: string; tagline: string; bio: string; photo: string; cover: string; students: number; rating: number;
-  socials: string[];
-  products: { title: string; type: string; price: number; image: string; href: string; rating: number; students: number }[];
-}> = {
-  "aminata-diallo": {
-    name: "Aminata Diallo",
-    tagline: "Formatrice en bureautique et e-commerce à Dakar",
-    bio: "J'aide les commerçants et les jeunes entrepreneurs à gagner du temps avec les outils numériques et à vendre en ligne. Plus de 1 200 apprenants formés depuis 2021.",
-    photo: "/images/team-1.jpg",
-    cover: "/images/store-cover.jpg",
-    students: 1247,
-    rating: 4.8,
-    socials: ["WhatsApp", "Instagram", "YouTube"],
-    products: [
-      { title: "Vendre sur WhatsApp Business", type: "Formation", price: 25000, image: "/images/article-whatsapp.jpg", href: "/formations/vendre-sur-whatsapp-business", rating: 4.8, students: 312 },
-      { title: "Maîtriser Excel en 7 jours", type: "Formation", price: 25000, image: "/images/article-formation.jpg", href: "/formations/vendre-sur-whatsapp-business", rating: 4.9, students: 540 },
-      { title: "Lancer son e-commerce en Afrique", type: "Formation", price: 35000, image: "/images/feature-vendre.jpg", href: "/formations/vendre-sur-whatsapp-business", rating: 4.7, students: 220 },
-      { title: "Pack de 50 modèles de factures", type: "Produit numérique", price: 5000, image: "/images/article-prix.jpg", href: "/formations/vendre-sur-whatsapp-business", rating: 4.6, students: 610 },
-    ],
-  },
-};
+export const offices = site.cities;
 
 /* ---------- Dashboard : notifications et aide ---------- */
 
@@ -295,7 +235,7 @@ export const notifications: Notif[] = [
   { id: "n2", kind: "vente", title: "Nouvelle vente", text: "Awa Sarr a acheté « Lancer son e-commerce en Afrique » (35 000 FCFA).", when: "Il y a 42 min", unread: true },
   { id: "n3", kind: "avis", title: "Nouvel avis 5 étoiles", text: "« Très clair et concret, je recommande ! » sur Vendre sur WhatsApp Business.", when: "Il y a 2 h", unread: true },
   { id: "n4", kind: "retrait", title: "Retrait effectué", text: "150 000 FCFA ont été envoyés sur votre numéro Orange Money.", when: "Hier", unread: false },
-  { id: "n5", kind: "ia", title: "Plan de cours prêt", text: "L'assistant IA a terminé le plan de « Comptabilité simple pour freelances ».", when: "Hier", unread: false },
+  { id: "n5", kind: "ia", title: "Plan de cours prêt", text: "L'assistant IA a terminé le plan de « Tontine digitale : bien gérer son groupe ». Relisez-le avant publication.", when: "Hier", unread: false },
   { id: "n6", kind: "systeme", title: "Nouveauté", text: "Les codes promo sont disponibles pour le plan Pro. Créez votre première offre.", when: "Il y a 3 jours", unread: false },
 ];
 
@@ -321,6 +261,8 @@ export const productTypes = [
   { id: "coaching", icon: Users, title: "Coaching / service", text: "Séance individuelle ou accompagnement." },
   { id: "communaute", icon: Gift, title: "Abonnement", text: "Contenu ou communauté en accès mensuel." },
 ];
+
+export const shopCategories = ["Business et entrepreneuriat", "Informatique et bureautique", "Marketing digital", "Finance et comptabilité", "Beauté et bien-être", "Langues", "Cuisine", "Développement personnel", "Autre"];
 
 export const onboardingGoals = [
   { id: "formations", icon: BookOpen, label: "Vendre des formations" },

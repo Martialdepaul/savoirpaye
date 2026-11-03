@@ -24,7 +24,7 @@ export default function ArticleList() {
                 role="tab"
                 aria-selected={cat === c}
                 onClick={() => setCat(c)}
-                className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                className={`min-h-11 shrink-0 rounded-full px-4 text-sm font-semibold transition-colors ${
                   cat === c ? "bg-primary text-white" : "border border-line bg-white text-ink-2 hover:text-ink"
                 }`}
               >

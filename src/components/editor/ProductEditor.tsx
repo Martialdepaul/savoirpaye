@@ -128,7 +128,7 @@ export default function ProductEditor({ initial, isNew }: { initial: Draft; isNe
         <Topbar />
         <form onSubmit={save} noValidate className="mx-auto max-w-3xl space-y-5 px-4 pb-36 pt-6 sm:px-8">
           <div>
-            <Link href="/dashboard/produits" className="-ml-1 inline-flex items-center gap-2 px-1 py-2 text-sm font-medium text-ink-2 hover:text-ink"><ArrowLeft size={16} /> Produits</Link>
+            <Link href="/dashboard/produits" className="-ml-1 inline-flex min-h-11 items-center gap-2 px-1 text-sm font-medium text-ink-2 hover:text-ink"><ArrowLeft size={16} /> Produits</Link>
             <div className="mt-1 flex flex-wrap items-center gap-3">
               <h1 className="font-heading text-2xl font-extrabold sm:text-3xl">{isNew ? `Nouveau : ${d.type.toLowerCase()}` : "Modifier le produit"}</h1>
             </div>

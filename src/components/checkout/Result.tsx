@@ -3,6 +3,7 @@ import { CheckCircle2, XCircle, ArrowRight, RotateCcw, Mail } from "lucide-react
 import { fcfa } from "../../lib/dashboard-data";
 import { productUrl, seller, type CatalogProduct } from "../../lib/catalog";
 import type { Buyer } from "./CheckoutForm";
+import { emails } from "../../lib/site-config";
 
 const access = (p: CatalogProduct) =>
   p.type === "Formation"
@@ -54,7 +55,7 @@ export function Failure({ reason, product, onRetry }: { reason: "expired" | "dec
         <RotateCcw size={17} /> Réessayer
       </button>
       <Link href={productUrl(product)} className="mt-3 inline-flex w-full justify-center rounded-btn border border-line bg-white px-6 py-3.5 font-semibold hover:bg-page">Retour au produit</Link>
-      <p className="mt-5 text-sm text-ink-2">Besoin d'aide ? Écrivez-nous à <span className="font-medium text-ink">aide@savoirpay.com</span></p>
+      <p className="mt-5 text-sm text-ink-2">Besoin d'aide ? Écrivez-nous à <a href={`mailto:${emails.support}`} className="font-medium text-ink underline">{emails.support}</a></p>
     </div>
   );
 }

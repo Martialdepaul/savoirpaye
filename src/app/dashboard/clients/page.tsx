@@ -5,59 +5,8 @@ import { Search, X, MessageSquare } from "lucide-react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import BottomNav from "@/components/dashboard/BottomNav";
-import { fcfa } from "@/lib/dashboard-data";
+import { clients, fcfa, type Client } from "@/lib/dashboard-data";
 import Pagination, { usePagination } from "@/components/ui/Pagination";
-
-interface Client {
-  id: string;
-  name: string;
-  initials: string;
-  email: string;
-  phone: string;
-  purchases: number;
-  totalSpent: number;
-  lastPurchase: string;
-  joinedAt: string;
-  products: string[];
-}
-
-const clients: Client[] = [
-  { id: "C001", name: "Moussa Ndiaye", initials: "MN", email: "moussa@email.com", phone: "+221 77 123 45 67", purchases: 3, totalSpent: 75000, lastPurchase: "14 oct. 2026", joinedAt: "12 jan. 2026", products: ["Maîtriser Excel en 7 jours", "Lancer son e-commerce en Afrique", "Pack de 50 modèles de factures"] },
-  { id: "C002", name: "Awa Sarr", initials: "AS", email: "awa@email.com", phone: "+221 76 234 56 78", purchases: 2, totalSpent: 60000, lastPurchase: "14 oct. 2026", joinedAt: "3 mars 2026", products: ["Lancer son e-commerce en Afrique", "Comptabilité simple pour freelances"] },
-  { id: "C003", name: "Ibrahima Sow", initials: "IS", email: "ibrahima@email.com", phone: "+221 78 345 67 89", purchases: 1, totalSpent: 15000, lastPurchase: "13 oct. 2026", joinedAt: "13 oct. 2026", products: ["Comptabilité simple pour freelances"] },
-  { id: "C004", name: "Fatou Diop", initials: "FD", email: "fatou@email.com", phone: "+221 77 456 78 90", purchases: 2, totalSpent: 55000, lastPurchase: "12 oct. 2026", joinedAt: "20 jan. 2026", products: ["Vendre sur WhatsApp Business", "Maîtriser Excel en 7 jours"] },
-  { id: "C005", name: "Omar Faye", initials: "OF", email: "omar@email.com", phone: "+221 76 567 89 01", purchases: 1, totalSpent: 35000, lastPurchase: "12 oct. 2026", joinedAt: "12 oct. 2026", products: ["Lancer son e-commerce en Afrique"] },
-  { id: "C006", name: "Rokhaya Niang", initials: "RN", email: "rokhaya@email.com", phone: "+221 78 678 90 12", purchases: 1, totalSpent: 5000, lastPurchase: "11 oct. 2026", joinedAt: "5 sept. 2026", products: ["Pack de 50 modèles de factures"] },
-  { id: "C007", name: "Seydou Diallo", initials: "SD", email: "seydou@email.com", phone: "+221 77 789 01 23", purchases: 1, totalSpent: 25000, lastPurchase: "11 oct. 2026", joinedAt: "11 oct. 2026", products: ["Maîtriser Excel en 7 jours"] },
-  { id: "C008", name: "Aissatou Bah", initials: "AB", email: "aissatou@email.com", phone: "+221 76 890 12 34", purchases: 1, totalSpent: 15000, lastPurchase: "10 oct. 2026", joinedAt: "2 août 2026", products: ["Comptabilité simple pour freelances"] },
-];
-
-// Clients plus anciens (données de démonstration) pour remplir plusieurs pages
-const olderNames = ["Khady Mbaye", "Babacar Gueye", "Ndeye Thiam", "Lamine Cissé", "Coumba Kane", "Pape Diouf", "Astou Sy", "Modou Lo", "Bineta Camara", "Alioune Ndour", "Mame Diarra Fall", "Abdou Seck", "Yacine Touré", "Dieynaba Sall", "Moustapha Kâ", "Nafi Badji", "Ousmane Sané", "Marème Dia"];
-const olderCatalog = [
-  { name: "Maîtriser Excel en 7 jours", price: 25000 },
-  { name: "Lancer son e-commerce en Afrique", price: 35000 },
-  { name: "Pack de 50 modèles de factures", price: 5000 },
-  { name: "Comptabilité simple pour freelances", price: 15000 },
-  { name: "Vendre sur WhatsApp Business", price: 20000 },
-];
-const olderMonths = ["sept.", "août", "juil.", "juin"];
-olderNames.forEach((name, i) => {
-  const bought = olderCatalog.filter((_, j) => (i + j) % 3 === 0).slice(0, 1 + (i % 3));
-  const [first, last] = [name.split(" ")[0], name.split(" ").slice(-1)[0]];
-  clients.push({
-    id: `C${String(9 + i).padStart(3, "0")}`,
-    name,
-    initials: `${first[0]}${last[0]}`.toUpperCase(),
-    email: `${first.toLowerCase()}@email.com`,
-    phone: `+221 7${6 + (i % 3)} ${String(100 + i * 37).slice(-3)} ${String(10 + i).slice(-2)} ${String(40 + i).slice(-2)}`,
-    purchases: bought.length,
-    totalSpent: bought.reduce((t, b) => t + b.price, 0),
-    lastPurchase: `${28 - i} ${olderMonths[Math.floor(i / 5)]} 2026`,
-    joinedAt: `${1 + ((i * 7) % 27)} ${olderMonths[Math.min(3, Math.floor(i / 5) + 1)]} 2026`,
-    products: bought.map((b) => b.name),
-  });
-});
 
 export default function ClientsPage() {
   const [search, setSearch] = useState("");
@@ -145,7 +94,7 @@ export default function ClientsPage() {
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-line bg-page text-xs uppercase tracking-wider text-ink-2">
-                    {["Client", "Achats", "Total dépensé", "Dernier achat", "Inscrit le", ""].map((h, i) => (
+                    {["Client", "Achats", "Total dépensé", "Dernier achat", "Client depuis", ""].map((h, i) => (
                       <th key={i} scope="col" className={`px-6 py-3 font-semibold ${h === "Achats" || h === "Total dépensé" ? "text-right" : ""}`}>
                         {h}
                       </th>
@@ -247,7 +196,7 @@ export default function ClientsPage() {
                 <span className="font-semibold">Dernier achat :</span> {selected.lastPurchase}
               </div>
               <div className="text-xs text-ink-2">
-                <span className="font-semibold">Inscrit le :</span> {selected.joinedAt}
+                <span className="font-semibold">Client depuis :</span> {selected.joinedAt}
               </div>
             </div>
             <div className="border-t border-line p-6">

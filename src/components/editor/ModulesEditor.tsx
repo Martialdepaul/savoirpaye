@@ -32,14 +32,14 @@ function LessonRow({ lesson: l, mi, li, count, onChange, onMove, onRemove }: {
         <div className="flex rounded-btn border border-line bg-white p-0.5" role="radiogroup" aria-label="Format de la leçon">
           {(["Vidéo", "Texte"] as const).map((k) => (
             <button key={k} type="button" role="radio" aria-checked={l.kind === k} onClick={() => onChange({ ...l, kind: k })}
-              className={`flex min-h-9 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold ${l.kind === k ? "bg-primary text-white" : "text-ink-2 hover:text-ink"}`}>
+              className={`flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold ${l.kind === k ? "bg-primary text-white" : "text-ink-2 hover:text-ink"}`}>
               {k === "Vidéo" ? <Film size={13} /> : <FileText size={13} />} {k}
             </button>
           ))}
         </div>
         <label htmlFor={`${id}-dur`} className="sr-only">Durée</label>
         <input id={`${id}-dur`} value={l.duration} onChange={(e) => onChange({ ...l, duration: e.target.value })} placeholder="Durée" className={`${input} w-24`} />
-        <label className="flex min-h-10 cursor-pointer items-center gap-2 text-xs font-medium text-ink-2">
+        <label className="flex min-h-11 cursor-pointer items-center gap-2 text-xs font-medium text-ink-2">
           <input type="checkbox" checked={l.preview} onChange={(e) => onChange({ ...l, preview: e.target.checked })} className="size-4 accent-[var(--color-primary)]" />
           Aperçu gratuit
         </label>

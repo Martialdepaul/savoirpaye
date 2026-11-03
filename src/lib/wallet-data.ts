@@ -1,4 +1,6 @@
-import { fcfa } from "./dashboard-data";
+import { NOW, fcfa, formatDate, orders } from "./dashboard-data";
+import { mobileMoney, withdrawalFees } from "./mock-data";
+import { seller, slugify } from "./catalog";
 export { fcfa };
 
 export type TxType = "vente" | "commission" | "retrait";
@@ -13,53 +15,65 @@ export interface Transaction {
   method?: string;
 }
 
+/** Commission prélevée par la plateforme selon l'offre du vendeur (voir la page Tarifs) */
+export const COMMISSION_RATE = 0.03;
+/** Délai de validation avant qu'une vente devienne retirable */
+const VALIDATION_MS = 48 * 3_600_000;
+
+const withdrawals: [Date, string, number][] = [
+  [new Date(2026, 9, 13, 18, 5), "Orange Money", 150000],
+  [new Date(2026, 9, 6, 9, 40), "Wave", 200000],
+  [new Date(2026, 8, 29, 12, 15), "Wave", 175000],
+  [new Date(2026, 8, 22, 19, 30), "Orange Money", 150000],
+];
+const payoutNumber = (method: string) => seller.payouts.find((p) => p.method === method)?.number ?? "";
+
+// Historique des 30 derniers jours : ventes payées, commissions (regroupées par jour) et retraits
+export const transactions: Transaction[] = (() => {
+  const since = NOW.getTime() - 30 * 86_400_000;
+  const sales = orders.filter((o) => o.status === "Payé" && o.date.getTime() >= since);
+  const rows: (Transaction & { at: number })[] = sales.map((o) => ({
+    id: `TX-${o.id.slice(4)}`,
+    at: o.date.getTime(),
+    date: formatDate(o.date),
+    label: `Vente — ${o.product}`,
+    type: "vente",
+    amount: o.amount,
+    status: NOW.getTime() - o.date.getTime() < VALIDATION_MS ? "En attente" : "Confirmé",
+    method: o.method,
+  }));
+  const byDay = new Map<string, typeof sales>();
+  for (const o of sales) byDay.set(formatDate(o.date), [...(byDay.get(formatDate(o.date)) ?? []), o]);
+  for (const [day, list] of byDay) {
+    const last = list[0].date;
+    rows.push({
+      id: `CM-${last.getMonth() + 1}${String(last.getDate()).padStart(2, "0")}`,
+      at: new Date(last).setHours(23, 59),
+      date: day,
+      label: `Commission plateforme (${COMMISSION_RATE * 100} % sur ${list.length} vente${list.length > 1 ? "s" : ""})`,
+      type: "commission",
+      amount: -Math.round(list.reduce((s, o) => s + o.amount, 0) * COMMISSION_RATE),
+      status: "Confirmé",
+    });
+  }
+  withdrawals.forEach(([d, method, amount], i) => rows.push({
+    id: `RT-${104 - i}`,
+    at: d.getTime(),
+    date: formatDate(d),
+    label: `Retrait vers ${method} — ${payoutNumber(method)}`,
+    type: "retrait",
+    amount: -amount,
+    status: "Traité",
+    method,
+  }));
+  return rows.sort((x, y) => y.at - x.at).map(({ at: _, ...t }) => t);
+})();
+
 export const walletBalance = {
   available: 842500,
-  pending: 156000,
+  /** Ventes encore en période de validation, commission déduite */
+  pending: Math.round(transactions.filter((t) => t.status === "En attente").reduce((s, t) => s + t.amount, 0) * (1 - COMMISSION_RATE)),
   totalWithdrawn: 2180000,
 };
 
-export const transactions: Transaction[] = [
-  { id: "TX-1042", date: "14 oct. 2026", label: "Vente — Maîtriser Excel en 7 jours", type: "vente", amount: 25000, status: "Confirmé", method: "Wave" },
-  { id: "TX-1041", date: "14 oct. 2026", label: "Vente — Lancer son e-commerce en Afrique", type: "vente", amount: 35000, status: "Confirmé", method: "Orange Money" },
-  { id: "TX-1040", date: "14 oct. 2026", label: "Commission plateforme (5 %)", type: "commission", amount: -3000, status: "Confirmé" },
-  { id: "TX-1039", date: "13 oct. 2026", label: "Retrait vers Wave — +221 77 000 00 00", type: "retrait", amount: -200000, status: "Traité", method: "Wave" },
-  { id: "TX-1038", date: "13 oct. 2026", label: "Vente — Pack de 50 modèles de factures", type: "vente", amount: 5000, status: "Confirmé", method: "Wave" },
-  { id: "TX-1037", date: "12 oct. 2026", label: "Vente — Maîtriser Excel en 7 jours", type: "vente", amount: 25000, status: "Confirmé", method: "Carte bancaire" },
-  { id: "TX-1036", date: "12 oct. 2026", label: "Commission plateforme (5 %)", type: "commission", amount: -1250, status: "Confirmé" },
-  { id: "TX-1035", date: "11 oct. 2026", label: "Vente — Comptabilité simple pour freelances", type: "vente", amount: 15000, status: "En attente", method: "Orange Money" },
-  { id: "TX-1034", date: "10 oct. 2026", label: "Retrait vers Orange Money — +221 76 000 00 00", type: "retrait", amount: -150000, status: "Traité", method: "Orange Money" },
-  { id: "TX-1033", date: "9 oct. 2026", label: "Vente — Lancer son e-commerce en Afrique", type: "vente", amount: 35000, status: "Confirmé", method: "Wave" },
-  { id: "TX-1032", date: "8 oct. 2026", label: "Commission plateforme (5 %)", type: "commission", amount: -1750, status: "Confirmé" },
-  { id: "TX-1031", date: "7 oct. 2026", label: "Vente — Maîtriser Excel en 7 jours", type: "vente", amount: 25000, status: "Confirmé", method: "Wave" },
-];
-
-// Mouvements plus anciens (données de démonstration) pour remplir plusieurs pages
-const olderSales = [
-  { name: "Maîtriser Excel en 7 jours", price: 25000 },
-  { name: "Lancer son e-commerce en Afrique", price: 35000 },
-  { name: "Pack de 50 modèles de factures", price: 5000 },
-  { name: "Comptabilité simple pour freelances", price: 15000 },
-  { name: "Vendre sur WhatsApp Business", price: 20000 },
-];
-const olderMethods = ["Wave", "Orange Money", "Carte bancaire", "MTN MoMo"];
-for (let i = 0; i < 28; i++) {
-  const day = 6 - Math.floor(i / 6);
-  const date = day > 0 ? `${day} oct. 2026` : `${30 + day} sept. 2026`;
-  const id = `TX-${1030 - i}`;
-  if (i % 9 === 8) {
-    transactions.push({ id, date, label: "Retrait vers Wave — +221 77 000 00 00", type: "retrait", amount: -100000 - (i % 3) * 25000, status: "Traité", method: "Wave" });
-  } else if (i % 4 === 3) {
-    transactions.push({ id, date, label: "Commission plateforme (5 %)", type: "commission", amount: -1250 - (i % 3) * 500, status: "Confirmé" });
-  } else {
-    const prod = olderSales[i % olderSales.length];
-    transactions.push({ id, date, label: `Vente — ${prod.name}`, type: "vente", amount: prod.price, status: "Confirmé", method: olderMethods[i % olderMethods.length] });
-  }
-}
-
-export const mobileMoneyProviders = [
-  { id: "wave", label: "Wave", fee: 0.01 }, // 1%
-  { id: "orange-money", label: "Orange Money", fee: 0.015 }, // 1.5%
-  { id: "free-money", label: "Free Money", fee: 0.01 },
-  { id: "mtn-momo", label: "MTN MoMo", fee: 0.015 },
-];
+export const mobileMoneyProviders = mobileMoney.map((m) => ({ id: slugify(m.name), label: m.name, fee: withdrawalFees[m.name] }));

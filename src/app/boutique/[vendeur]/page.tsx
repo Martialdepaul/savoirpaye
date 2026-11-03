@@ -14,7 +14,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if ((await params).vendeur !== seller.slug) return {};
-  return { title: `Boutique de ${seller.name} | SavoirPaye`, description: seller.bio };
+  return { title: `Boutique de ${seller.name}`, description: seller.bio };
 }
 
 export default async function ShopPage({ params }: Props) {
@@ -62,7 +62,7 @@ export default async function ShopPage({ params }: Props) {
       </main>
 
       <footer className="border-t border-line py-8 text-center text-sm text-ink-2">
-        Boutique propulsée par <Link href="/" className="inline-block py-2 font-semibold text-primary hover:underline">savoirpay</Link>
+        Boutique propulsée par <Link href="/" className="inline-block py-3 font-semibold text-primary hover:underline">Savoirpay</Link>
       </footer>
     </div>
   );

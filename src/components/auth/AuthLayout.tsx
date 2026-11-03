@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Check } from "lucide-react";
 import Logo from "../ui/Logo";
+import { site, year } from "../../lib/site-config";
 
 const perks = [
   "Encaissez par Wave, Orange Money, MTN MoMo et carte",
@@ -21,12 +22,12 @@ export default function AuthLayout({ title, subtitle, children, footer }: { titl
           {footer && <div className="mt-8 text-center text-sm text-ink-2">{footer}</div>}
         </main>
         <p className="text-center text-xs text-ink-2">
-          © 2026 savoirpay · <Link href="/cgu" className="inline-block px-1.5 py-3 hover:text-ink">CGU</Link> · <Link href="/confidentialite" className="inline-block px-1.5 py-3 hover:text-ink">Confidentialité</Link>
+          © {year} {site.name} · <Link href="/cgu" className="inline-block px-2 py-3.5 hover:text-ink">CGU</Link> · <Link href="/confidentialite" className="inline-block px-2 py-3.5 hover:text-ink">Confidentialité</Link>
         </p>
       </div>
 
       <aside className="bg-forest-glow relative hidden overflow-hidden p-12 text-white lg:flex lg:flex-col lg:justify-center">
-                        <div className="relative max-w-md">
+        <div className="relative max-w-md">
           <p className="font-heading text-3xl font-extrabold leading-tight">Transformez votre savoir en <span className="text-gold">revenus</span>, en FCFA.</p>
           <ul className="mt-8 space-y-4">
             {perks.map((p) => (

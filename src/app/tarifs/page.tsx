@@ -8,7 +8,7 @@ import { comparison } from "../../lib/site-data";
 import { plans } from "../../lib/mock-data";
 
 export const metadata: Metadata = {
-  title: "Tarifs · Savoirpay",
+  title: "Tarifs",
   description: "Des tarifs simples en FCFA. Commencez gratuitement, sans engagement.",
 };
 

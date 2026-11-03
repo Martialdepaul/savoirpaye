@@ -4,7 +4,7 @@ import PageHero from "@/components/site/PageHero";
 import Faq from "@/components/landing/Faq";
 
 export const metadata: Metadata = {
-  title: "Questions fréquentes · Savoirpay",
+  title: "Questions fréquentes",
   description: "Moyens de paiement, retraits, Créateur IA, protection des contenus : les réponses à vos questions.",
 };
 

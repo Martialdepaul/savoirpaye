@@ -8,6 +8,7 @@ import Logo from "../ui/Logo";
 import { CreateButton } from "./CreateMenu";
 import { NavList, SellerCard } from "./Sidebar";
 import Notifications from "./Notifications";
+import { seller } from "../../lib/catalog";
 
 const today = new Date().toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 
@@ -40,7 +41,7 @@ export default function Topbar() {
           <CreateButton />
           <Notifications />
           <Link href="/dashboard/parametres" aria-label="Mon profil" className="lg:hidden">
-            <img src="/images/team-1.jpg" alt="" className="size-10 rounded-full object-cover" />
+            <img src={seller.photo} alt="" className="size-10 rounded-full object-cover" />
           </Link>
         </div>
       </header>

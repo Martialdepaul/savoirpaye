@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Logo from "../ui/Logo";
+import { seller } from "../../lib/catalog";
+import { site, year } from "../../lib/site-config";
 
 const cols = [
   {
@@ -8,7 +10,7 @@ const cols = [
       { label: "Fonctionnalités", href: "/fonctionnalites" },
       { label: "Tarifs", href: "/tarifs" },
       { label: "Créateur IA", href: "/createur-ia" },
-      { label: "Exemple de boutique", href: "/boutique/aminata-diallo" },
+      { label: "Exemple de boutique", href: `/boutique/${seller.slug}` },
     ],
   },
   {
@@ -45,17 +47,17 @@ export default function Footer() {
           {cols.map((c) => (
             <div key={c.title}>
               <h2 className="font-heading text-sm font-bold">{c.title}</h2>
-              <ul className="mt-3 space-y-0.5">
+              <ul className="mt-2">
                 {c.links.map((l) => (
-                  <li key={l.label}><Link href={l.href} className="inline-block py-2 text-sm text-white/70 transition-colors hover:text-white">{l.label}</Link></li>
+                  <li key={l.label}><Link href={l.href} className="inline-flex min-h-11 items-center pr-3 text-sm text-white/70 transition-colors hover:text-white">{l.label}</Link></li>
                 ))}
               </ul>
             </div>
           ))}
         </div>
         <div className="mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 text-sm text-white/60 sm:flex-row sm:justify-between">
-          <p>© 2026 Savoirpay. Tous droits réservés.</p>
-          <p>Dakar · Abidjan · Cotonou</p>
+          <p>© {year} {site.name}. Tous droits réservés.</p>
+          <p>{site.cities.map((c) => c.split(",")[0]).join(" · ")}</p>
         </div>
       </div>
     </footer>

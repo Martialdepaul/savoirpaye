@@ -57,7 +57,7 @@ export default function TransactionHistory() {
         )}
         {pager.pageItems.map((tx) => {
           const amount = (
-            <>{tx.amount > 0 ? "+" : ""}{fcfa(Math.abs(tx.amount))}</>
+            <>{tx.amount > 0 ? "+" : "−"}{fcfa(Math.abs(tx.amount))}</>
           );
           const amountCls = `num shrink-0 whitespace-nowrap font-heading font-bold ${tx.amount > 0 ? "text-success" : "text-ink-2"}`;
           return (

@@ -4,7 +4,7 @@ import PageHero from "@/components/site/PageHero";
 import AiCreator from "@/components/landing/AiCreator";
 
 export const metadata: Metadata = {
-  title: "Créateur IA · Savoirpay",
+  title: "Créateur IA",
   description: "Décrivez votre sujet : l'IA propose le plan, rédige les leçons et les quiz, puis prépare votre page de vente.",
 };
 

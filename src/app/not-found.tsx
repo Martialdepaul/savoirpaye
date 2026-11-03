@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ArrowLeft, SearchX } from "lucide-react";
+import type { Metadata } from "next";
 import Logo from "@/components/ui/Logo";
+
+export const metadata: Metadata = { title: "Page introuvable" };
 
 export default function NotFound() {
   return (

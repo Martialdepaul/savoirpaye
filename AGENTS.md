@@ -13,16 +13,18 @@ Plateforme de vente de formations et produits numériques pour l'Afrique francop
 - `src/app/` : routes (App Router)
   - `page.tsx` : accueil court (hero avec photos, moyens de paiement, témoignages, bandeau final)
   - `fonctionnalites/`, `comment-ca-marche/`, `createur-ia/`, `tarifs/`, `faq/`, `ressources/` (+ `[slug]`), `a-propos/`, `contact/` : site public, une page par sujet, via `SiteShell` + `PageHero` (`src/components/site/`)
-  - `inscription/`, `connexion/`, `mot-de-passe-oublie/`, `reinitialiser-mot-de-passe/` : comptes
+  - `inscription/`, `connexion/`, `mot-de-passe-oublie/`, `reinitialiser-mot-de-passe/` : comptes (e-mail ou Google via `GoogleButton` de `components/auth/fields.tsx`)
   - `onboarding/` : configuration de la boutique en 3 étapes, après l'inscription
   - `formations/[slug]/` et `produits/[slug]/` : pages de vente générées depuis le catalogue
   - `boutique/[vendeur]/` : boutique publique du vendeur
   - `checkout/` : paiement Mobile Money (`/checkout?produit=<slug>`)
   - `cgu/`, `confidentialite/`, `mentions-legales/` : pages légales (les `[crochets]` sont à compléter)
   - `dashboard/` : espace vendeur (accueil, produits, `produits/nouveau`, `produits/[id]/modifier`, commandes, clients, créateur IA, statistiques, portefeuille, paramètres, notifications, aide) et espace apprenant (`mes-formations/`)
-- `src/lib/catalog.ts` : catalogue central des produits (source unique pour tableau de bord, éditeur, pages de vente, boutique et paiement) + `productUrl`, `checkoutUrl`, `slugify`
+- `src/lib/site-config.ts` : nom, URL (`NEXT_PUBLIC_SITE_URL`), e-mails, téléphones, villes et informations légales de la société (valeurs `[entre crochets]` à compléter) ; à utiliser au lieu d'écrire une adresse ou un numéro en dur
+- `src/lib/catalog.ts` : catalogue central des produits et profil du vendeur de démonstration (`seller`) ; source unique pour tableau de bord, éditeur, pages de vente, boutique et paiement. Chiffre d'affaires et élèves sont calculés à partir de `sales` ; + `productUrl`, `checkoutUrl`, `slugify`
+- `src/lib/dashboard-data.ts` : commandes générées depuis le catalogue, d'où sont dérivés clients, statistiques par période, graphique et meilleurs produits (date de référence `NOW`) ; `src/lib/wallet-data.ts` en dérive les transactions (commission de 3 % du plan Pro)
 - `src/lib/site-data.ts` : contenus du site public (menu, fonctionnalités, comparatif, articles, équipe)
-- `src/lib/*-data.ts` : autres données de démonstration (pas encore de back-end)
+- `src/lib/*-data.ts` : autres données de démonstration (pas encore de back-end) ; `mock-data.ts` contient moyens de paiement (`paymentMethods`, `mobileMoney`, `withdrawalFees`), offres et FAQ
 - `public/images/` : photos du site (Unsplash, voir `CREDITS.md`), versionnées hors Git LFS pour que Vercel les serve
 - `src/components/` : composants par domaine (`landing`, `sales`, `checkout`, `dashboard`, `editor`, `auth`, `legal`, `creator`, `student`, `wallet`, `ui`)
 - `src/components/editor/` : éditeur de produit (`ProductEditor`, `ModulesEditor`, validation dans `types.ts`)
@@ -41,6 +43,12 @@ Les appels serveur sont simulés (`setTimeout`) et marqués `// Simulation … �
 - Montants : utiliser `fcfa()` de `src/lib/dashboard-data.ts`, avec `whitespace-nowrap` dans les tableaux.
 - Thème et tokens de couleur dans `src/app/globals.css` (Tailwind v4, pas de fichier de config Tailwind) ; polices chargées par `next/font` dans `src/app/layout.tsx`.
 - Liens internes avec `next/link`, redirections avec `useRouter()` de `next/navigation` (jamais `<a href="/…">` ni `window.location.href`).
+
+## Contenus
+
+- Marque : « Savoirpay » dans les textes, titres de page via le gabarit `%s · Savoirpay` de `layout.tsx` (ne pas répéter la marque dans `metadata.title`).
+- Les pages client (`"use client"`) reçoivent leur titre par un `layout.tsx` voisin.
+- E-mails de démonstration en `@exemple.com`.
 
 ## Qualité du code
 

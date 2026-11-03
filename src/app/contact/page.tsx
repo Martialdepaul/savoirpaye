@@ -6,7 +6,7 @@ import ContactForm from "../../components/site/ContactForm";
 import { contactChannels, offices } from "../../lib/site-data";
 
 export const metadata: Metadata = {
-  title: "Contact · Savoirpay",
+  title: "Contact",
   description: "Une question ? L'équipe Savoirpay vous répond sur WhatsApp, par e-mail ou par téléphone.",
 };
 
@@ -26,7 +26,7 @@ export default function ContactPage() {
                 <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-light text-primary"><c.icon size={20} /></span>
                 <div className="min-w-0">
                   <div className="text-sm text-ink-2">{c.title}</div>
-                  <div className="break-words font-heading text-lg font-bold">{c.value}</div>
+                  <a href={c.href} target={c.href.startsWith("http") ? "_blank" : undefined} rel="noopener" className="inline-block break-words py-2 font-heading text-lg font-bold hover:text-primary hover:underline">{c.value}</a>
                   <p className="mt-1 text-sm text-ink-2">{c.text}</p>
                 </div>
               </div>

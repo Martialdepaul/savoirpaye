@@ -50,7 +50,7 @@ export default function NotificationsPage() {
               role="tab"
               aria-selected={filter === f.id}
               onClick={() => setFilter(f.id)}
-              className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold ${filter === f.id ? "bg-primary text-white" : "border border-line bg-white text-ink-2"}`}
+              className={`min-h-11 shrink-0 rounded-full px-4 text-sm font-semibold ${filter === f.id ? "bg-primary text-white" : "border border-line bg-white text-ink-2"}`}
             >
               {f.label}
             </button>

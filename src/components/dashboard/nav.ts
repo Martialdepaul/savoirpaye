@@ -1,3 +1,4 @@
+import { seller } from "../../lib/catalog";
 import { Home, Package, GraduationCap, Sparkles, ShoppingBag, Users, Wallet, BarChart3, Settings, Bell, LifeBuoy, Store } from "lucide-react";
 
 export const navItems = [
@@ -15,7 +16,7 @@ export const navItems = [
 export const secondaryNav = [
   { label: "Notifications", icon: Bell, href: "/dashboard/notifications" },
   { label: "Centre d'aide", icon: LifeBuoy, href: "/dashboard/aide" },
-  { label: "Voir ma boutique", icon: Store, href: "/boutique/aminata-diallo" },
+  { label: "Voir ma boutique", icon: Store, href: `/boutique/${seller.slug}` },
 ];
 
 /** Retourne le libellé de l'entrée active pour une URL donnée (correspondance la plus longue). */

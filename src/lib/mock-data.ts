@@ -1,4 +1,4 @@
-import { BarChart3, CreditCard, FileText, GraduationCap, ShieldCheck, Sparkles, TrendingUp, UserRound, Users } from "lucide-react";
+import { CreditCard, GraduationCap, TrendingUp, UserRound } from "lucide-react";
 
 export const paymentMethods = [
   { name: "Orange Money", color: "#FF7900" },
@@ -9,20 +9,17 @@ export const paymentMethods = [
   { name: "Carte bancaire", color: "#1C1917" },
 ];
 
+/** Opérateurs Mobile Money (paiement et retrait) */
+export const mobileMoney = paymentMethods.filter((m) => m.name !== "Carte bancaire");
+
+/** Frais de retrait par opérateur, rappelés sur la page Tarifs */
+export const withdrawalFees: Record<string, number> = { Wave: 0.01, "Orange Money": 0.015, "MTN MoMo": 0.015, "Moov Money": 0.015, "Airtel Money": 0.015 };
+
 export const steps = [
   { icon: UserRound, title: "Inscrivez-vous", text: "Créez votre compte en quelques minutes. C'est gratuit." },
   { icon: GraduationCap, title: "Créez vos contenus", text: "Ajoutez vos formations, produits numériques ou services." },
   { icon: CreditCard, title: "Recevez vos paiements", text: "Vos clients paient via Mobile Money, carte bancaire ou autres moyens." },
   { icon: TrendingUp, title: "Retirez vos gains", text: "Suivez vos ventes et retirez vos fonds en toute sécurité." },
-];
-
-export const features = [
-  { icon: GraduationCap, title: "Vente de formations", text: "Créez des cours vidéo, PDF, quiz et plus encore.", tint: "bg-[#e3f4ec] text-[#138a5b]" },
-  { icon: FileText, title: "Produits numériques", text: "Vendez e-books, templates, logiciels, etc.", tint: "bg-[#efeafd] text-[#6a4fd8]" },
-  { icon: Sparkles, title: "Assistant IA", text: "Générez des idées, des titres et même le contenu de vos cours.", tint: "bg-[#fef1e1] text-[#e07b00]" },
-  { icon: Users, title: "Gestion des clients", text: "Suivez vos apprenants et communiquez facilement.", tint: "bg-[#e6f0fd] text-[#2f6fd6]" },
-  { icon: BarChart3, title: "Analytics avancés", text: "Analysez vos ventes, votre audience et votre croissance.", tint: "bg-[#fde8ef] text-[#d6336c]" },
-  { icon: ShieldCheck, title: "Sécurité multi-tenant", text: "Vos données sont protégées et isolées de celles des autres.", tint: "bg-[#e0f5f3] text-[#0f8f84]" },
 ];
 
 export const testimonials = [
@@ -60,7 +57,7 @@ export const plans = [
 
 export const faqs = [
   { q: "Quels moyens de paiement mes élèves peuvent-ils utiliser ?", a: "Vos élèves règlent par Orange Money, Wave, MTN MoMo, Moov Money, Airtel Money ou par carte bancaire. Les montants s'affichent en FCFA, sans conversion." },
-  { q: "Comment et quand puis-je retirer mes gains ?", a: "Depuis votre tableau de bord, cliquez sur « Retirer » et choisissez votre numéro Mobile Money ou votre compte bancaire. Les retraits Mobile Money sont généralement crédités en quelques minutes." },
+  { q: "Comment et quand puis-je retirer mes gains ?", a: "Depuis votre tableau de bord, cliquez sur « Retirer » et choisissez votre numéro Mobile Money ou votre compte bancaire. Les retraits Mobile Money sont généralement crédités en quelques minutes, avec des frais de 1 à 1,5 % selon l'opérateur." },
   { q: "Dois-je payer pour commencer ?", a: "Non. Le plan Starter est gratuit et sans engagement. Vous ne payez qu'une commission lorsque vous réalisez une vente." },
   { q: "Que fait exactement le Créateur IA ?", a: "Il propose le plan de votre cours, rédige les leçons, les quiz et la page de vente à partir de votre sujet. Vous relisez, modifiez et validez chaque contenu avant publication." },
   { q: "Mes contenus sont-ils protégés contre le piratage ?", a: "Vos vidéos et fichiers sont accessibles uniquement aux élèves ayant payé, avec des liens sécurisés et un filigrane au nom de l'élève." },
