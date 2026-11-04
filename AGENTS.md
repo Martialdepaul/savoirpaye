@@ -25,6 +25,7 @@ Plateforme de vente de formations et produits numériques pour l'Afrique francop
 - `src/lib/dashboard-data.ts` : commandes générées depuis le catalogue, d'où sont dérivés clients, statistiques par période, graphique et meilleurs produits (date de référence `NOW`) ; `src/lib/wallet-data.ts` en dérive les transactions (commission de 3 % du plan Pro)
 - `src/lib/site-data.ts` : contenus du site public (menu, fonctionnalités, comparatif, articles, équipe)
 - `src/lib/*-data.ts` : autres données de démonstration (pas encore de back-end) ; `mock-data.ts` contient moyens de paiement (`paymentMethods`, `mobileMoney`, `withdrawalFees`), offres et FAQ
+- `public/videos/` : vidéo de démonstration (`savoirpay-demo.mp4`, H.264, et son image `savoirpay-demo.jpg`), lue par `components/landing/DemoVideo.tsx` (fenêtre « Voir la démo » de l'accueil et section de « Comment ça marche ») ; à réenregistrer quand l'interface change, hors Git LFS
 - `public/images/` : photos du site (Unsplash, voir `CREDITS.md`), versionnées hors Git LFS pour que Vercel les serve
 - `src/components/` : composants par domaine (`landing`, `sales`, `checkout`, `dashboard`, `editor`, `auth`, `legal`, `creator`, `student`, `wallet`, `ui`)
 - `src/components/editor/` : éditeur de produit (`ProductEditor`, `ModulesEditor`, validation dans `types.ts`)

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import SiteShell from "@/components/site/SiteShell";
 import PageHero from "@/components/site/PageHero";
 import HowItWorks from "@/components/landing/HowItWorks";
+import DemoVideo from "@/components/landing/DemoVideo";
 import PaymentStrip from "@/components/landing/PaymentStrip";
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export default function HowItWorksPage() {
         text="Quatre étapes simples, depuis votre téléphone ou votre ordinateur. Aucune compétence technique n'est nécessaire."
       />
       <HowItWorks />
+      <DemoVideo />
       <div id="paiements" className="scroll-mt-16"><PaymentStrip /></div>
     </SiteShell>
   );

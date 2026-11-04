@@ -149,3 +149,4 @@
 public/images/*.jpg -filter -diff -merge -text
 src/app/apple-icon.png -filter -diff -merge -text
 src/app/fonts/*.woff2 -filter -diff -merge binary
+public/videos/* -filter -diff -merge binary

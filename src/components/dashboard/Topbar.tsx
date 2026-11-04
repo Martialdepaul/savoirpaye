@@ -9,8 +9,11 @@ import { CreateButton } from "./CreateMenu";
 import { NavList, SellerCard } from "./Sidebar";
 import Notifications from "./Notifications";
 import { seller } from "../../lib/catalog";
+import { NOW } from "../../lib/dashboard-data";
 
-const today = new Date().toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+// Date de référence des données de démonstration (à remplacer par la date du jour avec l'API)
+const date = NOW.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+const today = date[0].toUpperCase() + date.slice(1);
 
 export default function Topbar() {
   const [open, setOpen] = useState(false);
@@ -36,7 +39,7 @@ export default function Topbar() {
           </button>
           <Logo href="/dashboard" />
         </div>
-        <div suppressHydrationWarning className="hidden text-sm capitalize text-ink-2 lg:block">{today}</div>
+        <div className="hidden text-sm text-ink-2 lg:block">{today}</div>
         <div className="flex items-center gap-2 sm:gap-3">
           <CreateButton />
           <Notifications />

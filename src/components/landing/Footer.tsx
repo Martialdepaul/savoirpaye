@@ -26,38 +26,48 @@ const cols = [
     links: [
       { label: "À propos", href: "/a-propos" },
       { label: "Contact", href: "/contact" },
-      { label: "Conditions d'utilisation", href: "/cgu" },
-      { label: "Confidentialité", href: "/confidentialite" },
-      { label: "Mentions légales", href: "/mentions-legales" },
     ],
   },
+];
+
+const legal = [
+  { label: "CGU", href: "/cgu" },
+  { label: "Confidentialité", href: "/confidentialite" },
+  { label: "Mentions légales", href: "/mentions-legales" },
 ];
 
 export default function Footer() {
   return (
     <footer className="bg-forest text-white">
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-5 lg:py-14">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:gap-10">
-          <div className="col-span-2 lg:col-span-1">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-5 lg:py-14">
+        <div className="sm:grid sm:grid-cols-3 sm:gap-6 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:gap-10">
+          <div className="mb-3 sm:col-span-3 sm:mb-0 lg:col-span-1">
             <Logo tone="light" className="text-2xl" />
-            <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/70">
-              La plateforme des créateurs africains pour vendre formations, produits numériques et services, payés en Mobile Money.
+            <p className="mt-2 max-w-xs text-sm leading-relaxed text-white/70">
+              Vendez vos formations et produits numériques, payés en Mobile Money.
             </p>
           </div>
+          {/* Sur mobile, tous les liens se suivent en ligne (intitulés réservés aux lecteurs d'écran) pour un pied de page compact */}
+          <nav aria-label="Liens du site" className="flex flex-wrap gap-x-5 sm:contents">
           {cols.map((c) => (
-            <div key={c.title}>
-              <h2 className="font-heading text-sm font-bold">{c.title}</h2>
-              <ul className="mt-2">
+            <div key={c.title} className="contents sm:block">
+              <h2 className="sr-only font-heading text-sm font-bold sm:not-sr-only">{c.title}</h2>
+              <ul className="contents sm:mt-1 sm:block lg:mt-2">
                 {c.links.map((l) => (
-                  <li key={l.label}><Link href={l.href} className="inline-flex min-h-11 items-center pr-3 text-sm text-white/70 transition-colors hover:text-white">{l.label}</Link></li>
+                  <li key={l.label}><Link href={l.href} className="inline-flex min-h-11 items-center text-sm text-white/70 transition-colors hover:text-white sm:pr-3">{l.label}</Link></li>
                 ))}
               </ul>
             </div>
           ))}
+          </nav>
         </div>
-        <div className="mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 text-sm text-white/60 sm:flex-row sm:justify-between">
-          <p>© {year} {site.name}. Tous droits réservés.</p>
-          <p>{site.cities.map((c) => c.split(",")[0]).join(" · ")}</p>
+        <div className="mt-4 flex flex-col gap-1 border-t border-white/10 pt-4 text-sm text-white/60 lg:mt-10 lg:flex-row lg:items-center lg:justify-between lg:pt-6">
+          <ul className="flex flex-wrap gap-x-5">
+            {legal.map((l) => (
+              <li key={l.href}><Link href={l.href} className="inline-flex min-h-11 items-center transition-colors hover:text-white">{l.label}</Link></li>
+            ))}
+          </ul>
+          <p>© {year} {site.name} · {site.cities.map((c) => c.split(",")[0]).join(" · ")}</p>
         </div>
       </div>
     </footer>

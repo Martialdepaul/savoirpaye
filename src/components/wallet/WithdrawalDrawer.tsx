@@ -3,6 +3,11 @@
 import { useState, useId } from "react";
 import { X, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { walletBalance, mobileMoneyProviders, fcfa } from "@/lib/wallet-data";
+import { seller } from "@/lib/catalog";
+
+/** Numéro enregistré dans Paramètres › Paiements pour cet opérateur */
+const savedNumber = (id: string) => seller.payouts.find((p) => mobileMoneyProviders.find((m) => m.id === id)?.label === p.method)?.number ?? "";
+const pct = (fee: number) => `${(fee * 100).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} %`;
 
 interface Props {
   open: boolean;
@@ -12,7 +17,7 @@ interface Props {
 export default function WithdrawalDrawer({ open, onClose }: Props) {
   const [amount, setAmount] = useState("");
   const [provider, setProvider] = useState(mobileMoneyProviders[0].id);
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(savedNumber(mobileMoneyProviders[0].id));
   const [success, setSuccess] = useState(false);
   const amountId = useId();
   const providerId = useId();
@@ -34,7 +39,7 @@ export default function WithdrawalDrawer({ open, onClose }: Props) {
   function handleClose() {
     setSuccess(false);
     setAmount("");
-    setPhone("");
+    setPhone(savedNumber(mobileMoneyProviders[0].id));
     setProvider(mobileMoneyProviders[0].id);
     onClose();
   }
@@ -122,11 +127,11 @@ export default function WithdrawalDrawer({ open, onClose }: Props) {
                 <select
                   id={providerId}
                   value={provider}
-                  onChange={(e) => setProvider(e.target.value)}
+                  onChange={(e) => { setProvider(e.target.value); setPhone(savedNumber(e.target.value)); }}
                   className="w-full rounded-btn border border-line bg-white px-4 py-3 text-sm font-medium focus:border-primary focus:outline-none"
                 >
                   {mobileMoneyProviders.map((p) => (
-                    <option key={p.id} value={p.id}>{p.label} — frais {(p.fee * 100).toFixed(1)} %</option>
+                    <option key={p.id} value={p.id}>{p.label} — frais {pct(p.fee)}</option>
                   ))}
                 </select>
               </div>
@@ -139,7 +144,7 @@ export default function WithdrawalDrawer({ open, onClose }: Props) {
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+221 77 000 00 00"
+                  placeholder="+221 77 123 45 67"
                   className="w-full rounded-btn border border-line bg-white px-4 py-3 text-sm font-medium focus:border-primary focus:outline-none"
                 />
               </div>
@@ -152,7 +157,7 @@ export default function WithdrawalDrawer({ open, onClose }: Props) {
                     <span className="num font-medium">{fcfa(numAmount)}</span>
                   </div>
                   <div className="flex justify-between text-ink-2">
-                    <span>Frais {selectedProvider.label} ({(selectedProvider.fee * 100).toFixed(1)} %)</span>
+                    <span>Frais {selectedProvider.label} ({pct(selectedProvider.fee)})</span>
                     <span className="num font-medium text-danger">− {fcfa(fees)}</span>
                   </div>
                   <div className="border-t border-line pt-2 flex justify-between font-bold text-ink">

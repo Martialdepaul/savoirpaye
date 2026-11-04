@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, Play, Smartphone, Zap, Sparkles, ShieldCheck, LayoutDashboard, Package, GraduationCap, ShoppingBag, Users, Wallet, BarChart3, TrendingUp } from "lucide-react";
+import { DemoButton } from "./DemoVideo";
+import { ArrowRight, Smartphone, Zap, Sparkles, ShieldCheck, LayoutDashboard, Package, GraduationCap, ShoppingBag, Users, Wallet, BarChart3, TrendingUp } from "lucide-react";
 
 const perks = [
   { icon: Smartphone, title: "Paiements", sub: "Mobile Money" },
@@ -126,10 +127,7 @@ export default function Hero() {
             <Link href="/inscription" className="inline-flex items-center justify-center gap-2 rounded-btn bg-gold px-6 py-3.5 font-bold text-forest transition-colors hover:bg-gold-hover">
               Commencer gratuitement <ArrowRight size={18} />
             </Link>
-            <Link href="/comment-ca-marche" className="inline-flex items-center justify-center gap-2.5 rounded-btn border border-white/30 px-6 py-3.5 font-semibold text-white transition-colors hover:bg-white/10">
-              <span className="flex size-6 items-center justify-center rounded-full bg-white text-forest"><Play size={12} fill="currentColor" /></span>
-              Voir la démo
-            </Link>
+            <DemoButton className="inline-flex items-center justify-center gap-2.5 rounded-btn border border-white/30 px-6 py-3.5 font-semibold text-white transition-colors hover:bg-white/10" />
           </div>
         </div>
 
