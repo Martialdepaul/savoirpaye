@@ -7,7 +7,8 @@ import { site } from "./site-config";
 
 type Mail = { to: string; subject: string; html: string; text: string };
 
-const FROM_RESEND = process.env.EMAIL_FROM ?? `${site.name} <onboarding@resend.dev>`;
+// `||` et non `??` : une ligne « EMAIL_FROM= » vide doit aussi prendre l'expéditeur par défaut
+const FROM_RESEND = process.env.EMAIL_FROM?.trim() || `${site.name} <onboarding@resend.dev>`;
 
 export async function sendEmail(mail: Mail) {
   try {
