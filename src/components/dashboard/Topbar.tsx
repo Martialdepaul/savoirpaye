@@ -3,12 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Logo from "../ui/Logo";
 import { CreateButton } from "./CreateMenu";
-import { NavList, SellerCard } from "./Sidebar";
+import { NavList, SellerCard, SignOutButton, UserAvatar } from "./Sidebar";
 import Notifications from "./Notifications";
-import { seller } from "../../lib/catalog";
 import { NOW } from "../../lib/dashboard-data";
 
 // Date de référence des données de démonstration (à remplacer par la date du jour avec l'API)
@@ -44,7 +43,7 @@ export default function Topbar() {
           <CreateButton />
           <Notifications />
           <Link href="/dashboard/parametres" aria-label="Mon profil" className="lg:hidden">
-            <img src={seller.photo} alt="" className="size-10 rounded-full object-cover" />
+            <UserAvatar />
           </Link>
         </div>
       </header>
@@ -58,9 +57,9 @@ export default function Topbar() {
               <button onClick={() => setOpen(false)} aria-label="Fermer le menu" className="flex size-10 items-center justify-center rounded-btn hover:bg-page"><X size={20} /></button>
             </div>
             <div className="flex-1 overflow-y-auto p-3"><NavList onNavigate={() => setOpen(false)} /></div>
-            <div className="flex items-center justify-between border-t border-line p-4">
+            <div className="flex items-center justify-between gap-2 border-t border-line p-4">
               <SellerCard />
-              <Link href="/connexion" aria-label="Se déconnecter" className="flex size-10 items-center justify-center rounded-btn text-ink-2 hover:bg-page hover:text-danger"><LogOut size={18} /></Link>
+              <SignOutButton />
             </div>
           </div>
         </div>

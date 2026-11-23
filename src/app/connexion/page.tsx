@@ -2,36 +2,55 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AuthLayout from "@/components/auth/AuthLayout";
-import { Divider, Field, GoogleButton, PasswordInput, SubmitButton, inputCls, isEmail, isPhone } from "@/components/auth/fields";
+import { Divider, Field, FormError, GoogleButton, PasswordInput, SubmitButton, googleErrorFromUrl, inputCls, isEmail, nextPath } from "@/components/auth/fields";
+import { authClient, authErrorMessage } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [id, setId] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
-  const [errors, setErrors] = useState<{ id?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [formError, setFormError] = useState("");
   const [loading, setLoading] = useState(false);
   const [google, setGoogle] = useState(false);
 
-  const withGoogle = () => {
+  useEffect(() => setFormError(googleErrorFromUrl()), []);
+
+  const withGoogle = async () => {
     setGoogle(true);
-    // Simulation de la connexion Google (OAuth), à remplacer par la redirection vers le fournisseur
-    setTimeout(() => router.push("/dashboard"), 900);
+    setFormError("");
+    const { error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: nextPath(),
+      newUserCallbackURL: "/onboarding",
+      errorCallbackURL: "/connexion",
+    });
+    if (error) {
+      setGoogle(false);
+      setFormError(authErrorMessage(error));
+    }
   };
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const er: typeof errors = {};
-    if (!isEmail(id) && !isPhone(id)) er.id = "Saisissez votre adresse e-mail ou votre numéro de téléphone.";
+    if (!isEmail(email)) er.email = "Saisissez votre adresse e-mail.";
     if (!password) er.password = "Saisissez votre mot de passe.";
     setErrors(er);
-    if (er.id) return document.getElementById("login-id")?.focus();
+    if (er.email) return document.getElementById("login-id")?.focus();
     if (er.password) return document.getElementById("password")?.focus();
     setLoading(true);
-    // Simulation de la connexion, à remplacer par l'API
-    setTimeout(() => router.push("/dashboard"), 800);
+    setFormError("");
+    const { error } = await authClient.signIn.email({ email: email.trim(), password, rememberMe: remember });
+    if (error) {
+      setLoading(false);
+      return setFormError(authErrorMessage(error));
+    }
+    router.push(nextPath());
+    router.refresh();
   };
 
   return (
@@ -43,9 +62,10 @@ export default function LoginPage() {
       <GoogleButton loading={google} disabled={loading} onClick={withGoogle} />
       <Divider>ou avec votre e-mail</Divider>
       <form onSubmit={submit} noValidate className="space-y-5">
-        <Field id="login-id" label="E-mail ou numéro de téléphone" error={errors.id}>
-          <input id="login-id" autoComplete="username" value={id} onChange={(e) => { setId(e.target.value); setErrors({ ...errors, id: undefined }); }}
-            placeholder="vous@exemple.com ou 77 123 45 67" aria-invalid={!!errors.id} aria-describedby={errors.id ? "login-id-error" : undefined} className={inputCls(!!errors.id)} />
+        <FormError>{formError}</FormError>
+        <Field id="login-id" label="Adresse e-mail" error={errors.email}>
+          <input id="login-id" type="email" inputMode="email" autoComplete="username" value={email} onChange={(e) => { setEmail(e.target.value); setErrors({ ...errors, email: undefined }); }}
+            placeholder="vous@exemple.com" aria-invalid={!!errors.email} aria-describedby={errors.email ? "login-id-error" : undefined} className={inputCls(!!errors.email)} />
         </Field>
         <Field id="password" label="Mot de passe" error={errors.password}>
           <PasswordInput id="password" autoComplete="current-password" value={password} onChange={(e) => { setPassword(e.target.value); setErrors({ ...errors, password: undefined }); }} invalid={!!errors.password} />

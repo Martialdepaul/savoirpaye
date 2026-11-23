@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Loader2, LogOut } from "lucide-react";
+import { signOut, useSession } from "../../lib/auth-client";
 import Logo from "../ui/Logo";
 import { activeLabel, navItems, secondaryNav } from "./nav";
 import { seller } from "../../lib/dashboard-data";
@@ -42,13 +45,51 @@ export function NavList({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-export function SellerCard() {
+/** Photo de l'utilisateur connecté (Google) ou ses initiales */
+export function UserAvatar({ className = "size-10" }: { className?: string }) {
+  const { data } = useSession();
+  const u = data?.user;
+  if (u?.image) return <img src={u.image} alt="" referrerPolicy="no-referrer" className={`${className} shrink-0 rounded-full object-cover`} />;
+  const initials = (u?.name ?? "").split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("");
   return (
-    <div className="flex items-center gap-3">
-      <img src={seller.photo} alt="" className="size-10 rounded-full object-cover" />
+    <span aria-hidden className={`${className} flex shrink-0 items-center justify-center rounded-full bg-primary-light text-sm font-bold text-primary`}>
+      {initials || "·"}
+    </span>
+  );
+}
+
+/** Bouton de déconnexion (ferme la session puis renvoie vers la page de connexion) */
+export function SignOutButton() {
+  const router = useRouter();
+  const [busy, setBusy] = useState(false);
+  return (
+    <button
+      type="button"
+      disabled={busy}
+      onClick={async () => {
+        setBusy(true);
+        await signOut();
+        router.push("/connexion");
+        router.refresh();
+      }}
+      aria-label="Se déconnecter"
+      title="Se déconnecter"
+      className="flex size-11 shrink-0 items-center justify-center rounded-btn text-ink-2 hover:bg-page hover:text-danger disabled:opacity-60"
+    >
+      {busy ? <Loader2 size={18} className="animate-spin" /> : <LogOut size={18} />}
+    </button>
+  );
+}
+
+export function SellerCard() {
+  const { data, isPending } = useSession();
+  const u = data?.user;
+  return (
+    <div className="flex min-w-0 items-center gap-3">
+      <UserAvatar />
       <div className="min-w-0">
-        <div className="truncate text-sm font-semibold">{seller.name}</div>
-        <div className="truncate text-xs text-ink-2">{seller.role}</div>
+        <div className="truncate text-sm font-semibold">{isPending ? "…" : u?.name ?? seller.name}</div>
+        <div className="truncate text-xs text-ink-2">{u?.email ?? seller.role}</div>
       </div>
     </div>
   );
@@ -66,7 +107,10 @@ export default function Sidebar(_: { active?: string }) {
           <div className="font-heading font-bold">{plan.name} · <span className="text-gold">{plan.price}</span><span className="text-xs font-medium text-white/70"> / mois</span></div>
           <Link href="/tarifs" className="mt-1 inline-block py-1.5 text-xs font-semibold text-gold hover:underline">Passer à Business</Link>
         </div>
-        <SellerCard />
+        <div className="flex items-center justify-between gap-2">
+          <SellerCard />
+          <SignOutButton />
+        </div>
       </div>
     </aside>
   );

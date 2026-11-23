@@ -5,6 +5,7 @@ build/
 out/
 .cache/
 .env*
+!.env.example
 .vercel/
 *.tsbuildinfo
 *-debug.log*

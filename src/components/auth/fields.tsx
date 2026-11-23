@@ -92,5 +92,26 @@ export function Divider({ children = "ou" }: { children?: ReactNode }) {
   );
 }
 
-export const isEmail = (v: string) => /^\S+@\S+\.\S+$/.test(v.trim());
+/** Message d'erreur général d'un formulaire (réponse du serveur) */
+export function FormError({ children }: { children?: ReactNode }) {
+  if (!children) return null;
+  return <p role="alert" className="rounded-btn border border-danger/30 bg-danger/5 px-4 py-3 text-sm leading-relaxed text-danger">{children}</p>;
+}
+
+/** Page interne vers laquelle revenir après connexion (paramètre ?suite=), protégée contre les redirections externes */
+export const nextPath = (fallback = "/dashboard") => {
+  if (typeof window === "undefined") return fallback;
+  const p = new URLSearchParams(window.location.search).get("suite");
+  return p && p.startsWith("/") && !p.startsWith("//") ? p : fallback;
+};
+
+/** Erreur renvoyée par Google dans l'URL (?error=…) après un échec de connexion */
+export const googleErrorFromUrl = () => {
+  if (typeof window === "undefined") return "";
+  const e = new URLSearchParams(window.location.search).get("error");
+  if (!e) return "";
+  return e === "access_denied" ? "Connexion Google annulée." : "La connexion avec Google a échoué. Réessayez ou utilisez votre e-mail.";
+};
+
+export const isEmail =(v: string) => /^\S+@\S+\.\S+$/.test(v.trim());
 export const isPhone = (v: string) => v.replace(/\D/g, "").length >= 8;

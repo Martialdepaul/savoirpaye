@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
 import AuthLayout from "@/components/auth/AuthLayout";
-import { Divider, Field, GoogleButton, PasswordInput, PasswordStrength, SubmitButton, inputCls, isEmail, isPhone, passwordOk } from "@/components/auth/fields";
+import { Divider, Field, FormError, GoogleButton, PasswordInput, PasswordStrength, SubmitButton, googleErrorFromUrl, inputCls, isEmail, isPhone, passwordOk } from "@/components/auth/fields";
+import { authClient, authErrorMessage } from "@/lib/auth-client";
 import { countries } from "@/components/checkout/CheckoutForm";
 
 type Form = { name: string; email: string; country: string; phone: string; password: string; terms: boolean };
@@ -18,7 +19,11 @@ export default function SignupPage() {
   const router = useRouter();
   // Lu côté client pour que le formulaire soit rendu dès le HTML initial
   const [offer, setOffer] = useState<string | undefined>();
-  useEffect(() => setOffer(offers[new URLSearchParams(window.location.search).get("offre") ?? ""]), []);
+  useEffect(() => {
+    setOffer(offers[new URLSearchParams(window.location.search).get("offre") ?? ""]);
+    setFormError(googleErrorFromUrl());
+  }, []);
+  const [formError, setFormError] = useState("");
   const [f, setF] = useState<Form>({ name: "", email: "", country: "Sénégal", phone: "", password: "", terms: false });
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
@@ -26,7 +31,7 @@ export default function SignupPage() {
   const set = <K extends keyof Form>(k: K, v: Form[K]) => { setF({ ...f, [k]: v }); if (errors[k]) setErrors({ ...errors, [k]: undefined }); };
   const dial = countries.find((c) => c.name === f.country)?.dial;
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const er: Errors = {};
     if (f.name.trim().length < 3) er.name = "Indiquez votre nom complet.";
@@ -38,14 +43,37 @@ export default function SignupPage() {
     const first = Object.keys(er)[0];
     if (first) return document.getElementById(first)?.focus();
     setLoading(true);
-    // Simulation de la création de compte, à remplacer par l'API
-    setTimeout(() => router.push("/onboarding"), 900);
+    setFormError("");
+    const { error } = await authClient.signUp.email({
+      name: f.name.trim(),
+      email: f.email.trim().toLowerCase(),
+      password: f.password,
+      phone: `${dial ?? ""} ${f.phone.trim()}`.trim(),
+      country: f.country,
+      callbackURL: "/dashboard",
+    });
+    if (error) {
+      setLoading(false);
+      setFormError(authErrorMessage(error));
+      return document.getElementById("signup-error")?.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+    router.push("/onboarding");
+    router.refresh();
   };
 
-  const withGoogle = () => {
+  const withGoogle = async () => {
     setGoogle(true);
-    // Simulation de l'inscription Google (OAuth), à remplacer par la redirection vers le fournisseur
-    setTimeout(() => router.push("/onboarding"), 900);
+    setFormError("");
+    const { error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+      newUserCallbackURL: "/onboarding",
+      errorCallbackURL: "/inscription",
+    });
+    if (error) {
+      setGoogle(false);
+      setFormError(authErrorMessage(error));
+    }
   };
 
   return (
@@ -63,6 +91,7 @@ export default function SignupPage() {
       <p className="mt-2 text-center text-xs text-ink-2">En continuant avec Google, vous acceptez les <Link href="/cgu" className="underline hover:text-ink">CGU</Link> et la <Link href="/confidentialite" className="underline hover:text-ink">politique de confidentialité</Link>.</p>
       <Divider>ou avec votre e-mail</Divider>
       <form onSubmit={submit} noValidate className="space-y-5">
+        <div id="signup-error"><FormError>{formError}</FormError></div>
         <Field id="name" label="Nom complet" error={errors.name}>
           <input id="name" autoComplete="name" value={f.name} onChange={(e) => set("name", e.target.value)} placeholder="Ex. : Aminata Diallo"
             aria-invalid={!!errors.name} aria-describedby={errors.name ? "name-error" : undefined} className={inputCls(!!errors.name)} />
