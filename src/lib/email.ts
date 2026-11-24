@@ -104,6 +104,68 @@ export const resetPasswordEmail = (name: string, url: string) => ({
   text: `Bonjour ${name},\n\nPour choisir un nouveau mot de passe, ouvrez ce lien (valable 1 heure) :\n${url}\n\nVous n'avez rien demandé ? Ignorez cet e-mail.`,
 });
 
+const base = () => process.env.BETTER_AUTH_URL ?? site.url;
+const money = (n: number) => `${Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} FCFA`;
+
+type OrderInfo = { ref: string; buyerName: string; buyerEmail: string; buyerPhone: string; product: string; productType: string; amount: number; method: string; sellerName: string; sellerPhone?: string | null };
+
+/** Acheteur : commande enregistrée, paiement à finaliser avec le vendeur */
+export const orderReceivedEmail = (o: OrderInfo) => ({
+  subject: `Commande ${o.ref} enregistrée · ${o.product}`,
+  html: layout({
+    title: "Votre commande est enregistrée",
+    intro: [
+      `Bonjour ${firstName(o.buyerName)},`,
+      `Merci pour votre commande de <strong>${esc(o.product)}</strong> (${money(o.amount)}, référence <strong>${o.ref}</strong>).`,
+      `${esc(o.sellerName)} va vous contacter${o.sellerPhone ? ` sur WhatsApp (${esc(o.sellerPhone)})` : ""} pour finaliser le paiement par ${esc(o.method)}. Dès que le paiement est confirmé, vous recevez votre accès par e-mail.`,
+    ],
+    outro: ["Gardez cette référence : elle vous sera demandée en cas de question."],
+  }),
+  text: `Bonjour ${o.buyerName},\n\nVotre commande ${o.ref} (${o.product}, ${money(o.amount)}) est enregistrée. ${o.sellerName} vous contacte pour finaliser le paiement par ${o.method}. Vous recevrez votre accès par e-mail dès la confirmation.`,
+});
+
+/** Acheteur : paiement confirmé, accès au produit */
+export const orderPaidEmail = (o: OrderInfo) => {
+  const coaching = o.productType === "Coaching";
+  const url = `${base()}/dashboard/mes-formations`;
+  const signup = `${base()}/inscription?suite=/dashboard/mes-formations`;
+  return {
+    subject: `${coaching ? "Réservation confirmée" : "Votre accès est prêt"} · ${o.product}`,
+    html: layout({
+      title: coaching ? "Votre séance est confirmée" : "Votre accès est prêt",
+      intro: [
+        `Bonjour ${firstName(o.buyerName)},`,
+        coaching
+          ? `Votre paiement pour <strong>${esc(o.product)}</strong> est confirmé (référence ${o.ref}). ${esc(o.sellerName)} vous contacte pour fixer la date de la séance.`
+          : `Votre paiement pour <strong>${esc(o.product)}</strong> est confirmé (référence ${o.ref}). Retrouvez votre achat dans votre espace « Mes achats ».`,
+        ...(coaching ? [] : [`Connectez-vous avec l'adresse <strong>${esc(o.buyerEmail)}</strong>. Pas encore de compte ? <a href="${signup}" style="color:#0d4d3b">Créez-le en 1 minute</a> avec cette même adresse.`]),
+      ],
+      cta: coaching ? undefined : { label: "Accéder à mon achat", url },
+    }),
+    text: coaching
+      ? `Bonjour ${o.buyerName},\n\nVotre paiement pour ${o.product} est confirmé (${o.ref}). ${o.sellerName} vous contacte pour fixer la séance.`
+      : `Bonjour ${o.buyerName},\n\nVotre paiement pour ${o.product} est confirmé (${o.ref}). Accédez à votre achat : ${url}\nPas encore de compte ? Créez-le avec ${o.buyerEmail} : ${signup}`,
+  };
+};
+
+/** Vendeur : nouvelle commande */
+export const newOrderEmail = (o: OrderInfo, paid: boolean) => {
+  const url = `${base()}/dashboard/commandes`;
+  return {
+    subject: `${paid ? "Nouvelle inscription" : "Nouvelle commande"} ${o.ref} · ${o.product}`,
+    html: layout({
+      title: paid ? "Nouvel inscrit à votre produit gratuit" : "Vous avez une nouvelle commande",
+      intro: [
+        `<strong>${esc(o.buyerName)}</strong> a ${paid ? "obtenu" : "commandé"} <strong>${esc(o.product)}</strong>${o.amount ? ` (${money(o.amount)})` : ""}.`,
+        `E-mail : ${esc(o.buyerEmail)}<br>Téléphone : ${esc(o.buyerPhone)}<br>Moyen de paiement choisi : ${esc(o.method)}`,
+        ...(paid ? [] : ["Contactez votre client pour recevoir le paiement, puis marquez la commande comme payée : il recevra aussitôt son accès."]),
+      ],
+      cta: { label: "Voir la commande", url },
+    }),
+    text: `${o.buyerName} a ${paid ? "obtenu" : "commandé"} ${o.product} (${money(o.amount)}). ${o.buyerEmail} · ${o.buyerPhone}. Voir : ${url}`,
+  };
+};
+
 export const passwordChangedEmail = (name: string) => {
   const url = `${process.env.BETTER_AUTH_URL ?? site.url}/mot-de-passe-oublie`;
   return {

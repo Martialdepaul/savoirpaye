@@ -1,9 +1,13 @@
+"use client";
+
 import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { fcfa, periods, revenueSeries, type PeriodId } from "../../lib/dashboard-data";
+import { useShopData } from "./AccountContext";
 
 export default function RevenueChart({ period }: { period: PeriodId }) {
-  const data = useMemo(() => revenueSeries(Number(period)), [period]);
+  const { orders } = useShopData();
+  const data = useMemo(() => revenueSeries(orders, Number(period)), [orders, period]);
   const label = periods.find((p) => p.id === period)!.label;
   return (
     <section className="rounded-card border border-line bg-white p-4 shadow-soft sm:p-6">

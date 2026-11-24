@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Store } from "lucide-react";
+import { useAccount } from "@/components/dashboard/AccountContext";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import ProductEditor, { TypePicker } from "@/components/editor/ProductEditor";
 import { newDraft } from "@/components/editor/types";
@@ -15,6 +16,20 @@ const toParam = (t: ProductType) => Object.keys(byParam).find((k) => byParam[k] 
 function NewProduct() {
   const router = useRouter();
   const type = byParam[useSearchParams().get("type") ?? ""];
+  const hasShop = !!useAccount()?.shop;
+
+  if (!hasShop) {
+    return (
+      <DashboardShell active="Produits">
+        <main className="mx-auto max-w-md px-4 pb-32 pt-16 text-center">
+          <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-gold-light text-gold-ink"><Store size={26} /></span>
+          <h1 className="mt-4 font-heading text-2xl font-extrabold">Créez d'abord votre boutique</h1>
+          <p className="mt-2 text-ink-2">Vos produits sont vendus depuis votre boutique. Configurez-la en 1 minute, puis revenez ajouter votre premier produit.</p>
+          <Link href="/onboarding" className="mt-6 inline-flex min-h-12 items-center rounded-btn bg-gold px-6 font-bold text-forest hover:bg-gold-hover">Configurer ma boutique</Link>
+        </main>
+      </DashboardShell>
+    );
+  }
 
   if (type) return <ProductEditor key={type} initial={newDraft(type)} isNew />;
 

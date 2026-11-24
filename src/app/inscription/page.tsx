@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
 import AuthLayout from "@/components/auth/AuthLayout";
-import { Divider, Field, FormError, GoogleButton, PasswordInput, PasswordStrength, SubmitButton, googleErrorFromUrl, inputCls, isEmail, isPhone, passwordOk } from "@/components/auth/fields";
+import { Divider, Field, FormError, GoogleButton, PasswordInput, PasswordStrength, SubmitButton, googleErrorFromUrl, inputCls, isEmail, isPhone, nextPath, passwordOk } from "@/components/auth/fields";
 import { authClient, authErrorMessage, useRedirectIfSignedIn } from "@/lib/auth-client";
 import { countries } from "@/components/checkout/CheckoutForm";
 
@@ -26,8 +26,10 @@ export default function SignupPage() {
   const [formError, setFormError] = useState("");
   // Déjà connecté (ex. clic sur « Créer mon compte » depuis l'accueil) : direction le tableau de bord.
   // Pendant l'envoi du formulaire, c'est submit() qui redirige vers l'onboarding.
+  // Un acheteur arrive avec ?suite=/dashboard/mes-formations : il y retourne au lieu de créer une boutique.
   const submitting = useRef(false);
-  useRedirectIfSignedIn(() => (submitting.current ? "/onboarding" : "/dashboard"));
+  const afterSignup = () => nextPath("/onboarding");
+  useRedirectIfSignedIn(() => (submitting.current ? afterSignup() : nextPath()));
   const [f, setF] = useState<Form>({ name: "", email: "", country: "Sénégal", phone: "", password: "", terms: false });
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
@@ -63,7 +65,7 @@ export default function SignupPage() {
       setFormError(authErrorMessage(error));
       return document.getElementById("signup-error")?.scrollIntoView({ block: "center", behavior: "smooth" });
     }
-    router.push("/onboarding");
+    router.push(afterSignup());
     router.refresh();
   };
 
@@ -72,8 +74,8 @@ export default function SignupPage() {
     setFormError("");
     const { error } = await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/dashboard",
-      newUserCallbackURL: "/onboarding",
+      callbackURL: nextPath(),
+      newUserCallbackURL: afterSignup(),
       errorCallbackURL: "/inscription",
     });
     if (error) {

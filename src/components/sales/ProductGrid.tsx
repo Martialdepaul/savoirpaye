@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { FileDown, GraduationCap, Star, Users, Video } from "lucide-react";
+import { FileDown, GraduationCap, Users, Video } from "lucide-react";
 import Pagination, { usePagination } from "../ui/Pagination";
+import Cover from "./Cover";
 import { fcfa } from "../../lib/dashboard-data";
 import { productUrl, type CatalogProduct, type ProductType } from "../../lib/catalog";
 
@@ -40,17 +41,16 @@ export default function ProductGrid({ products }: { products: CatalogProduct[] }
             return (
               <li key={p.id}>
                 <Link href={productUrl(p)} className="group flex h-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-soft transition-shadow hover:shadow-[0_4px_20px_rgb(28_25_23/0.1)]">
-                  <div className="relative aspect-[16/9] bg-primary-light">
-                    <img src={p.cover} alt="" loading="lazy" className="size-full object-cover" />
+                  <div className="relative aspect-video bg-primary-light">
+                    <Cover src={p.cover} type={p.type} className="size-full" />
                     <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold"><Icon size={13} className="text-primary" /> {p.type}</span>
                   </div>
                   <div className="flex flex-1 flex-col p-4">
                     <h3 className="font-heading text-base font-bold leading-snug group-hover:text-primary">{p.name}</h3>
                     <p className="mt-1.5 line-clamp-2 text-sm text-ink-2">{p.subtitle}</p>
-                    <div className="num mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-2">
-                      {p.reviewsCount > 0 && <span className="flex items-center gap-1"><Star size={13} className="fill-gold text-gold" /> <strong className="text-ink">{String(p.rating).replace(".", ",")}</strong> ({p.reviewsCount})</span>}
-                      {p.students > 0 && <span className="flex items-center gap-1"><Users size={13} /> {p.students.toLocaleString("fr-FR")}</span>}
-                    </div>
+                    {p.sales > 0 && (
+                      <div className="num mt-3 flex items-center gap-1 text-xs text-ink-2"><Users size={13} /> {p.sales.toLocaleString("fr-FR")} {p.type === "Formation" ? "élève" : "client"}{p.sales > 1 ? "s" : ""}</div>
+                    )}
                     <div className="mt-auto flex items-baseline gap-2 pt-4">
                       <span className="num font-heading text-lg font-extrabold text-gold-ink">{p.price === 0 ? "Gratuit" : fcfa(p.price)}</span>
                       {p.comparePrice && <span className="num text-xs text-ink-2 line-through">{fcfa(p.comparePrice)}</span>}

@@ -6,13 +6,13 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { shop, type Payout } from "@/lib/db/schema";
 import { getSession } from "@/lib/account";
-import { seller, slugify } from "@/lib/catalog";
+import { slugify } from "@/lib/catalog";
 import { mobileMoney } from "@/lib/mock-data";
 import { shopCategories } from "@/lib/site-data";
 
 type Result<T = object> = ({ ok: true } & T) | { ok: false; error: string };
 
-const RESERVED = new Set([seller.slug, "admin", "api", "dashboard", "boutique", "savoirpay"]);
+const RESERVED = new Set(["admin", "api", "dashboard", "boutique", "savoirpay"]);
 const PAYOUT_METHODS = new Set([...mobileMoney.map((m) => m.name), "Virement bancaire"]);
 const clean = (s: unknown, max: number) => (typeof s === "string" ? s.trim().replace(/\s+/g, " ").slice(0, max) : "");
 

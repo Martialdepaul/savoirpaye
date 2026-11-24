@@ -15,6 +15,7 @@ export type AccountUser = {
 };
 
 export type AccountShop = {
+  id: string;
   name: string;
   slug: string;
   description: string;
@@ -34,7 +35,7 @@ export async function getSession() {
 export async function getShopByUser(userId: string): Promise<AccountShop | null> {
   const [s] = await db.select().from(shop).where(eq(shop.userId, userId)).limit(1);
   if (!s) return null;
-  return { name: s.name, slug: s.slug, description: s.description, category: s.category, plan: s.plan, payouts: s.payouts, autoWithdraw: s.autoWithdraw };
+  return { id: s.id, name: s.name, slug: s.slug, description: s.description, category: s.category, plan: s.plan, payouts: s.payouts, autoWithdraw: s.autoWithdraw };
 }
 
 /** Compte complet de l'utilisateur connecté, ou null sans session valide */

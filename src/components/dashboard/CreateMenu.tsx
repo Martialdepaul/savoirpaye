@@ -2,12 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Plus, Package, GraduationCap, Sparkles } from "lucide-react";
+import { Plus, FileDown, GraduationCap, Video } from "lucide-react";
 
-const items = [
-  { label: "Nouveau produit", icon: Package, href: "/dashboard/produits/nouveau" },
+const items: { label: string; icon: typeof Plus; href: string; ai?: boolean }[] = [
   { label: "Nouvelle formation", icon: GraduationCap, href: "/dashboard/produits/nouveau?type=formation" },
-  { label: "Créer avec l'IA", icon: Sparkles, ai: true, href: "/dashboard/createur-ia" },
+  { label: "Nouveau produit numérique", icon: FileDown, href: "/dashboard/produits/nouveau?type=numerique" },
+  { label: "Nouvelle séance de coaching", icon: Video, href: "/dashboard/produits/nouveau?type=coaching" },
 ];
 
 export function CreateMenuList({ onPick }: { onPick: () => void }) {

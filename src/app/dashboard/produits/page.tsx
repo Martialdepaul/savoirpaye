@@ -7,9 +7,11 @@ import Pagination, { usePagination } from "@/components/ui/Pagination";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import BottomNav from "@/components/dashboard/BottomNav";
-import { fcfa } from "@/lib/dashboard-data";
-import { catalog as products, productUrl, type ProductStatus, type ProductType } from "@/lib/catalog";
+import { fcfa, formatDate } from "@/lib/dashboard-data";
+import { productUrl, type ProductStatus, type ProductType } from "@/lib/catalog";
 import { useToast } from "@/components/ui/Toast";
+import { useShopData } from "@/components/dashboard/AccountContext";
+import EmptyState from "@/components/dashboard/EmptyState";
 
 function statusBadge(status: ProductStatus) {
   if (status === "En ligne")
@@ -30,6 +32,7 @@ function typeBadge(type: ProductType) {
 const editUrl = (id: string) => `/dashboard/produits/${id}/modifier`;
 
 export default function ProduitsPage() {
+  const { products } = useShopData();
   const [search, setSearch] = useState("");
   const [toast, showToast] = useToast();
 
@@ -90,9 +93,9 @@ export default function ProduitsPage() {
               <p className="text-xs text-ink-2">en ligne</p>
             </div>
             <div className="rounded-card border border-line bg-white p-4 shadow-soft">
-              <p className="text-xs text-ink-2">Ventes ce mois</p>
+              <p className="text-xs text-ink-2">Ventes</p>
               <p className="num mt-1 text-2xl font-extrabold text-ink">{totalSales}</p>
-              <p className="text-xs text-ink-2">commandes</p>
+              <p className="text-xs text-ink-2">commandes payées</p>
             </div>
             <div className="col-span-2 rounded-card border border-line bg-white p-4 shadow-soft sm:col-span-1">
               <p className="text-xs text-ink-2">Revenu total</p>
@@ -146,7 +149,7 @@ export default function ProduitsPage() {
                     <tr key={p.id} className="hover:bg-page/60">
                       <td className="px-6 py-4">
                         <Link href={editUrl(p.id)} className="font-semibold text-ink hover:text-primary">{p.name}</Link>
-                        <div className="text-xs text-ink-2">Créé le {p.createdAt}</div>
+                        <div className="text-xs text-ink-2">Créé le {formatDate(new Date(p.createdAt))}</div>
                       </td>
                       <td className="px-6 py-4">{typeBadge(p.type)}</td>
                       <td className="num whitespace-nowrap px-6 py-4 text-right font-semibold text-gold-ink">{fcfa(p.price)}</td>
@@ -173,7 +176,11 @@ export default function ProduitsPage() {
             </div>
           </section>
 
-          {filtered.length === 0 ? (
+          {products.length === 0 ? (
+            <EmptyState icon="package" title="Aucun produit pour le moment"
+              text="Créez votre première formation, un produit numérique ou une séance de coaching. Il apparaîtra dans votre boutique dès sa publication."
+              cta={{ label: "Créer mon premier produit", href: "/dashboard/produits/nouveau" }} />
+          ) : filtered.length === 0 ? (
             <p className="rounded-card border border-dashed border-line bg-white py-12 text-center text-sm text-ink-2">Aucun produit ne correspond à votre recherche.</p>
           ) : (
             <Pagination {...pager} onChange={pager.setPage} label="produits" />

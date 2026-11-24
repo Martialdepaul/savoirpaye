@@ -23,16 +23,16 @@ export default function AidePage() {
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Retraits, remboursement, domaine…"
+              placeholder="Paiement, vidéo, retrait…"
               className="w-full rounded-btn bg-white py-3.5 pl-11 pr-4 text-[15px] text-ink outline-none focus:ring-2 focus:ring-gold"
             />
           </label>
         </section>
 
-        <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+        <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {helpTopics.map((t) => (
             <li key={t.title}>
-              <button onClick={() => setQ(t.title.split(" ")[0])} className="flex h-full w-full flex-col items-start rounded-card border border-line bg-white p-4 text-left shadow-soft transition-shadow hover:shadow-lift sm:p-5">
+              <button onClick={() => { setQ(t.search); setOpen(0); }} className="flex h-full w-full flex-col items-start rounded-card border border-line bg-white p-4 text-left shadow-soft transition-shadow hover:shadow-lift sm:p-5">
                 <span className="flex size-10 items-center justify-center rounded-xl bg-primary-light text-primary"><t.icon size={19} /></span>
                 <span className="mt-3 font-heading text-sm font-bold sm:text-base">{t.title}</span>
                 <span className="mt-1 hidden text-sm text-ink-2 sm:block">{t.text}</span>
@@ -61,7 +61,7 @@ export default function AidePage() {
           {[
             { icon: MessageCircle, title: "WhatsApp", text: "Réponse en moins de 2 h", cta: "Écrire", href: waLink(phones.whatsapp, "Bonjour, j'ai besoin d'aide sur mon compte Savoirpay."), cls: "bg-[#25D366] text-white" },
             { icon: Mail, title: "E-mail", text: emails.support, cta: "Envoyer", href: `mailto:${emails.support}`, cls: "bg-primary text-white" },
-            { icon: PlayCircle, title: "Tutoriels vidéo", text: "Prise en main en 10 min", cta: "Regarder", href: "/ressources", cls: "bg-gold text-forest" },
+            { icon: PlayCircle, title: "Guides", text: "Conseils pour vendre en ligne", cta: "Lire", href: "/ressources", cls: "bg-gold text-forest" },
           ].map((c) => (
             <div key={c.title} className="flex min-w-0 items-center gap-3 rounded-card border border-line bg-white p-4 shadow-soft sm:gap-4 sm:p-5">
               <span className={`flex size-11 shrink-0 items-center justify-center rounded-full ${c.cls}`}><c.icon size={20} /></span>

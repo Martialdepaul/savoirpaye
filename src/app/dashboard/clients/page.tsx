@@ -1,14 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Search, X, MessageSquare } from "lucide-react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import BottomNav from "@/components/dashboard/BottomNav";
-import { clients, fcfa, type Client } from "@/lib/dashboard-data";
+import { clientsFrom, fcfa, isPaid, type Client } from "@/lib/dashboard-data";
 import Pagination, { usePagination } from "@/components/ui/Pagination";
+import EmptyState from "@/components/dashboard/EmptyState";
+import { useShopData } from "@/components/dashboard/AccountContext";
 
 export default function ClientsPage() {
+  const { orders } = useShopData();
+  const clients = useMemo(() => clientsFrom(orders), [orders]);
+  // Clients dont le premier achat payé date des 30 derniers jours
+  const newThisMonth = useMemo(() => {
+    const since = Date.now() - 30 * 86_400_000;
+    const first = new Map<string, number>();
+    for (const o of orders.filter(isPaid)) first.set(o.email, Math.min(first.get(o.email) ?? Infinity, o.date.getTime()));
+    return [...first.values()].filter((t) => t >= since).length;
+  }, [orders]);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Client | null>(null);
 
@@ -42,11 +53,11 @@ export default function ClientsPage() {
               <p className="num mt-1 text-2xl font-extrabold text-ink">{clients.length}</p>
             </div>
             <div className="rounded-card border border-line bg-white p-4 shadow-soft">
-              <p className="text-xs text-ink-2">Nouveaux ce mois</p>
-              <p className="num mt-1 text-2xl font-extrabold text-primary">14</p>
+              <p className="text-xs text-ink-2">Nouveaux (30 jours)</p>
+              <p className="num mt-1 text-2xl font-extrabold text-primary">{newThisMonth}</p>
             </div>
             <div className="col-span-2 rounded-card border border-line bg-white p-4 shadow-soft sm:col-span-1">
-              <p className="text-xs text-ink-2">Valeur moyenne</p>
+              <p className="text-xs text-ink-2">Panier moyen</p>
               <p className="num mt-1 text-xl font-extrabold text-gold-ink">{fcfa(avgValue)}</p>
             </div>
           </div>
@@ -131,7 +142,10 @@ export default function ClientsPage() {
             </div>
           </section>
 
-          {filtered.length === 0 ? (
+          {clients.length === 0 ? (
+            <EmptyState icon="clients" title="Aucun client pour le moment"
+              text="Chaque personne qui achète l'un de vos produits apparaît ici, avec ses coordonnées et l'historique de ses achats." />
+          ) : filtered.length === 0 ? (
             <p className="rounded-card border border-dashed border-line bg-white py-12 text-center text-sm text-ink-2">Aucun client ne correspond à votre recherche.</p>
           ) : (
             <Pagination {...pager} onChange={pager.setPage} label="clients" />
@@ -181,7 +195,7 @@ export default function ClientsPage() {
 
               {/* Products */}
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-ink-2 mb-3">Formations achetées</p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-ink-2 mb-3">Produits achetés</p>
                 <ul className="space-y-2">
                   {selected.products.map((p, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-ink">

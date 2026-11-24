@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
-import { ArrowDown, ArrowUp, ChevronDown, Film, Plus, Sparkles, Trash2, Upload, FileText } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown, Film, Link2, Plus, Trash2, FileText } from "lucide-react";
 import { emptyLesson, emptyModule, type EditorLesson, type EditorModule } from "./types";
 
 const input = "w-full rounded-btn border border-line bg-white px-3 py-2.5 text-base outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-sm";
@@ -45,13 +44,24 @@ function LessonRow({ lesson: l, mi, li, count, onChange, onMove, onRemove }: {
         </label>
       </div>
 
-      {l.kind === "Vidéo" && (
-        <label className="ml-7 mt-2.5 flex min-h-11 cursor-pointer items-center gap-2 rounded-btn border border-dashed border-line bg-white px-3 text-sm text-ink-2 hover:border-primary hover:text-primary">
-          <Upload size={15} className="shrink-0" />
-          <span className="min-w-0 truncate">{l.file ?? "Importer la vidéo (MP4, 2 Go max.)"}</span>
-          <input type="file" accept="video/*" className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; if (f) onChange({ ...l, file: f.name }); }} />
-        </label>
-      )}
+      <div className="mt-2.5 pl-7">
+        {l.kind === "Vidéo" ? (
+          <>
+            <label htmlFor={`${id}-url`} className="sr-only">Lien de la vidéo</label>
+            <div className="relative">
+              <Link2 size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-2" />
+              <input id={`${id}-url`} type="url" inputMode="url" value={l.url} onChange={(e) => onChange({ ...l, url: e.target.value })}
+                placeholder="Lien de la vidéo : YouTube (non répertoriée), Vimeo, Google Drive…" className={`${input} pl-9`} />
+            </div>
+          </>
+        ) : (
+          <>
+            <label htmlFor={`${id}-content`} className="sr-only">Contenu de la leçon</label>
+            <textarea id={`${id}-content`} rows={5} value={l.content} onChange={(e) => onChange({ ...l, content: e.target.value })}
+              placeholder="Rédigez le contenu de la leçon. Sautez une ligne pour un nouveau paragraphe." className={input} />
+          </>
+        )}
+      </div>
 
       <div className="mt-1 flex justify-end">
         <button type="button" onClick={() => onMove(-1)} disabled={li === 0} aria-label={`Monter la leçon ${li + 1}`} className={iconBtn}><ArrowUp size={16} /></button>
@@ -77,12 +87,7 @@ export default function ModulesEditor({ modules, onChange }: { modules: EditorMo
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="num text-sm text-ink-2">{modules.length} module{modules.length > 1 ? "s" : ""} · {lessonsTotal} leçon{lessonsTotal > 1 ? "s" : ""}</p>
-        <Link href="/dashboard/createur-ia" className="inline-flex min-h-10 items-center gap-1.5 rounded-btn bg-ai-light px-3 text-sm font-semibold text-ai hover:bg-[#ebe8fd]">
-          <Sparkles size={15} /> Générer le plan avec l'IA
-        </Link>
-      </div>
+      <p className="num text-sm text-ink-2">{modules.length} module{modules.length > 1 ? "s" : ""} · {lessonsTotal} leçon{lessonsTotal > 1 ? "s" : ""} · cochez « Aperçu gratuit » pour qu'une leçon soit visible avant l'achat</p>
 
       <ol className="space-y-3">
         {modules.map((m, mi) => {

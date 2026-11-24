@@ -9,6 +9,7 @@ import StatCards from "../../components/dashboard/StatCards";
 import RevenueChart from "../../components/dashboard/RevenueChart";
 import TopProducts from "../../components/dashboard/TopProducts";
 import LatestOrders from "../../components/dashboard/LatestOrders";
+import GettingStarted from "../../components/dashboard/GettingStarted";
 import { periods, type PeriodId } from "../../lib/dashboard-data";
 import { firstName, useAccount } from "../../components/dashboard/AccountContext";
 
@@ -25,7 +26,7 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h1 className="font-heading text-2xl font-extrabold sm:text-3xl">Bonjour{name ? `, ${name}` : ""}</h1>
-              <p className="mt-1 text-sm text-ink-2">{account?.shop ? <>Voici l'activité de <strong className="text-ink">{account.shop.name}</strong>.</> : "Voici un aperçu de votre futur tableau de bord."}</p>
+              <p className="mt-1 text-sm text-ink-2">{account?.shop ? <>Voici l'activité de <strong className="text-ink">{account.shop.name}</strong>.</> : "Commencez par configurer votre boutique."}</p>
             </div>
             <div role="tablist" aria-label="Période" className="flex w-full rounded-btn border border-line bg-white p-1 sm:w-auto">
               {periods.map((p) => (
@@ -44,6 +45,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          <GettingStarted />
           <BalanceCard />
           <StatCards period={period} />
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1.5fr_1fr]">

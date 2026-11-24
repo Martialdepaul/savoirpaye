@@ -226,40 +226,24 @@ export const contactChannels = [
 
 export const offices = site.cities;
 
-/* ---------- Dashboard : notifications et aide ---------- */
-
-export type Notif = { id: string; kind: "vente" | "retrait" | "avis" | "systeme" | "ia"; title: string; text: string; when: string; unread: boolean };
-
-export const notifications: Notif[] = [
-  { id: "n1", kind: "vente", title: "Nouvelle vente", text: "Moussa Ndiaye a acheté « Maîtriser Excel en 7 jours » (25 000 FCFA).", when: "Il y a 8 min", unread: true },
-  { id: "n2", kind: "vente", title: "Nouvelle vente", text: "Awa Sarr a acheté « Lancer son e-commerce en Afrique » (35 000 FCFA).", when: "Il y a 42 min", unread: true },
-  { id: "n3", kind: "avis", title: "Nouvel avis 5 étoiles", text: "« Très clair et concret, je recommande ! » sur Vendre sur WhatsApp Business.", when: "Il y a 2 h", unread: true },
-  { id: "n4", kind: "retrait", title: "Retrait effectué", text: "150 000 FCFA ont été envoyés sur votre numéro Orange Money.", when: "Hier", unread: false },
-  { id: "n5", kind: "ia", title: "Plan de cours prêt", text: "L'assistant IA a terminé le plan de « Tontine digitale : bien gérer son groupe ». Relisez-le avant publication.", when: "Hier", unread: false },
-  { id: "n6", kind: "systeme", title: "Nouveauté", text: "Les codes promo sont disponibles pour le plan Pro. Créez votre première offre.", when: "Il y a 3 jours", unread: false },
-];
+/* ---------- Dashboard : centre d'aide (décrit le fonctionnement réel de la plateforme) ---------- */
 
 export const helpTopics = [
-  { icon: Rocket, title: "Bien démarrer", text: "Créer votre boutique et votre premier produit." },
-  { icon: CreditCard, title: "Paiements", text: "Moyens de paiement, frais et remboursements." },
-  { icon: Wallet, title: "Retraits", text: "Délais, plafonds et opérateurs pris en charge." },
-  { icon: Bot, title: "Assistant IA", text: "Générer un cours, un quiz ou une page de vente." },
-  { icon: Palette, title: "Personnalisation", text: "Couleurs, logo, domaine et page de vente." },
-  { icon: Globe, title: "Compte et sécurité", text: "Mot de passe, équipe et données personnelles." },
+  { icon: Rocket, title: "Bien démarrer", search: "produit", text: "Configurer votre boutique, créer puis mettre en ligne votre premier produit." },
+  { icon: CreditCard, title: "Commandes et paiements", search: "paie", text: "Recevoir le paiement de vos clients et leur donner accès." },
+  { icon: Wallet, title: "Portefeuille et retraits", search: "solde", text: "Solde, délai de validation et demandes de retrait." },
+  { icon: Globe, title: "Compte et sécurité", search: "mot de passe", text: "Mot de passe, connexion Google et appareils connectés." },
 ];
 
 export const helpFaqs = [
-  { q: "Combien de temps pour recevoir un retrait Mobile Money ?", a: "La plupart des retraits sont crédités en moins de 10 minutes. Un délai de 24 h peut s'appliquer lors du premier retrait, le temps de vérifier votre numéro." },
-  { q: "Comment rembourser un client ?", a: "Ouvrez la commande dans « Commandes », puis cliquez sur « Rembourser ». Le montant est déduit de votre solde disponible." },
-  { q: "Puis-je vendre un produit gratuit ?", a: "Oui, fixez le prix à 0 FCFA. C'est idéal pour un aimant à prospects ou une formation d'introduction." },
-  { q: "Comment connecter mon propre nom de domaine ?", a: "Avec le plan Business, rendez-vous dans Paramètres > Boutique > Domaine, puis suivez les instructions DNS." },
-];
-
-export const productTypes = [
-  { id: "formation", icon: GraduationCap, title: "Formation", text: "Cours en modules avec vidéos, PDF et quiz." },
-  { id: "numerique", icon: FileText, title: "Produit numérique", text: "E-book, templates, fichiers à télécharger." },
-  { id: "coaching", icon: Users, title: "Coaching / service", text: "Séance individuelle ou accompagnement." },
-  { id: "communaute", icon: Gift, title: "Abonnement", text: "Contenu ou communauté en accès mensuel." },
+  { q: "Comment mes clients paient-ils ?", a: "Le client commande sur votre page de vente en choisissant son moyen de paiement (Wave, Orange Money…). Vous recevez un e-mail, vous le contactez pour recevoir le paiement, puis vous ouvrez la commande dans « Commandes » et cliquez sur « Marquer comme payée » : il reçoit aussitôt son accès par e-mail." },
+  { q: "Où mes clients retrouvent-ils leur achat ?", a: "Dans « Mes achats », en se connectant (ou en créant un compte) avec l'adresse e-mail utilisée pour commander. Le lien leur est envoyé par e-mail dès que la commande est payée." },
+  { q: "Comment ajouter mes vidéos et mes fichiers ?", a: "Déposez vos vidéos sur YouTube (en « non répertoriée »), Vimeo ou Google Drive, et vos fichiers sur Google Drive ou Dropbox, puis collez les liens dans l'éditeur du produit. Ils ne sont visibles que par vos acheteurs, sauf les leçons cochées « Aperçu gratuit »." },
+  { q: "Puis-je vendre un produit gratuit ?", a: "Oui, fixez le prix à 0 FCFA. Le client obtient l'accès immédiatement, sans paiement. C'est idéal pour vous faire connaître." },
+  { q: "Pourquoi mon solde reste-t-il à 0 FCFA ?", a: "Le solde du portefeuille ne contient que les paiements encaissés par Savoirpay. Les ventes que vos clients vous paient directement sont déjà sur votre compte : elles apparaissent dans « Commandes » et « Statistiques », pas dans le solde." },
+  { q: "Comment changer mon mot de passe ou sécuriser mon compte ?", a: "Dans Paramètres › Sécurité : changez votre mot de passe, associez votre compte Google et déconnectez à distance un appareil que vous ne reconnaissez pas. Mot de passe oublié ? Utilisez le lien sur la page de connexion." },
+  { q: "Comment retirer mon argent ?", a: "Les paiements encaissés par Savoirpay deviennent retirables 48 h après la vente. Dans « Portefeuille », cliquez sur « Retirer » (à partir de 5 000 FCFA) et choisissez votre numéro Mobile Money : la demande est traitée sous 24 h ouvrées." },
+  { q: "Combien de produits puis-je mettre en ligne ?", a: "Le plan Starter permet 1 produit en ligne à la fois (vous pouvez préparer autant de brouillons que vous voulez). Les plans Pro et Business n'ont pas de limite." },
 ];
 
 export const shopCategories = ["Business et entrepreneuriat", "Informatique et bureautique", "Marketing digital", "Finance et comptabilité", "Beauté et bien-être", "Langues", "Cuisine", "Développement personnel", "Autre"];

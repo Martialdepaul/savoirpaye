@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, useId } from "react";
-import { X, ArrowUpRight, CheckCircle2 } from "lucide-react";
-import { walletBalance, mobileMoneyProviders, fcfa } from "@/lib/wallet-data";
-import { useAccount } from "@/components/dashboard/AccountContext";
+import { useMemo, useState, useId } from "react";
+import { useRouter } from "next/navigation";
+import { X, ArrowUpRight, CheckCircle2, Loader2 } from "lucide-react";
+import { walletFrom, mobileMoneyProviders, fcfa } from "@/lib/wallet-data";
+import { MIN_WITHDRAWAL } from "@/lib/plans";
+import { useAccount, useShopData } from "@/components/dashboard/AccountContext";
+import { requestWithdrawal } from "@/app/actions/orders";
 
 const pct = (fee: number) => `${(fee * 100).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} %`;
 
@@ -20,6 +23,11 @@ export default function WithdrawalDrawer({ open, onClose }: Props) {
   const [provider, setProvider] = useState(mobileMoneyProviders[0].id);
   const [phone, setPhone] = useState(savedNumber(mobileMoneyProviders[0].id));
   const [success, setSuccess] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const { orders, withdrawals } = useShopData();
+  const walletBalance = useMemo(() => walletFrom(orders, withdrawals), [orders, withdrawals]);
   const amountId = useId();
   const providerId = useId();
   const phoneId = useId();
@@ -29,16 +37,23 @@ export default function WithdrawalDrawer({ open, onClose }: Props) {
   const fees = Math.round(numAmount * selectedProvider.fee);
   const net = numAmount - fees;
   const maxAmount = walletBalance.available;
-  const isValid = numAmount >= 5000 && numAmount <= maxAmount && phone.trim().length >= 9;
+  const isValid = numAmount >= MIN_WITHDRAWAL && numAmount <= maxAmount && phone.replace(/\D/g, "").length >= 8;
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!isValid) return;
+    setSending(true);
+    setError("");
+    const res = await requestWithdrawal({ amount: numAmount, method: selectedProvider.label, number: phone }).catch(() => null);
+    setSending(false);
+    if (!res || !res.ok) return setError(res && !res.ok ? res.error : "Connexion impossible. Réessayez.");
     setSuccess(true);
+    router.refresh();
   }
 
   function handleClose() {
     setSuccess(false);
+    setError("");
     setAmount("");
     setPhone(savedNumber(mobileMoneyProviders[0].id));
     setProvider(mobileMoneyProviders[0].id);
@@ -67,7 +82,7 @@ export default function WithdrawalDrawer({ open, onClose }: Props) {
             <h3 className="font-heading text-xl font-extrabold">Retrait demandé !</h3>
             <p className="text-sm text-ink-2">
               Votre demande de retrait de <span className="num font-bold text-ink">{fcfa(numAmount)}</span> vers{" "}
-              <strong>{selectedProvider.label}</strong> a bien été enregistrée. Vous recevrez les fonds sous 24 h.
+              <strong>{selectedProvider.label}</strong> a bien été enregistrée. Vous recevrez les fonds sous 24 h ouvrées ; son suivi apparaît dans l'historique.
             </p>
             <button
               onClick={handleClose}
@@ -103,7 +118,7 @@ export default function WithdrawalDrawer({ open, onClose }: Props) {
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-ink-2">FCFA</span>
                 </div>
                 <div className="flex gap-2">
-                  {[10000, 25000, 50000, 100000].map((v) => (
+                  {[10000, 25000, 50000, 100000].filter((v) => v <= maxAmount).map((v) => (
                     <button
                       key={v}
                       type="button"
@@ -171,12 +186,13 @@ export default function WithdrawalDrawer({ open, onClose }: Props) {
 
             {/* Submit */}
             <div className="border-t border-line p-5">
+              {error && <p role="alert" className="mb-3 text-sm text-danger">{error}</p>}
               <button
                 type="submit"
-                disabled={!isValid}
-                className="flex w-full items-center justify-center gap-2 rounded-btn bg-primary py-3 font-bold text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
+                disabled={!isValid || sending}
+                className="flex min-h-12 w-full items-center justify-center gap-2 rounded-btn bg-primary py-3 font-bold text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
               >
-                Confirmer le retrait <ArrowUpRight size={18} />
+                {sending ? <Loader2 size={18} className="animate-spin" /> : <>Confirmer le retrait <ArrowUpRight size={18} /></>}
               </button>
             </div>
           </form>

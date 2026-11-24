@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ArrowUpRight, ArrowDownLeft, TrendingDown } from "lucide-react";
-import { transactions, fcfa, type TxType } from "@/lib/wallet-data";
+import { transactionsFrom, fcfa, type TxType } from "@/lib/wallet-data";
 import Pagination, { usePagination } from "@/components/ui/Pagination";
+import { useShopData } from "@/components/dashboard/AccountContext";
 
 const filters: { id: TxType | "all"; label: string }[] = [
   { id: "all", label: "Tout" },
@@ -21,10 +22,14 @@ function TxIcon({ type }: { type: TxType; amount: number }) {
 function statusBadge(status: string) {
   if (status === "Confirmé") return <span className="rounded-md bg-[#f0faf5] px-2 py-0.5 text-[11px] font-bold text-success">{status}</span>;
   if (status === "Traité") return <span className="rounded-md bg-primary-light px-2 py-0.5 text-[11px] font-bold text-primary">{status}</span>;
+  if (status === "Refusé") return <span className="rounded-md bg-[#FCEDED] px-2 py-0.5 text-[11px] font-bold text-danger">{status}</span>;
   return <span className="rounded-md bg-[#fef6ec] px-2 py-0.5 text-[11px] font-bold text-pending">{status}</span>;
 }
 
 export default function TransactionHistory() {
+  const { orders, withdrawals } = useShopData();
+  const transactions = useMemo(() => transactionsFrom(orders, withdrawals), [orders, withdrawals]);
+  const offPlatform = orders.filter((o) => o.status === "Payé" && o.offPlatform).length;
   const [filter, setFilter] = useState<TxType | "all">("all");
   const visible = filter === "all" ? transactions : transactions.filter((t) => t.type === filter);
   const pager = usePagination(visible, 10, filter);
@@ -53,7 +58,10 @@ export default function TransactionHistory() {
 
       <div className="divide-y divide-line">
         {visible.length === 0 && (
-          <div className="py-12 text-center text-sm text-ink-2">Aucune transaction</div>
+          <div className="px-5 py-12 text-center text-sm leading-relaxed text-ink-2">
+            {transactions.length === 0 ? "Les paiements encaissés par Savoirpay, les commissions et vos retraits apparaîtront ici." : "Aucune transaction de ce type."}
+            {offPlatform > 0 && <span className="mt-2 block">{offPlatform} vente{offPlatform > 1 ? "s" : ""} payée{offPlatform > 1 ? "s" : ""} directement à vous (hors Savoirpay) : elles figurent dans Commandes, pas dans ce solde.</span>}
+          </div>
         )}
         {pager.pageItems.map((tx) => {
           const amount = (

@@ -460,7 +460,7 @@ function TabSecurite({ notify }: { notify: Notify }) {
 
       <section className="rounded-card border border-danger/30 bg-white p-4 sm:p-6">
         <h3 className="mb-1 font-heading font-bold text-danger">Supprimer mon compte</h3>
-        <p className="mb-4 text-sm text-ink-2">Votre compte et votre boutique seront supprimés définitivement. Cette action est irréversible.</p>
+        <p className="mb-4 text-sm text-ink-2">Votre compte, votre boutique, vos produits et l'historique de vos ventes seront supprimés définitivement, et vos acheteurs perdront l'accès à vos produits. Cette action est irréversible.</p>
         {!del.open ? (
           <button onClick={() => setDel({ ...del, open: true })} className="min-h-11 rounded-btn border border-danger px-5 text-sm font-bold text-danger hover:bg-[#FCEDED]">Supprimer mon compte</button>
         ) : (

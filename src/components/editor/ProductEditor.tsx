@@ -3,17 +3,21 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { AlertCircle, ArrowLeft, Check, Eye, FileDown, GraduationCap, ImagePlus, Loader2, Plus, Trash2, Upload, Video, X } from "lucide-react";
+import { AlertCircle, ArrowLeft, Check, Eye, FileDown, GraduationCap, ImagePlus, Link2, Loader2, Plus, Trash2, Upload, Video, X } from "lucide-react";
 import Sidebar from "../dashboard/Sidebar";
 import Topbar from "../dashboard/Topbar";
 import ModulesEditor from "./ModulesEditor";
 import { useToast } from "../ui/Toast";
+import { useAccount } from "../dashboard/AccountContext";
 import { fcfa } from "../../lib/dashboard-data";
 import { productUrl, slugify, type ProductStatus, type ProductType } from "../../lib/catalog";
-import { formatSize, uid, validate, type Draft, type Errors } from "./types";
+import { commissionOf } from "../../lib/plans";
+import { site } from "../../lib/site-config";
+import { deleteProduct, saveProduct } from "../../app/actions/products";
+import { compressImage, emptyFile, validate, type Draft, type Errors } from "./types";
 
-const COMMISSION = 0.05;
-const MAX_COVER = 5 * 1024 * 1024;
+const MAX_COVER = 15 * 1024 * 1024;
+const host = site.url.replace(/^https?:\/\//, "");
 
 const input = "mt-2 w-full rounded-btn border bg-white px-3.5 py-3 text-base outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-sm";
 const types: { type: ProductType; icon: typeof GraduationCap; text: string }[] = [
@@ -54,13 +58,18 @@ export function TypePicker({ onPick }: { onPick: (t: ProductType) => void }) {
   );
 }
 
-export default function ProductEditor({ initial, isNew }: { initial: Draft; isNew: boolean }) {
+export default function ProductEditor({ initial, isNew, productId }: { initial: Draft; isNew: boolean; productId?: string }) {
   const router = useRouter();
+  const COMMISSION = commissionOf(useAccount()?.shop?.plan);
   const [d, setD] = useState<Draft>(initial);
+  const [saved, setSaved] = useState<Draft>(initial);
   const [errors, setErrors] = useState<Errors>({});
+  const [serverError, setServerError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [coverError, setCoverError] = useState("");
+  const [coverBusy, setCoverBusy] = useState(false);
   const slugTouched = useRef(!isNew);
   const [toast, showToast] = useToast();
 
@@ -86,22 +95,28 @@ export default function ProductEditor({ initial, isNew }: { initial: Draft; isNe
   const net = Math.round(price * (1 - COMMISSION));
   const publicPath = useMemo(() => productUrl({ slug: d.slug || "votre-produit", type: d.type }), [d.slug, d.type]);
 
-  const pickCover = (f?: File) => {
+  const pickCover = async (f?: File) => {
     if (!f) return;
     if (!f.type.startsWith("image/")) return setCoverError("Choisissez une image (JPG, PNG ou WebP).");
-    if (f.size > MAX_COVER) return setCoverError("L'image dépasse 5 Mo. Choisissez une image plus légère.");
+    if (f.size > MAX_COVER) return setCoverError("L'image dépasse 15 Mo. Choisissez une image plus légère.");
     setCoverError("");
-    set("cover", URL.createObjectURL(f));
+    setCoverBusy(true);
+    try {
+      set("cover", await compressImage(f));
+    } catch {
+      setCoverError("Impossible de lire cette image. Essayez une autre image (JPG ou PNG).");
+    }
+    setCoverBusy(false);
   };
 
-  const addFiles = (list: FileList | null) => {
-    if (!list?.length) return;
-    set("files", [...d.files, ...Array.from(list).map((f) => ({ id: uid("f"), name: f.name, size: formatSize(f.size) }))]);
+  const setFile = (id: string, patch: Partial<Draft["files"][number]>) => {
+    set("files", d.files.map((f) => (f.id === id ? { ...f, ...patch } : f)));
     setErrors((e) => ({ ...e, content: undefined }));
   };
 
-  const save = (e: React.FormEvent) => {
+  const save = async (e: React.FormEvent) => {
     e.preventDefault();
+    setServerError("");
     const er = validate(d);
     setErrors(er);
     const first = Object.keys(er)[0];
@@ -110,13 +125,35 @@ export default function ProductEditor({ initial, isNew }: { initial: Draft; isNe
       return;
     }
     setSaving(true);
-    // Simulation de l'appel API, à remplacer par le back-end
-    setTimeout(() => {
-      setSaving(false);
-      setDirty(false);
-      showToast(d.status === "En ligne" ? "Produit publié" : "Modifications enregistrées");
-      if (isNew) setTimeout(() => router.push("/dashboard/produits"), 900);
-    }, 700);
+    const res = await saveProduct({
+      type: d.type, name: d.name, slug: d.slug, subtitle: d.subtitle, description: d.description, cover: d.cover,
+      price: Number(d.price), comparePrice: d.comparePrice ? Number(d.comparePrice) : null,
+      goals: d.goals, modules: d.modules, files: d.files,
+      coaching: d.type === "Coaching" ? { duration: d.coachingDuration, format: d.coachingFormat } : null,
+      status: d.status,
+    }, productId).catch(() => null);
+    setSaving(false);
+    if (!res || !res.ok) {
+      setServerError(res && !res.ok ? res.error : "Connexion impossible. Vérifiez votre réseau et réessayez.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    setDirty(false);
+    setSaved(d);
+    showToast(d.status === "En ligne" ? (saved.status === "En ligne" ? "Modifications publiées" : "Produit publié") : "Modifications enregistrées");
+    if (isNew) router.replace(`/dashboard/produits/${res.id}/modifier`);
+    router.refresh();
+  };
+
+  const remove = async () => {
+    if (!productId || !window.confirm("Supprimer définitivement ce produit ?")) return;
+    setDeleting(true);
+    const res = await deleteProduct(productId).catch(() => null);
+    setDeleting(false);
+    if (!res || !res.ok) return setServerError(res && !res.ok ? res.error : "Connexion impossible. Réessayez.");
+    setDirty(false);
+    router.push("/dashboard/produits");
+    router.refresh();
   };
 
   const errorCount = Object.values(errors).filter(Boolean).length;
@@ -133,6 +170,12 @@ export default function ProductEditor({ initial, isNew }: { initial: Draft; isNe
               <h1 className="font-heading text-2xl font-extrabold sm:text-3xl">{isNew ? `Nouveau : ${d.type.toLowerCase()}` : "Modifier le produit"}</h1>
             </div>
           </div>
+
+          {serverError && (
+            <div role="alert" className="flex items-start gap-3 rounded-card border border-danger/30 bg-[#FCEDED] p-4 text-sm text-danger">
+              <AlertCircle size={18} className="mt-0.5 shrink-0" /> <p>{serverError}</p>
+            </div>
+          )}
 
           {errorCount > 0 && (
             <div role="alert" className="flex items-start gap-3 rounded-card border border-danger/30 bg-[#FCEDED] p-4 text-sm text-danger">
@@ -155,11 +198,11 @@ export default function ProductEditor({ initial, isNew }: { initial: Draft; isNe
               <div id="field-slug">
                 <label htmlFor="slug" className="text-sm font-semibold">Adresse de la page</label>
                 <div className={`mt-2 flex items-center overflow-hidden rounded-btn border bg-white focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 ${errors.slug ? "border-danger" : "border-line"}`}>
-                  <span className="hidden shrink-0 border-r border-line bg-page px-3 py-3 text-sm text-ink-2 sm:block">savoirpay.com{publicPath.replace(/[^/]+$/, "")}</span>
+                  <span className="hidden shrink-0 border-r border-line bg-page px-3 py-3 text-sm text-ink-2 sm:block">{host}{publicPath.replace(/[^/]+$/, "")}</span>
                   <input id="slug" value={d.slug} onChange={(e) => { slugTouched.current = true; set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-")); }}
                     aria-invalid={!!errors.slug} aria-describedby="slug-hint" className="min-w-0 flex-1 px-3.5 py-3 text-base outline-none sm:text-sm" />
                 </div>
-                <p id="slug-hint" className="mt-1.5 break-all text-xs text-ink-2">savoirpay.com{publicPath}</p>
+                <p id="slug-hint" className="mt-1.5 break-all text-xs text-ink-2">{host}{publicPath}</p>
                 <Err msg={errors.slug} />
               </div>
               <div>
@@ -178,8 +221,10 @@ export default function ProductEditor({ initial, isNew }: { initial: Draft; isNe
             </div>
           </Card>
 
-          <Card title="Image de couverture" hint="Format paysage 16:9 conseillé (1400 × 800 px), 5 Mo maximum.">
-            {d.cover ? (
+          <Card title="Image de couverture" hint="Format paysage 16:9 conseillé (1400 × 800 px). L'image est automatiquement allégée.">
+            {coverBusy ? (
+              <div className="flex aspect-[16/9] items-center justify-center gap-2 rounded-btn border border-line bg-page text-sm text-ink-2"><Loader2 size={18} className="animate-spin" /> Préparation de l'image…</div>
+            ) : d.cover ? (
               <div className="relative overflow-hidden rounded-btn border border-line">
                 <img src={d.cover} alt="Aperçu de la couverture" className="aspect-[16/9] w-full object-cover" />
                 <div className="absolute right-2 top-2 flex gap-2">
@@ -235,27 +280,30 @@ export default function ProductEditor({ initial, isNew }: { initial: Draft; isNe
               </Card>
             )}
             {d.type === "Produit numérique" && (
-              <Card title="Fichiers à télécharger" hint="Vos acheteurs reçoivent un lien de téléchargement juste après le paiement.">
-                <label className="flex min-h-32 cursor-pointer flex-col items-center justify-center gap-2 rounded-btn border-2 border-dashed border-line bg-page px-4 py-6 text-center hover:border-primary"
-                  onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); addFiles(e.dataTransfer.files); }}>
-                  <Upload size={26} className="text-ink-2" />
-                  <span className="font-semibold text-primary">Ajouter des fichiers</span>
-                  <span className="text-xs text-ink-2">PDF, ZIP, Word, Excel… 500 Mo maximum par fichier</span>
-                  <input type="file" multiple className="sr-only" onChange={(e) => { addFiles(e.target.files); e.target.value = ""; }} />
-                </label>
-                {d.files.length > 0 && (
-                  <ul className="mt-4 divide-y divide-line rounded-btn border border-line">
-                    {d.files.map((f) => (
-                      <li key={f.id} className="flex items-center gap-3 px-3 py-2">
+              <Card title="Fichiers à télécharger" hint="Déposez vos fichiers sur Google Drive ou Dropbox (partage « Tous les utilisateurs disposant du lien »), puis collez le lien ici. Il n'est donné qu'aux acheteurs.">
+                <ul className="space-y-3">
+                  {d.files.map((f, i) => (
+                    <li key={f.id} className="rounded-btn border border-line bg-page/60 p-3">
+                      <div className="flex items-center gap-2">
                         <FileDown size={18} className="shrink-0 text-primary" />
-                        <span className="min-w-0 flex-1 truncate text-sm font-medium">{f.name}</span>
-                        <span className="num shrink-0 text-xs text-ink-2">{f.size}</span>
-                        <button type="button" onClick={() => set("files", d.files.filter((x) => x.id !== f.id))} aria-label={`Retirer ${f.name}`}
-                          className="flex size-10 shrink-0 items-center justify-center rounded-lg text-ink-2 hover:bg-page hover:text-danger"><X size={16} /></button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                        <label htmlFor={`file-name-${i}`} className="sr-only">Nom du fichier {i + 1}</label>
+                        <input id={`file-name-${i}`} value={f.name} onChange={(e) => setFile(f.id, { name: e.target.value })} placeholder="Nom affiché, ex. : Modèles de factures (PDF)"
+                          className="w-full rounded-btn border border-line bg-white px-3 py-2.5 text-base outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-sm" />
+                        <button type="button" onClick={() => set("files", d.files.filter((x) => x.id !== f.id))} aria-label={`Retirer le fichier ${i + 1}`}
+                          className="flex size-10 shrink-0 items-center justify-center rounded-lg text-ink-2 hover:bg-white hover:text-danger"><X size={16} /></button>
+                      </div>
+                      <div className="relative mt-2 pl-7">
+                        <Link2 size={15} className="pointer-events-none absolute left-10 top-1/2 -translate-y-1/2 text-ink-2" />
+                        <label htmlFor={`file-url-${i}`} className="sr-only">Lien de téléchargement du fichier {i + 1}</label>
+                        <input id={`file-url-${i}`} type="url" inputMode="url" value={f.url} onChange={(e) => setFile(f.id, { url: e.target.value })} placeholder="https://drive.google.com/…"
+                          className="w-full rounded-btn border border-line bg-white py-2.5 pl-9 pr-3 text-base outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-sm" />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <button type="button" onClick={() => set("files", [...d.files, emptyFile()])} className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-btn px-3 text-sm font-semibold text-primary hover:bg-primary-light">
+                  <Plus size={16} /> Ajouter un fichier
+                </button>
                 <Err msg={errors.content} />
               </Card>
             )}
@@ -319,15 +367,21 @@ export default function ProductEditor({ initial, isNew }: { initial: Draft; isNe
 
           <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur lg:left-64">
             <div className="mx-auto flex max-w-3xl items-center gap-3 sm:px-4">
-              <span className="hidden min-w-0 flex-1 truncate text-sm text-ink-2 sm:block">{dirty ? "Modifications non enregistrées" : "Tout est enregistré"}</span>
+              <span className="hidden min-w-0 flex-1 truncate text-sm text-ink-2 sm:block">{dirty ? "Modifications non enregistrées" : isNew ? "Pas encore enregistré" : "Tout est enregistré"}</span>
               {!isNew && (
-                <a href={productUrl({ slug: initial.slug, type: initial.type })} target="_blank" rel="noopener"
+                <button type="button" onClick={remove} disabled={deleting} aria-label="Supprimer le produit" title="Supprimer le produit"
+                  className="flex size-12 shrink-0 items-center justify-center rounded-btn border border-line bg-white text-danger hover:bg-[#FCEDED] disabled:opacity-60">
+                  {deleting ? <Loader2 size={17} className="animate-spin" /> : <Trash2 size={17} />}
+                </button>
+              )}
+              {!isNew && (
+                <a href={productUrl({ slug: saved.slug, type: saved.type })} target="_blank" rel="noopener"
                   className="flex min-h-12 items-center justify-center gap-2 rounded-btn border border-line bg-white px-4 font-semibold text-ink hover:bg-page">
                   <Eye size={17} /> <span className="hidden min-[400px]:inline">Aperçu</span>
                 </a>
               )}
               <button type="submit" disabled={saving} className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-btn bg-primary px-6 font-semibold text-white hover:bg-primary-hover disabled:opacity-70 sm:flex-none">
-                {saving ? <><Loader2 size={18} className="animate-spin" /> Enregistrement…</> : d.status === "En ligne" && initial.status !== "En ligne" ? "Publier" : "Enregistrer"}
+                {saving ? <><Loader2 size={18} className="animate-spin" /> Enregistrement…</> : d.status === "En ligne" && saved.status !== "En ligne" ? "Publier" : "Enregistrer"}
               </button>
             </div>
           </div>

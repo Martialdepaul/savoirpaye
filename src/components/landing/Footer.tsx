@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Logo from "../ui/Logo";
-import { seller } from "../../lib/catalog";
 import { site, year } from "../../lib/site-config";
 
 const cols = [
@@ -10,7 +9,7 @@ const cols = [
       { label: "Fonctionnalités", href: "/fonctionnalites" },
       { label: "Tarifs", href: "/tarifs" },
       { label: "Créateur IA", href: "/createur-ia" },
-      { label: "Exemple de boutique", href: `/boutique/${seller.slug}` },
+      { label: "Ouvrir ma boutique", href: "/inscription" },
     ],
   },
   {

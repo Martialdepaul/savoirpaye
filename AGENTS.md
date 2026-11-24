@@ -15,35 +15,37 @@ Plateforme de vente de formations et produits numériques pour l'Afrique francop
   - `fonctionnalites/`, `comment-ca-marche/`, `createur-ia/`, `tarifs/`, `faq/`, `ressources/` (+ `[slug]`), `a-propos/`, `contact/` : site public, une page par sujet, via `SiteShell` + `PageHero` (`src/components/site/`)
   - `inscription/`, `connexion/`, `mot-de-passe-oublie/`, `reinitialiser-mot-de-passe/` : comptes (e-mail ou Google via `GoogleButton` de `components/auth/fields.tsx`)
   - `onboarding/` : configuration de la boutique en 3 étapes, après l'inscription
-  - `formations/[slug]/` et `produits/[slug]/` : pages de vente générées depuis le catalogue
-  - `boutique/[vendeur]/` : boutique publique du vendeur
-  - `checkout/` : paiement Mobile Money (`/checkout?produit=<slug>`)
+  - `formations/[slug]/` et `produits/[slug]/` : pages de vente lues en base (`src/lib/sales-page.ts`) ; brouillons et produits archivés visibles seulement par leur vendeur
+  - `boutique/[vendeur]/` : boutique publique du vendeur (produits en ligne)
+  - `checkout/` : commande (`/checkout?produit=<slug>`)
   - `cgu/`, `confidentialite/`, `mentions-legales/` : pages légales (les `[crochets]` sont à compléter)
-  - `dashboard/` : espace vendeur (accueil, produits, `produits/nouveau`, `produits/[id]/modifier`, commandes, clients, créateur IA, statistiques, portefeuille, paramètres, notifications, aide) et espace apprenant (`mes-formations/`)
+  - `dashboard/` : espace vendeur (accueil, produits, `produits/nouveau`, `produits/[id]/modifier`, commandes, clients, statistiques, portefeuille, paramètres, notifications, aide ; créateur IA = page « bientôt disponible ») et espace acheteur « Mes achats » (`mes-formations/`, `mes-formations/[slug]` = lecteur de formation ou téléchargements)
 - `src/lib/site-config.ts` : nom, URL (`NEXT_PUBLIC_SITE_URL`), e-mails, téléphones, villes et informations légales de la société (valeurs `[entre crochets]` à compléter) ; à utiliser au lieu d'écrire une adresse ou un numéro en dur
-- `src/lib/catalog.ts` : catalogue central des produits et profil du vendeur de démonstration (`seller`) ; source unique pour tableau de bord, éditeur, pages de vente, boutique et paiement. Chiffre d'affaires et élèves sont calculés à partir de `sales` ; + `productUrl`, `checkoutUrl`, `slugify`
-- `src/lib/dashboard-data.ts` : commandes générées depuis le catalogue, d'où sont dérivés clients, statistiques par période, graphique et meilleurs produits (date de référence `NOW`) ; `src/lib/wallet-data.ts` en dérive les transactions (commission de 3 % du plan Pro)
-- `src/lib/site-data.ts` : contenus du site public (menu, fonctionnalités, comparatif, articles, équipe)
-- `src/lib/*-data.ts` : autres données de démonstration (pas encore de back-end) ; `mock-data.ts` contient moyens de paiement (`paymentMethods`, `mobileMoney`, `withdrawalFees`), offres et FAQ
+- `src/lib/catalog.ts` : types et fonctions des produits (`CatalogProduct`, `productUrl`, `checkoutUrl`, `includesOf`, `slugify`), sans données
+- `src/lib/store.ts` (serveur) : lecture des produits, commandes et retraits ; `publicView()` retire liens vidéo, textes et fichiers payants avant tout affichage public
+- `src/lib/dashboard-data.ts` : `fcfa`, dates et calculs (statistiques, clients, graphique, meilleurs produits) à partir des vraies commandes ; `src/lib/wallet-data.ts` : solde et historique ; `src/lib/plans.ts` : commissions (Starter 8 %, Pro 3 %, Business 0 %) et limite Starter d'1 produit en ligne
+- `src/lib/site-data.ts` : contenus du site public (menu, fonctionnalités, comparatif, articles, équipe, aide)
+- `src/lib/mock-data.ts` : contenus fixes (moyens de paiement, frais de retrait, offres, FAQ, témoignages du site)
 - `public/videos/` : vidéo de démonstration (`savoirpay-demo.mp4`, H.264, et son image `savoirpay-demo.jpg`), lue par `components/landing/DemoVideo.tsx` (fenêtre « Voir la démo » de l'accueil et section de « Comment ça marche ») ; à réenregistrer quand l'interface change, hors Git LFS
 - `public/images/` : photos du site (Unsplash, voir `CREDITS.md`), versionnées hors Git LFS pour que Vercel les serve
-- `src/components/` : composants par domaine (`landing`, `sales`, `checkout`, `dashboard`, `editor`, `auth`, `legal`, `creator`, `student`, `wallet`, `ui`)
-- `src/components/editor/` : éditeur de produit (`ProductEditor`, `ModulesEditor`, validation dans `types.ts`)
+- `src/components/` : composants par domaine (`landing`, `sales`, `checkout`, `dashboard`, `editor`, `auth`, `legal`, `student`, `wallet`, `ui`)
+- `src/components/editor/` : éditeur de produit (`ProductEditor`, `ModulesEditor`, validation et compression de la couverture dans `types.ts`) ; vidéos et fichiers donnés par lien (YouTube, Vimeo, Google Drive, Dropbox), lus par `src/lib/video.ts`
 - `src/components/dashboard/nav.ts` : source unique de la navigation du tableau de bord (`navItems`, `secondaryNav`, `activeLabel` qui déduit l'entrée active de l'URL) ; `NavList` est partagée par la barre latérale et le menu ☰ du Topbar
 - `src/components/ui/Pagination.tsx` : `usePagination` + `<Pagination>`, à utiliser pour toute liste longue
 - `src/components/ui/Toast.tsx` : `useToast()` pour les confirmations
 
-Les appels serveur encore simulés (`setTimeout`) sont marqués `// Simulation … à remplacer par l'API`.
+Aucune donnée de démonstration dans le parcours : tout ce qui s'affiche vient de la base, avec un écran vide explicatif (`EmptyState`) quand il n'y a rien.
 
-## Back-end (authentification et e-mails)
+## Back-end
 
 - Comptes : Better Auth (`src/lib/auth.ts`, route `src/app/api/auth/[...all]/route.ts`, client `src/lib/auth-client.ts` avec `useSession`, `signOut` et `authErrorMessage` pour les erreurs en français). E-mail + mot de passe, Google, vérification d'adresse (non bloquante), mot de passe oublié.
 - Base : PostgreSQL Neon via Drizzle (`src/lib/db/`). Après une modification de `schema.ts` : `pnpm db:push`. `pnpm db:studio` pour consulter les données.
 - E-mails : `src/lib/email.ts` (gabarits HTML en français + `sendEmail`, qui n'interrompt jamais le parcours en cas d'échec). Resend par défaut ; Gmail si `GMAIL_USER` et `GMAIL_APP_PASSWORD` sont définis. Sans domaine vérifié chez Resend, seuls les envois vers l'adresse du compte Resend aboutissent.
 - `src/middleware.ts` redirige `/dashboard` et `/onboarding` vers `/connexion?suite=…` sans cookie de session ; les layouts de ces deux espaces revérifient la session côté serveur (`getAccount()` de `src/lib/account.ts`).
-- Compte connecté côté client : `useAccount()` de `components/dashboard/AccountContext.tsx` (utilisateur + boutique, fourni par `app/dashboard/layout.tsx`). Après une modification : `router.refresh()`.
-- Boutique : table `shop` (une par compte), créée par l'onboarding et modifiée dans Paramètres via les actions serveur de `src/app/actions/shop.ts`. `/boutique/[vendeur]` lit la boutique en base (le slug `aminata-diallo` reste la boutique de démonstration).
-- Les pages encore alimentées par les données de démonstration (produits, commandes, clients, portefeuille, statistiques…) affichent le bandeau « Mode découverte » (`AccountBanners.tsx`) ; Profil, Boutique, Paiements et Sécurité de Paramètres sont réels.
+- Côté client du tableau de bord : `useAccount()` (utilisateur + boutique) et `useShopData()` (produits, commandes, retraits) de `components/dashboard/AccountContext.tsx`, chargés par `app/dashboard/layout.tsx`. Après une action serveur : `router.refresh()`.
+- Tables : `shop` (une par compte), `product`, `orders`, `withdrawal`, `progress` (leçons terminées). Actions serveur dans `src/app/actions/` (`shop.ts`, `products.ts`, `orders.ts`, `learning.ts`), qui revérifient toujours la session et la propriété.
+- Parcours de vente : le client commande sur `/checkout` → commande « En attente » + e-mails (client et vendeur) → le vendeur reçoit le paiement (Wave, Orange Money…) et clique « Marquer comme payée » dans Commandes → le client reçoit son accès et le retrouve dans « Mes achats » avec l'adresse de sa commande. Produit gratuit : accès immédiat. Ces ventes « hors plateforme » comptent dans les statistiques mais pas dans le solde du portefeuille, réservé aux futurs paiements encaissés par Savoirpay (intégration Mobile Money à venir).
+- Notifications : déduites des commandes et retraits (`useNotifications.ts`), état « lu » mémorisé dans le navigateur.
 - Site public : `AccountLink` (et l'en-tête de l'accueil) affichent « Mon tableau de bord » quand l'utilisateur est connecté ; `/connexion` et `/inscription` redirigent un utilisateur déjà connecté.
 - Variables d'environnement : voir `.env.example` (valeurs réelles dans `.env.local`, jamais versionné, et dans les réglages Vercel).
 
