@@ -8,15 +8,18 @@ import Logo from "../ui/Logo";
 import { CreateButton } from "./CreateMenu";
 import { NavList, SellerCard, SignOutButton, UserAvatar } from "./Sidebar";
 import Notifications from "./Notifications";
-import { NOW } from "../../lib/dashboard-data";
+import AccountBanners from "./AccountBanners";
 
-// Date de référence des données de démonstration (à remplacer par la date du jour avec l'API)
-const date = NOW.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-const today = date[0].toUpperCase() + date.slice(1);
+const formatToday = () => {
+  const d = new Date().toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  return d[0].toUpperCase() + d.slice(1);
+};
 
 export default function Topbar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const [today, setToday] = useState("");
+  useEffect(() => setToday(formatToday()), []);
 
   useEffect(() => setOpen(false), [pathname]);
   useEffect(() => {
@@ -47,6 +50,7 @@ export default function Topbar() {
           </Link>
         </div>
       </header>
+      <AccountBanners />
 
       {open && (
         <div className="fixed inset-0 z-[60] lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">

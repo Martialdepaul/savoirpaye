@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { Divider, Field, FormError, GoogleButton, PasswordInput, PasswordStrength, SubmitButton, googleErrorFromUrl, inputCls, isEmail, isPhone, passwordOk } from "@/components/auth/fields";
-import { authClient, authErrorMessage } from "@/lib/auth-client";
+import { authClient, authErrorMessage, useRedirectIfSignedIn } from "@/lib/auth-client";
 import { countries } from "@/components/checkout/CheckoutForm";
 
 type Form = { name: string; email: string; country: string; phone: string; password: string; terms: boolean };
@@ -24,6 +24,10 @@ export default function SignupPage() {
     setFormError(googleErrorFromUrl());
   }, []);
   const [formError, setFormError] = useState("");
+  // Déjà connecté (ex. clic sur « Créer mon compte » depuis l'accueil) : direction le tableau de bord.
+  // Pendant l'envoi du formulaire, c'est submit() qui redirige vers l'onboarding.
+  const submitting = useRef(false);
+  useRedirectIfSignedIn(() => (submitting.current ? "/onboarding" : "/dashboard"));
   const [f, setF] = useState<Form>({ name: "", email: "", country: "Sénégal", phone: "", password: "", terms: false });
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
@@ -44,6 +48,7 @@ export default function SignupPage() {
     if (first) return document.getElementById(first)?.focus();
     setLoading(true);
     setFormError("");
+    submitting.current = true;
     const { error } = await authClient.signUp.email({
       name: f.name.trim(),
       email: f.email.trim().toLowerCase(),
@@ -53,6 +58,7 @@ export default function SignupPage() {
       callbackURL: "/dashboard",
     });
     if (error) {
+      submitting.current = false;
       setLoading(false);
       setFormError(authErrorMessage(error));
       return document.getElementById("signup-error")?.scrollIntoView({ block: "center", behavior: "smooth" });

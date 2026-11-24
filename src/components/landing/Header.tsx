@@ -3,12 +3,15 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X, User, ArrowRight } from "lucide-react";
+import { Menu, X, User, ArrowRight, LayoutDashboard } from "lucide-react";
 import Logo from "../ui/Logo";
 import { navLinks } from "../../lib/site-data";
+import { useSession } from "../../lib/auth-client";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const { data: session, isPending } = useSession();
+  const loggedIn = !!session;
   const pathname = usePathname();
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
@@ -39,13 +42,21 @@ export default function Header() {
             );
           })}
         </nav>
-        <div className="hidden items-center gap-3 lg:flex">
-          <Link href="/connexion" className="inline-flex items-center gap-2 rounded-btn border border-white/30 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10">
-            <User size={16} /> Se connecter
-          </Link>
-          <Link href="/inscription" className="rounded-btn bg-gold px-4 py-2.5 text-sm font-bold text-forest transition-colors hover:bg-gold-hover">
-            Créer mon compte
-          </Link>
+        <div className="hidden min-w-[19rem] items-center justify-end gap-3 lg:flex">
+          {isPending ? null : loggedIn ? (
+            <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-btn bg-gold px-4 py-2.5 text-sm font-bold text-forest transition-colors hover:bg-gold-hover">
+              <LayoutDashboard size={16} /> Mon tableau de bord
+            </Link>
+          ) : (
+            <>
+              <Link href="/connexion" className="inline-flex items-center gap-2 rounded-btn border border-white/30 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10">
+                <User size={16} /> Se connecter
+              </Link>
+              <Link href="/inscription" className="rounded-btn bg-gold px-4 py-2.5 text-sm font-bold text-forest transition-colors hover:bg-gold-hover">
+                Créer mon compte
+              </Link>
+            </>
+          )}
         </div>
         <button
           className="flex size-10 items-center justify-center rounded-btn border border-white/20 text-white lg:hidden"
@@ -75,8 +86,14 @@ export default function Header() {
             </Link>
           </nav>
           <div className="mt-6 grid gap-3">
-            <Link href="/inscription" className="block rounded-btn bg-gold py-3.5 text-center font-bold text-forest">Créer mon compte</Link>
-            <Link href="/connexion" className="block rounded-btn border border-white/30 py-3.5 text-center font-semibold text-white">Se connecter</Link>
+            {loggedIn ? (
+              <Link href="/dashboard" className="flex items-center justify-center gap-2 rounded-btn bg-gold py-3.5 text-center font-bold text-forest"><LayoutDashboard size={18} /> Mon tableau de bord</Link>
+            ) : (
+              <>
+                <Link href="/inscription" className="block rounded-btn bg-gold py-3.5 text-center font-bold text-forest">Créer mon compte</Link>
+                <Link href="/connexion" className="block rounded-btn border border-white/30 py-3.5 text-center font-semibold text-white">Se connecter</Link>
+              </>
+            )}
           </div>
         </div>
       )}

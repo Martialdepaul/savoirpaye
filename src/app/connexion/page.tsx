@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { Divider, Field, FormError, GoogleButton, PasswordInput, SubmitButton, googleErrorFromUrl, inputCls, isEmail, nextPath } from "@/components/auth/fields";
-import { authClient, authErrorMessage } from "@/lib/auth-client";
+import { authClient, authErrorMessage, useRedirectIfSignedIn } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,6 +18,7 @@ export default function LoginPage() {
   const [google, setGoogle] = useState(false);
 
   useEffect(() => setFormError(googleErrorFromUrl()), []);
+  useRedirectIfSignedIn(() => nextPath());
 
   const withGoogle = async () => {
     setGoogle(true);

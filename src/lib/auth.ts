@@ -20,6 +20,8 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "pg", schema }),
 
   user: {
+    // Suppression du compte depuis Paramètres › Sécurité (la boutique est supprimée en cascade)
+    deleteUser: { enabled: true },
     additionalFields: {
       phone: { type: "string", required: false },
       country: { type: "string", required: false },

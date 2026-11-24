@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Check, Globe, PartyPopper } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Globe, Loader2, PartyPopper } from "lucide-react";
 import AuthShell from "../../components/auth/AuthShell";
+import { useAccount, firstName } from "../../components/dashboard/AccountContext";
+import { createShop } from "../actions/shop";
 import Field, { inputCls } from "../../components/auth/Field";
 import { onboardingGoals, shopCategories } from "../../lib/site-data";
 import { mobileMoney } from "../../lib/mock-data";
@@ -19,23 +21,31 @@ const steps = ["Votre objectif", "Votre boutique", "Vos retraits"];
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const me = useAccount();
   const [step, setStep] = useState(0);
   const [goal, setGoal] = useState("formations");
   const [shop, setShop] = useState("");
   const [shopError, setShopError] = useState("");
-  const [account, setAccount] = useState("");
+  const [category, setCategory] = useState(shopCategories[0]);
+  const [account, setAccount] = useState(me?.user.phone ?? "");
   const [accountError, setAccountError] = useState("");
   const [method, setMethod] = useState("Orange Money");
-  const [done, setDone] = useState(false);
-  const slug = slugify(shop) || "ma-boutique";
+  const [saving, setSaving] = useState(false);
+  const [savedSlug, setSavedSlug] = useState("");
+  const slug = savedSlug || slugify(shop) || "ma-boutique";
 
-  const next = () => {
+  const next = async () => {
     if (step === 1 && shop.trim().length < 2) return setShopError("Donnez un nom à votre boutique.");
     if (step === 2 && account.replace(/\W/g, "").length < 8) return setAccountError("Saisissez un numéro ou un compte valide.");
-    // Simulation de l'enregistrement de la boutique, à remplacer par l'API
-    if (step < steps.length - 1) setStep(step + 1);
-    else setDone(true);
+    if (step < steps.length - 1) return setStep(step + 1);
+    setSaving(true);
+    const res = await createShop({ name: shop, category, goal, payoutMethod: method, payoutNumber: account }).catch(() => null);
+    setSaving(false);
+    if (!res) return setAccountError("Connexion impossible. Vérifiez votre réseau et réessayez.");
+    if (!res.ok) return setAccountError(res.error);
+    setSavedSlug(res.slug);
   };
+  const done = !!savedSlug;
 
   if (done) {
     return (
@@ -46,8 +56,8 @@ export default function OnboardingPage() {
           <p className="mt-2 text-ink-2">Elle est accessible à l'adresse :</p>
           <p className="mt-3 break-all rounded-btn bg-mint px-4 py-3 font-semibold text-primary">{host}/boutique/{slug}</p>
           <div className="mt-8 grid gap-3">
-            <Link href="/dashboard/produits/nouveau" className="rounded-btn bg-gold py-3.5 font-bold text-forest hover:bg-gold-hover">Créer mon premier produit</Link>
-            <Link href="/dashboard" className="rounded-btn border border-line py-3.5 font-semibold hover:bg-page">Aller au tableau de bord</Link>
+            <Link href="/dashboard" className="rounded-btn bg-gold py-3.5 font-bold text-forest hover:bg-gold-hover">Aller au tableau de bord</Link>
+            <Link href={`/boutique/${slug}`} className="rounded-btn border border-line py-3.5 font-semibold hover:bg-page">Voir ma boutique</Link>
           </div>
         </div>
       </AuthShell>
@@ -67,6 +77,7 @@ export default function OnboardingPage() {
 
       {step === 0 && (
         <>
+          {me && <p className="mb-1 font-semibold text-primary">Bienvenue, {firstName(me.user.name)} !</p>}
           <h1 className="font-heading text-2xl font-extrabold sm:text-3xl">Que souhaitez-vous vendre ?</h1>
           <p className="mt-2 text-ink-2">Nous adaptons votre espace à votre activité. Vous pourrez tout changer plus tard.</p>
           <div className="mt-6 grid grid-cols-2 gap-3">
@@ -104,7 +115,7 @@ export default function OnboardingPage() {
             </div>
             <label className="block">
               <span className="mb-1.5 block text-sm font-semibold">Catégorie</span>
-              <select className={inputCls}>
+              <select className={inputCls} value={category} onChange={(e) => setCategory(e.target.value)}>
                 {shopCategories.map((c) => <option key={c}>{c}</option>)}
               </select>
             </label>
@@ -147,9 +158,10 @@ export default function OnboardingPage() {
         )}
         <button
           onClick={next}
-          className="flex items-center gap-2 rounded-btn bg-primary px-6 py-3 font-semibold text-white hover:bg-primary-hover"
+          disabled={saving}
+          className="flex min-h-11 items-center gap-2 rounded-btn bg-primary px-6 py-3 font-semibold text-white hover:bg-primary-hover disabled:opacity-70"
         >
-          {step < steps.length - 1 ? "Continuer" : "Terminer"} <ArrowRight size={17} />
+          {saving ? <><Loader2 size={17} className="animate-spin" /> Création…</> : <>{step < steps.length - 1 ? "Continuer" : "Terminer"} <ArrowRight size={17} /></>}
         </button>
       </div>
     </AuthShell>

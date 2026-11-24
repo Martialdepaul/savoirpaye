@@ -40,7 +40,11 @@ Les appels serveur encore simulés (`setTimeout`) sont marqués `// Simulation �
 - Comptes : Better Auth (`src/lib/auth.ts`, route `src/app/api/auth/[...all]/route.ts`, client `src/lib/auth-client.ts` avec `useSession`, `signOut` et `authErrorMessage` pour les erreurs en français). E-mail + mot de passe, Google, vérification d'adresse (non bloquante), mot de passe oublié.
 - Base : PostgreSQL Neon via Drizzle (`src/lib/db/`). Après une modification de `schema.ts` : `pnpm db:push`. `pnpm db:studio` pour consulter les données.
 - E-mails : `src/lib/email.ts` (gabarits HTML en français + `sendEmail`, qui n'interrompt jamais le parcours en cas d'échec). Resend par défaut ; Gmail si `GMAIL_USER` et `GMAIL_APP_PASSWORD` sont définis. Sans domaine vérifié chez Resend, seuls les envois vers l'adresse du compte Resend aboutissent.
-- `src/middleware.ts` redirige `/dashboard` et `/onboarding` vers `/connexion?suite=…` sans session.
+- `src/middleware.ts` redirige `/dashboard` et `/onboarding` vers `/connexion?suite=…` sans cookie de session ; les layouts de ces deux espaces revérifient la session côté serveur (`getAccount()` de `src/lib/account.ts`).
+- Compte connecté côté client : `useAccount()` de `components/dashboard/AccountContext.tsx` (utilisateur + boutique, fourni par `app/dashboard/layout.tsx`). Après une modification : `router.refresh()`.
+- Boutique : table `shop` (une par compte), créée par l'onboarding et modifiée dans Paramètres via les actions serveur de `src/app/actions/shop.ts`. `/boutique/[vendeur]` lit la boutique en base (le slug `aminata-diallo` reste la boutique de démonstration).
+- Les pages encore alimentées par les données de démonstration (produits, commandes, clients, portefeuille, statistiques…) affichent le bandeau « Mode découverte » (`AccountBanners.tsx`) ; Profil, Boutique, Paiements et Sécurité de Paramètres sont réels.
+- Site public : `AccountLink` (et l'en-tête de l'accueil) affichent « Mon tableau de bord » quand l'utilisateur est connecté ; `/connexion` et `/inscription` redirigent un utilisateur déjà connecté.
 - Variables d'environnement : voir `.env.example` (valeurs réelles dans `.env.local`, jamais versionné, et dans les réglages Vercel).
 
 ## Conventions UI

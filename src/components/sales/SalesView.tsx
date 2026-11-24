@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Check, Clock, Users, ShieldCheck, Infinity as Inf, Award, PlayCircle, FileDown, Video, Download, Eye } from "lucide-react";
 import Logo from "../ui/Logo";
+import AccountLink from "../auth/AccountLink";
 import Stars from "./Stars";
 import Curriculum from "./Curriculum";
 import Reviews from "./Reviews";
@@ -58,7 +59,7 @@ export default function SalesView({ product: p }: { product: CatalogProduct }) {
       <header className="border-b border-line bg-page/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
           <Logo />
-          <Link href="/connexion" className="-mr-3 px-3 py-3 text-sm font-medium text-ink-2 hover:text-ink">Connexion</Link>
+          <AccountLink />
         </div>
       </header>
 

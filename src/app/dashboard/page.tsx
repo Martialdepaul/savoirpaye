@@ -9,13 +9,13 @@ import StatCards from "../../components/dashboard/StatCards";
 import RevenueChart from "../../components/dashboard/RevenueChart";
 import TopProducts from "../../components/dashboard/TopProducts";
 import LatestOrders from "../../components/dashboard/LatestOrders";
-import { periods, seller, type PeriodId } from "../../lib/dashboard-data";
-import { useSession } from "../../lib/auth-client";
+import { periods, type PeriodId } from "../../lib/dashboard-data";
+import { firstName, useAccount } from "../../components/dashboard/AccountContext";
 
 export default function DashboardPage() {
   const [period, setPeriod] = useState<PeriodId>("30");
-  const { data } = useSession();
-  const firstName = (data?.user.name ?? seller.name).split(" ")[0];
+  const account = useAccount();
+  const name = firstName(account?.user.name);
   return (
     <div className="min-h-screen">
       <Sidebar />
@@ -24,8 +24,8 @@ export default function DashboardPage() {
         <main className="mx-auto max-w-6xl space-y-5 px-4 pb-32 pt-6 sm:px-8 lg:pb-12">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="font-heading text-2xl font-extrabold sm:text-3xl">Bonjour, {firstName}</h1>
-              <p className="mt-1 text-sm text-ink-2">Voici l'activité de votre boutique.</p>
+              <h1 className="font-heading text-2xl font-extrabold sm:text-3xl">Bonjour{name ? `, ${name}` : ""}</h1>
+              <p className="mt-1 text-sm text-ink-2">{account?.shop ? <>Voici l'activité de <strong className="text-ink">{account.shop.name}</strong>.</> : "Voici un aperçu de votre futur tableau de bord."}</p>
             </div>
             <div role="tablist" aria-label="Période" className="flex w-full rounded-btn border border-line bg-white p-1 sm:w-auto">
               {periods.map((p) => (

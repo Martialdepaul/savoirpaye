@@ -1,6 +1,6 @@
 // Tables de Better Auth (comptes, sessions, connexions Google, jetons de vérification)
 // + champs propres à Savoirpay sur l'utilisateur (téléphone, pays).
-import { boolean, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, index, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -48,6 +48,24 @@ export const account = pgTable(
   },
   (t) => [index("account_user_id_idx").on(t.userId)],
 );
+
+export type Payout = { id: string; method: string; number: string };
+
+/** Boutique du vendeur (une par compte), créée à l'onboarding et modifiable dans Paramètres */
+export const shop = pgTable("shop", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().unique().references(() => user.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  description: text("description").notNull().default(""),
+  category: text("category").notNull().default(""),
+  goal: text("goal").notNull().default(""),
+  plan: text("plan").notNull().default("Starter"),
+  payouts: jsonb("payouts").$type<Payout[]>().notNull().default([]),
+  autoWithdraw: boolean("auto_withdraw").notNull().default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()).notNull(),
+});
 
 export const verification = pgTable(
   "verification",

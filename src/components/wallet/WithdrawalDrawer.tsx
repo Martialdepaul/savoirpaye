@@ -3,10 +3,8 @@
 import { useState, useId } from "react";
 import { X, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { walletBalance, mobileMoneyProviders, fcfa } from "@/lib/wallet-data";
-import { seller } from "@/lib/catalog";
+import { useAccount } from "@/components/dashboard/AccountContext";
 
-/** Numéro enregistré dans Paramètres › Paiements pour cet opérateur */
-const savedNumber = (id: string) => seller.payouts.find((p) => mobileMoneyProviders.find((m) => m.id === id)?.label === p.method)?.number ?? "";
 const pct = (fee: number) => `${(fee * 100).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} %`;
 
 interface Props {
@@ -15,6 +13,9 @@ interface Props {
 }
 
 export default function WithdrawalDrawer({ open, onClose }: Props) {
+  const payouts = useAccount()?.shop?.payouts ?? [];
+  /** Numéro enregistré dans Paramètres › Paiements pour cet opérateur */
+  const savedNumber = (id: string) => payouts.find((p) => mobileMoneyProviders.find((m) => m.id === id)?.label === p.method)?.number ?? "";
   const [amount, setAmount] = useState("");
   const [provider, setProvider] = useState(mobileMoneyProviders[0].id);
   const [phone, setPhone] = useState(savedNumber(mobileMoneyProviders[0].id));
